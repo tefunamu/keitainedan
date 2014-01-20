@@ -76,6 +76,16 @@ class Welcome extends CI_Controller {
         
 	}
 
+		public function book()
+	{
+		$data['page_title'] = 'モバイル料金ラボ';
+		$this->load->helper('url');
+
+        $this->load->view('header',$data);
+        $this->load->view('book');
+        $this->load->view('footer',$data);
+        
+	}
 }
 
 /* End of file welcome.php */
