@@ -78,6 +78,8 @@ class Welcome extends CI_Controller {
 
 		public function book()
 	{
+		$this->load->helper('file');
+
 		$data['page_title'] = 'モバイル料金ラボ';
 		$this->load->helper('url');
 
