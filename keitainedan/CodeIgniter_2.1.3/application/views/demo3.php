@@ -1,1 +1,1 @@
- <a href="<?php echo base_url("index.php"); ?>">トップ</a> <a href="book">book</a>
+キャリア<?php echo $kyaria; ?></br> <a href="<?php echo base_url("index.php"); ?>">トップ</a> <a href="book">book</a>

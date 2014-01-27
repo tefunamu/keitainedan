@@ -2,5 +2,5 @@
 <link href="js/pagefile.js" type="text/javascript" />
 
 
-<img src ="/book.img" alt="本" align="left">
+<img src="images/login.gif" alt="ログイン">
 

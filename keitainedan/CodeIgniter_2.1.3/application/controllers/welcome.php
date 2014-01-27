@@ -21,16 +21,6 @@ class Welcome extends CI_Controller {
 	{
 		$this->load->helper('url');
 		$data['page_title'] = 'モバイル料金ラボ';
-
-		session_start();
-
-		if (empty($_SESSION['count'])) {
-		   $_SESSION['count'] = 1;
-		} else {
-		   $_SESSION['count']++;
-		}
-
-		
 		
         $this->load->view('header',$data);
         $this->load->view('top');
@@ -40,8 +30,8 @@ class Welcome extends CI_Controller {
 
 	public function demo()
 	{
+		$this->load->helper('url');
 		$data['page_title'] = 'モバイル料金ラボ';
-		$this->load->helper('url'); 
 
         $this->load->view('header',$data);
         $this->load->view('demo',$data);
@@ -53,9 +43,9 @@ class Welcome extends CI_Controller {
 	{
 		$this->load->helper('url'); 
 		$data['page_title'] = 'モバイル料金ラボ';
-		session_start();
 		
-		$data['count']= $_SESSION['count'];
+		session_start();
+		$_SESSION['kyaria']=$_REQUEST['kyaria'];
 
         $this->load->view('header',$data);
         $this->load->view('demo2',$data);
@@ -66,10 +56,12 @@ class Welcome extends CI_Controller {
 		public function demo3()
 	{
 		$data['page_title'] = 'モバイル料金ラボ';
-		session_start();
 		$this->load->helper('url'); 
-		$_SESSION['count']=array();
 
+		session_start();
+		
+		$data['kyaria']=$_SESSION['kyaria'];
+		
         $this->load->view('header',$data);
         $this->load->view('demo3',$data);
         $this->load->view('footer',$data);
