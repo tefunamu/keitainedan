@@ -1,1 +1,1 @@
-docomo<?php echo $docomo; ?></br>au<?php echo $au; ?>円</br>softbank<?php echo $softbank; ?>円</br> <a href="<?php echo base_url("index.php"); ?>">トップ</a> <a href="book">book</a>
+<form action="demo4"><input type="radio" name="kaisen" value="au">auの提携回線<input type="radio" name="kaisen" value="softbank">softbankの提携回線<input type="submit"></a></form>
