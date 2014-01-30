@@ -1,1 +1,1 @@
-<form action="demo3"><input type="radio" name="tushinryo" value="less">‚ ‚ñ‚ÜŽg‚Á‚Ä‚È‚¢<input type="radio" name="tushinryo" value="more">‚¯‚Á‚±‚¤Žg‚Á‚Ä‚é<input type="submit"></a></form>
+<form action="demo3"><input type="radio" name="tushinryo" value="less">ã‚ã‚“ã¾ä½¿ã£ã¦ãªã„<input type="radio" name="tushinryo" value="more">ã‘ã£ã“ã†ä½¿ã£ã¦ã‚‹<input type="submit"></a></form>
