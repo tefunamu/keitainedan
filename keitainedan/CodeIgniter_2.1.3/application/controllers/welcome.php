@@ -57,10 +57,36 @@ class Welcome extends CI_Controller {
 	{
 		$data['page_title'] = 'モバイル料金ラボ';
 		$this->load->helper('url'); 
-
+		
+		$d=0;
+		$a=0;
+		$s=0;
+		
 		session_start();
 		
-		$data['kyaria']=$_SESSION['kyaria'];
+		$_SESSION['tushinryo']=$_REQUEST['tushinryo'];
+		switch($_SESSION['kyaria']){
+			case "docomo":
+				$a=-980;
+				$s-=980;
+				switch($_SESSION['tushinryo']){
+					case"less":
+						$d+=5985;
+						$a+=5985;
+						$s+=5985;
+						break;
+					case"more":
+						break;
+				}
+			case "au":
+				break;
+			case "softbank":
+				break;
+		}
+		
+		$data['docomo']=$d;
+		$data['au']=$a;
+		$data['softbank']=$s;
 		
         $this->load->view('header',$data);
         $this->load->view('demo3',$data);

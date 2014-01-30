@@ -1,1 +1,1 @@
-キャリア<?php echo $kyaria; ?></br> <a href="<?php echo base_url("index.php"); ?>">トップ</a> <a href="book">book</a>
+docomo<?php echo $docomo; ?></br>au<?php echo $au; ?>円</br>softbank<?php echo $softbank; ?>円</br> <a href="<?php echo base_url("index.php"); ?>">トップ</a> <a href="book">book</a>

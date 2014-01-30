@@ -1,1 +1,1 @@
-<a href = "demo3">æ¬¡ã¸</a>
+<form action="demo3"><input type="radio" name="tushinryo" value="less">‚ ‚ñ‚ÜŽg‚Á‚Ä‚È‚¢<input type="radio" name="tushinryo" value="more">‚¯‚Á‚±‚¤Žg‚Á‚Ä‚é<input type="submit"></a></form>
