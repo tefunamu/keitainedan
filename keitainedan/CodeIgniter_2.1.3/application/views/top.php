@@ -1,1 +1,1 @@
-<a href="index.php/welcome/demo">診断スタート！</a>
+<a href="index.php/welcome/cyaria">診断スタート！</a>

@@ -28,18 +28,18 @@ class Welcome extends CI_Controller {
         
 	}
 
-	public function demo()
+	public function cyaria()
 	{
 		$this->load->helper('url');
 		$data['page_title'] = 'モバイル料金ラボ';
 
         $this->load->view('header',$data);
-        $this->load->view('demo',$data);
+        $this->load->view('cyaria',$data);
         $this->load->view('footer',$data);
         
 	}
 	
-	public function demo2()
+	public function tuushinryo()
 	{
 		$this->load->helper('url'); 
 		$data['page_title'] = 'モバイル料金ラボ';
@@ -48,13 +48,13 @@ class Welcome extends CI_Controller {
 		$_SESSION['kyaria']=$_REQUEST['kyaria'];
 
         $this->load->view('header',$data);
-        $this->load->view('demo2',$data);
+        $this->load->view('tusinryo',$data);
         $this->load->view('footer',$data);
         
 	}	
 
 
-	public function demo3()
+	public function kaisen()
 	{
 		$this->load->helper('url'); 
 		$data['page_title'] = 'モバイル料金ラボ';
@@ -63,12 +63,12 @@ class Welcome extends CI_Controller {
 		$_SESSION['tushinryo']=$_REQUEST['tushinryo'];
 		
         $this->load->view('header',$data);
-        $this->load->view('demo3',$data);
+        $this->load->view('kaisen_tv',$data);
         $this->load->view('footer',$data);
         
 	}
 	
-	public function demo4()
+	public function ruta()
 	{
 		$this->load->helper('url');
 		$data['page_title'] = 'モバイル料金ラボ';
@@ -77,12 +77,12 @@ class Welcome extends CI_Controller {
 		$_SESSION['kaisen']=$_REQUEST['kaisen'];
 		
 		$this->load->view('header',$data);
-		$this->load->view('demo4',$data);
+		$this->load->view('ruta',$data);
 		$this->load->view('footer',$data);
 		
 	}
 
-	public function demoX()
+	public function kekka()
 	{
 		$this->load->helper('url'); 
 		$data['page_title'] = 'モバイル料金ラボ';
@@ -1152,7 +1152,7 @@ class Welcome extends CI_Controller {
 		
 		
         $this->load->view('header',$data);
-        $this->load->view('demoX',$data);
+        $this->load->view('kekka',$data);
         $this->load->view('footer',$data);
         
 	}
