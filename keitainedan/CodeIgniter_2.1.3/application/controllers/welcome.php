@@ -1140,12 +1140,8 @@ class Welcome extends CI_Controller {
 					#softbank:パケットし放題(フラットとの違いが不明。無印が完全に上位互換。)
 				
 			break;
-				
-				
-				
-				
-				
 				}
+			}
 		
 		$data['docomo']=$d;
 		$data['au']=$a;
@@ -1159,10 +1155,10 @@ class Welcome extends CI_Controller {
         $this->load->view('demoX',$data);
         $this->load->view('footer',$data);
         
-	}1
+	}
 	
 		
-		public function book()
+	public function book()
 	{
 		$this->load->helper('file');
 
