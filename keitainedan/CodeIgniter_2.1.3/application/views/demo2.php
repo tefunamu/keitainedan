@@ -1,1 +1,0 @@
-<form action="demo3"><input type="radio" name="tushinryo" value="less">あんま使ってない<input type="radio" name="tushinryo" value="more">けっこう使ってる<input type="submit"></a></form>

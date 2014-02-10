@@ -1,1 +1,0 @@
-<form action="demo4"><input type="radio" name="kaisen" value="au">auの提携回線<input type="radio" name="kaisen" value="softbank">softbankの提携回線<input type="submit"></a></form>
