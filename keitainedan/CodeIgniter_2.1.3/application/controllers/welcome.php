@@ -39,22 +39,30 @@ class Welcome extends CI_Controller {
         
 	}
 	
-	public function tuushinryo()
+	public function gakusei()
 	{
-		$this->load->helper('url'); 
+		$this->load->helper('url');
 		$data['page_title'] = 'モバイル料金ラボ';
-		
-		session_start();
-		$_SESSION['kyaria']=$_REQUEST['kyaria'];
 
         $this->load->view('header',$data);
-        $this->load->view('tusinryo',$data);
+        $this->load->view('cyaria',$data);
         $this->load->view('footer',$data);
         
-	}	
+	}
+	
+	public function kisyu()
+	{
+		$this->load->helper('url');
+		$data['page_title'] = 'モバイル料金ラボ';
 
-
-	public function kaisen()
+        $this->load->view('header',$data);
+        $this->load->view('cyaria',$data);
+        $this->load->view('footer',$data);
+        
+	}
+	
+	
+	public function kaisen_tv()#ガラケの場合は関係なし
 	{
 		$this->load->helper('url'); 
 		$data['page_title'] = 'モバイル料金ラボ';
@@ -68,7 +76,7 @@ class Welcome extends CI_Controller {
         
 	}
 	
-	public function ruta()
+	public function ruta()#ガラケの場合は関係なし
 	{
 		$this->load->helper('url');
 		$data['page_title'] = 'モバイル料金ラボ';
@@ -81,7 +89,37 @@ class Welcome extends CI_Controller {
 		$this->load->view('footer',$data);
 		
 	}
+	
+	
+	public function packet()
+	{
+		$this->load->helper('url'); 
+		$data['page_title'] = 'モバイル料金ラボ';
+		
+		session_start();
+		$_SESSION['kyaria']=$_REQUEST['kyaria'];
 
+        $this->load->view('header',$data);
+        $this->load->view('tusinryo',$data);
+        $this->load->view('footer',$data);
+        
+	}
+	
+	
+	public function tuuwazikan()
+	{
+		$this->load->helper('url'); 
+		$data['page_title'] = 'モバイル料金ラボ';
+		
+		session_start();
+		$_SESSION['kyaria']=$_REQUEST['kyaria'];
+
+        $this->load->view('header',$data);
+        $this->load->view('tusinryo',$data);
+        $this->load->view('footer',$data);
+        
+	}
+	
 	public function kekka()
 	{
 		$this->load->helper('url'); 
@@ -93,21 +131,29 @@ class Welcome extends CI_Controller {
 		
 		#ソフバンに下取りあり。組み込まれてない。
 		#auにも下取りあり。組み込まれていない。
+		#docomoの学割はスマホのみなので、あまり意味ない。基本料金無料が3年間に延長になる
+		#au,softbankはガラケにも適用されるため、意味ある。ただし、日中使うプランのが多いからあれかも
+		
 		
 		switch($_SESSION['kisyu']){
 			case "iphone":
-				$docomo_ryoukin-=500;
+				$docomo_ryokin=743+5700+300;#もっとも一般的なスマホの料金を表示、他も一緒
+				$au_ryokin=934+5700+300;
+				$softbank_ryokin=934+5700+300;
+			
+				$docomo_ryoukin-=500;#iphoneの場合、各社で500円の割引が入る。
 				$au_ryoukin-=500;
 				$softbank_ryoukin-=500;
 				
 				switch($_SESSION['kyaria']){
-					case "docomo":
+					case "docomo":#docomo以外の乗り換え割り
 						$au_ryoukin=-934;
 						$softbank_ryoukin-=934;
 						
 						switch($_SESSION['kaisen_tv']){
-							case "au_kaisen":
+							case "au_kaisen":#本来スマートバリューは1410円マイナスだが、iphoneの500円割りと併用できない。
 								$au_ryoukin-=910;
+								#パケット数により、docomoの安いプランがある。ソフバンもほんとに少なければ(30Mbyteレベル)安いやつがある。
 								if ($_SESSION['packet'] < 114000){
 									$docomo_ryoukin-=1000;
 									$softbank_ryoukin+=0.05*$packet-5700;
@@ -132,7 +178,7 @@ class Welcome extends CI_Controller {
 								break;
 								
 							case "softbank_kaisen":
-								$s-=934;
+								$softbank_ryoukin-=934;
 								if ($_SESSION['packet'] < 114000){
 									$docomo_ryoukin-=1000;
 									$softbank_ryoukin+=0.05*$packet-5700;
@@ -919,8 +965,8 @@ class Welcome extends CI_Controller {
 				
 				break;
 				
-			default:#ここには定数garakeとd定数oredemoが該当します。
-				#以下通話時間
+			default:#ここには定数garakeと定数doredemoが該当します。
+				#以下通話時間。かなり細かく分けているが、誤差5分いないの物は省略している場合がある。
 				if ($_SESSION['tuuwazikan'] < 5) {
 					$docomo_ryoukin += 40*$_SESSION['tuuwazikan']+743;
 					$au_ryoukin +=40*0.741*$_SESSION['tuuwazikan']+934;
@@ -1114,7 +1160,7 @@ class Welcome extends CI_Controller {
 					#softbank:ブループラン・LLプラン
 				}
 				
-				#以下パケット
+				#以下パケット。パケット数はあまりかかわらないです。
 				if ($packet < 9800) {
 					$docomo_ryoukin += 0.08*$packet;
 					$au_ryoukin +=0.1*$packet;
