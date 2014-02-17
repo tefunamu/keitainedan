@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="../../css/welcome.css">
+<link href="../../js/pagefile.js" type="text/javascript" />
+<img src="../../images/book.png" alt=""></br>
 結果
 docomo<?php echo $docomo_ryokin; ?>円</br>
 au<?php echo $au_ryokin; ?>円</br>
@@ -13,4 +16,4 @@ softbank<?php echo $softbank_ryokin; ?>円</br>
 <?php echo $gakusei; ?>
 
 <a href="<?php echo base_url("index.php"); ?>">トップ</a>
-<a href="book">book</a>
+
