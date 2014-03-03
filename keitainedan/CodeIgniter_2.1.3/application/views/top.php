@@ -1,5 +1,7 @@
 <link rel="stylesheet" href="css/welcome.css">
 <link href="js/pagefile.js" type="text/javascript" />
-<img src="images/renew.jpg" alt=""></br>
-<background="images/background.jpg" ></br>
-<a href="index.php/welcome/kyaria">診断スタート！</a>
+
+<div id="bottun">
+<a href="index.php/welcome/kyaria"><img src="images/judge.gif" alt="judge"></a>
+<img src="images/whatsnew.gif" alt="judge"></a>
+</div>

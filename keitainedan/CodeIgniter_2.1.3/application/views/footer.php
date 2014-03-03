@@ -1,7 +1,4 @@
-<foooter></br>
-             著作権:モバイル料金ラボ</br>
-             本ホームページ内に記載された文章、画像等の無断転載を禁じます。</br>
-		利用規約</br>
- 		このサイトについて</br>
- 		お問い合わせ</br>
-     </footer>
+<foooter>
+</br>
+<img src = "<?php echo base_url("images/copyright.gif"); ?>" alt="footer-image" align="left"></a>
+</footer>

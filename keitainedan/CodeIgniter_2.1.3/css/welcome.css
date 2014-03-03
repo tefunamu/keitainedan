@@ -1,40 +1,4 @@
-@charset "utf-8";
-#pageflip-canvas {
-    position: absolute;
-    z-index: 100;
-}
 
-#book {
-    background: url("book.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
-    height: 148px;
-    left: 50%;
-
-    position: absolute;
-    top: 50%;
-    width: 476px;
-}
-
-#pages section {
-    background: url("paper.img") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
-    display: block;
-    height: 250px;
-    left: 415px;
-    overflow: hidden;
-    position: absolute;
-    top: 5px;
-    width: 400px;
-}
-#pages section > div {
-    display: block;
-    font-size: 12px;
-    height: 250px;
-    width: 400px;
-}
-#pages section p, #pages section h2 {
-    line-height: 1.4em;
-    padding: 3px 35px;
-    text-align: justify;
-}
-#pages section h2 {
-    margin: 15px 0 10px;
+#header {
+	margin-bottom:10px;
 }
