@@ -42,32 +42,16 @@ class Welcome extends CI_Controller {
         
 	}
 	
-	
-	public function gakusei()
+	public function kisyu()
 	{
 		$this->load->helper('url');
 		$data['page_title'] = 'モバイル料金ラボ';
 		
 		session_start();
-		$_SESSION['gakusei']=$_REQUEST['gakusei'];
-
-        $this->load->view('header',$data);
-        $this->load->view('cyaria',$data);
-        $this->load->view('footer',$data);
-
-	}
-	
-	
-	public function kisyu()
-	{
-		$this->load->helper('url');
-		$data['page_title'] = 'モバイル料金ラボ'
-		
-		;session_start();
 		$_SESSION['kisyu']=$_REQUEST['kisyu'];
 
         $this->load->view('header',$data);
-        $this->load->view('cyaria',$data);
+        $this->load->view('kisyu',$data);
         $this->load->view('footer',$data);
 
 	}
@@ -127,7 +111,7 @@ class Welcome extends CI_Controller {
 		$_SESSION['kyaria']=$_REQUEST['kyaria'];
 
         $this->load->view('header',$data);
-        $this->load->view('tusinryo',$data);
+        $this->load->view('suuti',$data);
         $this->load->view('footer',$data);
 
 	}

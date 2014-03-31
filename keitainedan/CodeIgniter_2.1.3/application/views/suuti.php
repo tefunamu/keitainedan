@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="../../css/welcome.css">
 <link href="../../js/pagefile.js" type="text/javascript" />
 <img src="../../images/book.png" alt=""></br>
-<form action="">
+<form action="kekka">
 <input type="text" name="tuuwaryoukin" value="">通話時間
 
 
