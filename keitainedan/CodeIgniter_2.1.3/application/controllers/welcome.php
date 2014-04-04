@@ -27,7 +27,7 @@ class Welcome extends CI_Controller {
         $this->load->view('footer',$data);
         
 	}
-
+#testtestこれができてればうまくいってる
 	public function kyaria()
 	{
 		$this->load->helper('url');
