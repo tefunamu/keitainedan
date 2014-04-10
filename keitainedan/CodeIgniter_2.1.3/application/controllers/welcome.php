@@ -106,7 +106,7 @@ class Welcome extends CI_Controller {
 		
 		session_start();
 		$_SESSION['packet']=$_REQUEST['packet'];
-		
+		$_SESSION['packet'] = mb_convert_kana($_SESSION['packet'], "a", "UTF-8");#全角数字を半角に変換してます
         $this->load->view('header',$data);
         $this->load->view('suuti',$data);
         $this->load->view('footer',$data);
@@ -121,6 +121,7 @@ class Welcome extends CI_Controller {
 		
 		session_start();
 		$_SESSION['tuuwazikan']=$_REQUEST['tuuwazikan'];
+		$_SESSION['tuuwazikan'] = mb_convert_kana($_SESSION['tuuwazikan'], "a", "UTF-8");#全角数字を半角に変換してます
 		
 		$docomo_ryoukin=743+5700+300;#もっとも一般的な料金を表示、他も一緒
 		$au_ryoukin=934+5700+300;
@@ -133,7 +134,6 @@ class Welcome extends CI_Controller {
 		
 		
 		switch($_SESSION['kisyu']){
-			
 			
 			case "iphone":
 				$docomo_ryoukin=743+5700+300;#もっとも一般的なスマホの料金を表示、他も一緒
