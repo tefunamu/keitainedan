@@ -17,11 +17,9 @@ footer {
 }
 
 #bottun{
-	text-align:center;
-	float:left;
+	float:center;
 	}
 	
 #profile{
-	text-align:center;
 	float:right;
 }

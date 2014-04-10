@@ -11,8 +11,8 @@
  </head>
  
  <style>
-	header-image{
-		background-image:url("<?php echo base_url("../images/title.gif"); ?>");
+	header{
+		background-image:url("<?php echo base_url("images/title.gif"); ?>");
 		/*height:80px;*/
 	}
 </style>
@@ -22,7 +22,8 @@
 	 <header id="header-image">
 	 <nav>
 		 <a href="<?php echo base_url("index.php"); ?>"><img src = "<?php echo base_url("images/logo.gif"); ?>" alt="モバイル料金ラボ" align="left"></a>
-		 <a href="<?php echo base_url("index.php"); ?>"><img src = "<?php echo base_url("images/title.gif"); ?>" alt="モバイル料金ラボ" align="left"></a>
+		 <a href="<?php echo base_url("index.php"); ?>"><img src = "<?php echo base_url("images/about.gif"); ?>" alt="about" align="left"></a>
+		 <a href="<?php echo base_url("index.php"); ?>"><img src = "<?php echo base_url("images/Q&A.gif"); ?>" alt="Q&A" align="left"></a>
 		<div id="access">
 		<a href="<?php echo base_url(""); ?>"><img src = "<?php echo base_url("images/access.gif"); ?>" alt="お問い合わせ" align="left"></a>
 		</div>
