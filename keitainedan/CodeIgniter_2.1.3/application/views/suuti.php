@@ -2,11 +2,10 @@
 <link href="../../js/pagefile.js" type="text/javascript" />
 <img src="../../images/book.png" alt=""></br>
 <form action="kekka">
-<input type="text" name="tuuwaryoukin" value="">通話時間
-
-
-<input type="text" name="packet" value="">パケット
-
+通話時間を以下に入力</br>
+<input type="text" name="tuuwazikan" value="100">分
+<input type="submit"></a>
+<br>
 <input type="text" name="gakusei" value="zibun">自分が学生
 <input type="text" name="gakusei" value="kazoku">家族の中に学生がいる
 

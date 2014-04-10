@@ -93,7 +93,7 @@ class Welcome extends CI_Controller {
 		$_SESSION['ruta']=$_REQUEST['ruta'];
 		
         $this->load->view('header',$data);
-        $this->load->view('tusinryo',$data);
+        $this->load->view('packet',$data);
         $this->load->view('footer',$data);
 
 	}
@@ -133,11 +133,13 @@ class Welcome extends CI_Controller {
 		
 		
 		switch($_SESSION['kisyu']){
+			
+			
 			case "iphone":
 				$docomo_ryoukin=743+5700+300;#もっとも一般的なスマホの料金を表示、他も一緒
 				$au_ryoukin=934+5700+300;
 				$softbank_ryoukin=934+5700+300;
-			
+				
 				$docomo_ryoukin-=500;#iphoneの場合、各社で500円の割引が入る。
 				$au_ryoukin-=500;
 				$softbank_ryoukin-=500;
@@ -254,7 +256,7 @@ class Welcome extends CI_Controller {
 									default:
 										if ($_SESSION['packet'] < 114000){
 											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
+											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 												$docomo_ryoukin+=$tuuwaryoukin;
 												$au_ryoukin+=$tuuwaryoukin;
@@ -288,7 +290,7 @@ class Welcome extends CI_Controller {
 								$au_ryoukin-=910;
 								if ($_SESSION['packet'] < 114000){
 									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$packet-5700;
+									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 										$docomo_ryoukin+=$tuuwaryoukin;
 										$au_ryoukin+=$tuuwaryoukin;
@@ -313,7 +315,7 @@ class Welcome extends CI_Controller {
 								$s-=934;
 								if ($_SESSION['packet'] < 114000){
 									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$packet-5700;
+									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 										$docomo_ryoukin+=$tuuwaryoukin;
 										$au_ryoukin+=$tuuwaryoukin;
@@ -340,7 +342,7 @@ class Welcome extends CI_Controller {
 										$au_ryouin-=934;
 										if ($_SESSION['packet'] < 114000){
 											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
+											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 												$docomo_ryoukin+=$tuuwaryoukin;
 												$au_ryoukin+=$tuuwaryoukin;
@@ -365,7 +367,7 @@ class Welcome extends CI_Controller {
 									$softbank_ryoukin-=934;
 										if ($_SESSION['packet'] < 114000){
 											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
+											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 												$docomo_ryoukin+=$tuuwaryoukin;
 												$au_ryoukin+=$tuuwaryoukin;
@@ -389,7 +391,7 @@ class Welcome extends CI_Controller {
 									default:
 										if ($_SESSION['packet'] < 114000){
 											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
+											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 												$docomo_ryoukin+=$tuuwaryoukin;
 												$au_ryoukin+=$tuuwaryoukin;
@@ -423,7 +425,7 @@ class Welcome extends CI_Controller {
 								$au_ryoukin-=910;
 								if ($_SESSION['packet'] < 114000){
 									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$packet-5700;
+									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 										$docomo_ryoukin+=$tuuwaryoukin;
 										$au_ryoukin+=$tuuwaryoukin;
@@ -448,7 +450,7 @@ class Welcome extends CI_Controller {
 								$s-=934;
 								if ($_SESSION['packet'] < 114000){
 									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$packet-5700;
+									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 										$docomo_ryoukin+=$tuuwaryoukin;
 										$au_ryoukin+=$tuuwaryoukin;
@@ -475,7 +477,7 @@ class Welcome extends CI_Controller {
 										$au_ryouin-=934;
 										if ($_SESSION['packet'] < 114000){
 											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
+											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 												$docomo_ryoukin+=$tuuwaryoukin;
 												$au_ryoukin+=$tuuwaryoukin;
@@ -500,7 +502,7 @@ class Welcome extends CI_Controller {
 									$softbank_ryoukin-=934;
 										if ($_SESSION['packet'] < 114000){
 											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
+											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 												$docomo_ryoukin+=$tuuwaryoukin;
 												$au_ryoukin+=$tuuwaryoukin;
@@ -524,7 +526,7 @@ class Welcome extends CI_Controller {
 									default:
 										if ($_SESSION['packet'] < 114000){
 											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
+											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 												$docomo_ryoukin+=$tuuwaryoukin;
 												$au_ryoukin+=$tuuwaryoukin;
@@ -552,6 +554,10 @@ class Welcome extends CI_Controller {
 				break;#機種に対する
 							
 			case "sumaho":
+				$docomo_ryoukin=743+5700+300;#もっとも一般的なスマホの料金を表示、他も一緒
+				$au_ryoukin=934+5700+300;
+				$softbank_ryoukin=934+5700+300;
+				
 				switch($_SESSION['kyaria']){
 					case "docomo":
 						$au_ryoukin=-934;
@@ -562,7 +568,7 @@ class Welcome extends CI_Controller {
 								$au_ryoukin-=1410;
 								if ($_SESSION['packet'] < 114000){
 									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$packet-5700;
+									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 										$docomo_ryoukin+=$tuuwaryoukin;
 										$au_ryoukin+=$tuuwaryoukin;
@@ -587,7 +593,7 @@ class Welcome extends CI_Controller {
 								$s-=934;
 								if ($_SESSION['packet'] < 114000){
 									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$packet-5700;
+									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 										$docomo_ryoukin+=$tuuwaryoukin;
 										$au_ryoukin+=$tuuwaryoukin;
@@ -614,7 +620,7 @@ class Welcome extends CI_Controller {
 										$au_ryouin-=934;
 										if ($_SESSION['packet'] < 114000){
 											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
+											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 												$docomo_ryoukin+=$tuuwaryoukin;
 												$au_ryoukin+=$tuuwaryoukin;
@@ -639,7 +645,7 @@ class Welcome extends CI_Controller {
 									$softbank_ryoukin-=934;
 										if ($_SESSION['packet'] < 114000){
 											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
+											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 												$docomo_ryoukin+=$tuuwaryoukin;
 												$au_ryoukin+=$tuuwaryoukin;
@@ -663,7 +669,7 @@ class Welcome extends CI_Controller {
 									default:
 										if ($_SESSION['packet'] < 114000){
 											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
+											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 												$docomo_ryoukin+=$tuuwaryoukin;
 												$au_ryoukin+=$tuuwaryoukin;
@@ -697,7 +703,7 @@ class Welcome extends CI_Controller {
 								$au_ryoukin-=1410;
 								if ($_SESSION['packet'] < 114000){
 									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$packet-5700;
+									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 										$docomo_ryoukin+=$tuuwaryoukin;
 										$au_ryoukin+=$tuuwaryoukin;
@@ -722,7 +728,7 @@ class Welcome extends CI_Controller {
 								$s-=934;
 								if ($_SESSION['packet'] < 114000){
 									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$packet-5700;
+									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 										$docomo_ryoukin+=$tuuwaryoukin;
 										$au_ryoukin+=$tuuwaryoukin;
@@ -749,7 +755,7 @@ class Welcome extends CI_Controller {
 										$au_ryouin-=934;
 										if ($_SESSION['packet'] < 114000){
 											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
+											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 												$docomo_ryoukin+=$tuuwaryoukin;
 												$au_ryoukin+=$tuuwaryoukin;
@@ -774,7 +780,7 @@ class Welcome extends CI_Controller {
 									$softbank_ryoukin-=934;
 										if ($_SESSION['packet'] < 114000){
 											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
+											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 												$docomo_ryoukin+=$tuuwaryoukin;
 												$au_ryoukin+=$tuuwaryoukin;
@@ -798,7 +804,7 @@ class Welcome extends CI_Controller {
 									default:
 										if ($_SESSION['packet'] < 114000){
 											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
+											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 												$docomo_ryoukin+=$tuuwaryoukin;
 												$au_ryoukin+=$tuuwaryoukin;
@@ -832,7 +838,7 @@ class Welcome extends CI_Controller {
 								$au_ryoukin-=1410;
 								if ($_SESSION['packet'] < 114000){
 									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$packet-5700;
+									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 										$docomo_ryoukin+=$tuuwaryoukin;
 										$au_ryoukin+=$tuuwaryoukin;
@@ -857,7 +863,7 @@ class Welcome extends CI_Controller {
 								$s-=934;
 								if ($_SESSION['packet'] < 114000){
 									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$packet-5700;
+									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 										$docomo_ryoukin+=$tuuwaryoukin;
 										$au_ryoukin+=$tuuwaryoukin;
@@ -884,7 +890,7 @@ class Welcome extends CI_Controller {
 										$au_ryouin-=934;
 										if ($_SESSION['packet'] < 114000){
 											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
+											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 												$docomo_ryoukin+=$tuuwaryoukin;
 												$au_ryoukin+=$tuuwaryoukin;
@@ -909,7 +915,7 @@ class Welcome extends CI_Controller {
 									$softbank_ryoukin-=934;
 										if ($_SESSION['packet'] < 114000){
 											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
+											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 												$docomo_ryoukin+=$tuuwaryoukin;
 												$au_ryoukin+=$tuuwaryoukin;
@@ -933,7 +939,7 @@ class Welcome extends CI_Controller {
 									default:
 										if ($_SESSION['packet'] < 114000){
 											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
+											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
 												$docomo_ryoukin+=$tuuwaryoukin;
 												$au_ryoukin+=$tuuwaryoukin;
@@ -1360,26 +1366,26 @@ class Welcome extends CI_Controller {
 					
 				
 				#以下パケット。パケット数はあまりかかわらないです。
-				if ($packet < 9800) {
-					$docomo_ryoukin += 0.08*$packet;
-					$au_ryoukin +=0.1*$packet;
-					$softbank_ryoukin +=0.1*$packet;
+				if ($_SESSION['packet'] < 9800) {
+					$docomo_ryoukin += 0.08*$_SESSION['packet'];
+					$au_ryoukin +=0.1*$_SESSION['packet'];
+					$softbank_ryoukin +=0.1*$_SESSION['packet'];
 					#docomo:パケ・ホーダイ シンプル(ダブルとの違いが不明、あきとに確認)
 					#au:ダブル定額スーパーライト
 					#softbank:パケットし放題S
 					
-				} elseif (9800 <= $packet || $packet < 25000){
-					$docomo_ryoukin += 0.08*$packet;
-					$au_ryoukin +=0.08*$packet;
-					$softbank_ryoukin +=0.08*$packet;
+				} elseif (9800 <= $_SESSION['packet'] || $_SESSION['packet'] < 25000){
+					$docomo_ryoukin += 0.08*$_SESSION['packet'];
+					$au_ryoukin +=0.08*$_SESSION['packet'];
+					$softbank_ryoukin +=0.08*$_SESSION['packet'];
 					#docomo:パケ・ホーダイ シンプル(ダブルとの違いが不明。シンプルが完全に上位互換。あきとに確認)
 					#au:ダブル定額ライト
 					#softbank:パケットし放題(フラットとの違いが不明。無印が完全に上位互換。)
 				
-				} elseif (25000 <=$packet){
-					$docomo_ryoukin += 0.08*$packet;
-					$au_ryoukin +=0.05*$packet;
-					$softbank_ryoukin +=0.08*$packet;
+				} elseif (25000 <=$_SESSION['packet']){
+					$docomo_ryoukin += 0.08*$_SESSION['packet'];
+					$au_ryoukin +=0.05*$_SESSION['packet'];
+					$softbank_ryoukin +=0.08*$_SESSION['packet'];
 					#docomo:パケ・ホーダイ シンプル(ダブルとの違いが不明。シンプルが完全に上位互換。あきとに確認)
 					#au:ダブル定額
 					#softbank:パケットし放題(フラットとの違いが不明。無印が完全に上位互換。)
