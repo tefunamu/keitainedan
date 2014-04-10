@@ -27,15 +27,12 @@ class Welcome extends CI_Controller {
         $this->load->view('footer',$data);
         
 	}
-#testtestこれができてればうまくいってる
+
 	public function kyaria()
 	{
 		$this->load->helper('url');
 		$data['page_title'] = 'モバイル料金ラボ';
 		
-		session_start();
-		$_SESSION['kyaria']=$_REQUEST['kyaria'];
-        
         $this->load->view('header',$data);
         $this->load->view('cyaria',$data);
         $this->load->view('footer',$data);
@@ -48,8 +45,8 @@ class Welcome extends CI_Controller {
 		$data['page_title'] = 'モバイル料金ラボ';
 		
 		session_start();
-		$_SESSION['kisyu']=$_REQUEST['kisyu'];
-
+		$_SESSION['kyaria']=$_REQUEST['kyaria'];
+		
         $this->load->view('header',$data);
         $this->load->view('kisyu',$data);
         $this->load->view('footer',$data);
@@ -61,9 +58,9 @@ class Welcome extends CI_Controller {
 	{
 		$this->load->helper('url'); 
 		$data['page_title'] = 'モバイル料金ラボ';
-
+		
 		session_start();
-		$_SESSION['kaisen_tv']=$_REQUEST['kaisen_tv'];
+		$_SESSION['kisyu']=$_REQUEST['kisyu'];
 		
         $this->load->view('header',$data);
         $this->load->view('kaisen_tv',$data);
@@ -78,7 +75,7 @@ class Welcome extends CI_Controller {
 		$data['page_title'] = 'モバイル料金ラボ';
 		
 		session_start();
-		$_SESSION['ruta']=$_REQUEST['ruta'];
+		$_SESSION['kaisen']=$_REQUEST['kaisen'];
 		
 		$this->load->view('header',$data);
 		$this->load->view('ruta',$data);
@@ -93,8 +90,8 @@ class Welcome extends CI_Controller {
 		$data['page_title'] = 'モバイル料金ラボ';
 		
 		session_start();
-		$_SESSION['packet']=$_REQUEST['packet'];
-
+		$_SESSION['ruta']=$_REQUEST['ruta'];
+		
         $this->load->view('header',$data);
         $this->load->view('tusinryo',$data);
         $this->load->view('footer',$data);
@@ -108,8 +105,8 @@ class Welcome extends CI_Controller {
 		$data['page_title'] = 'モバイル料金ラボ';
 		
 		session_start();
-		$_SESSION['kyaria']=$_REQUEST['kyaria'];
-
+		$_SESSION['packet']=$_REQUEST['packet'];
+		
         $this->load->view('header',$data);
         $this->load->view('suuti',$data);
         $this->load->view('footer',$data);
@@ -122,9 +119,12 @@ class Welcome extends CI_Controller {
 		$this->load->helper('url'); 
 		$data['page_title'] = 'モバイル料金ラボ';
 		
-		$docomo_ryokin=743+5700+300;#もっとも一般的な料金を表示、他も一緒
-		$au_ryokin=934+5700+300;
-		$softbank_ryokin=934+5700+300;
+		session_start();
+		$_SESSION['tuuwazikan']=$_REQUEST['tuuwazikan'];
+		
+		$docomo_ryoukin=743+5700+300;#もっとも一般的な料金を表示、他も一緒
+		$au_ryoukin=934+5700+300;
+		$softbank_ryoukin=934+5700+300;
 		
 		#ソフバンに下取りあり。組み込まれてない。
 		#auにも下取りあり。組み込まれていない。
@@ -134,9 +134,9 @@ class Welcome extends CI_Controller {
 		
 		switch($_SESSION['kisyu']){
 			case "iphone":
-				$docomo_ryokin=743+5700+300;#もっとも一般的なスマホの料金を表示、他も一緒
-				$au_ryokin=934+5700+300;
-				$softbank_ryokin=934+5700+300;
+				$docomo_ryoukin=743+5700+300;#もっとも一般的なスマホの料金を表示、他も一緒
+				$au_ryoukin=934+5700+300;
+				$softbank_ryoukin=934+5700+300;
 			
 				$docomo_ryoukin-=500;#iphoneの場合、各社で500円の割引が入る。
 				$au_ryoukin-=500;
@@ -1388,10 +1388,11 @@ class Welcome extends CI_Controller {
 				}
 			}
 		
+		/*以下3行は自分でもなんで書いたかわからんからとりあえずコメントに
 		$data['docomo']=$d;
 		$data['au']=$a;
 		$data['softbank']=$s;
-		
+		*/
 		
 		
         $this->load->view('header',$data);
