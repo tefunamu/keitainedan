@@ -23,3 +23,20 @@ footer {
 #profile{
 	float:right;
 }
+
+#goods {
+ position: relative;
+ margin-bottom: 10px;
+}
+#goods a {
+ display: block; 
+ }
+a.goods-menu {
+ border: 1px solid #777;
+}
+a.order {
+ position: absolute;
+}
+a.order2 {
+ position: relative;
+}
