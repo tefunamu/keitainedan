@@ -1,3 +1,6 @@
+#bottun{
+	float:left;
+	}
 body{
     padding:0px;
     margin:0px;
@@ -17,16 +20,22 @@ footer {
 }
 
 #bottun{
-	float:center;
+	top:200px;
+	 left:200px;
 	}
 	
 #profile{
+	top:90px;
 	float:right;
+	display: block; 
 }
 
 #goods {
  position: relative;
  margin-bottom: 10px;
+ top:90px;
+ float:center;
+ left:200px;
 }
 #goods a {
  display: block; 

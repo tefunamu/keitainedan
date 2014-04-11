@@ -24,7 +24,7 @@ class Welcome extends CI_Controller {
 		
         $this->load->view('header',$data);
         $this->load->view('top');
-        $this->load->view('footer',$data);
+       // $this->load->view('footer',$data);
         
 	}
 
@@ -35,7 +35,7 @@ class Welcome extends CI_Controller {
 		
         $this->load->view('header',$data);
         $this->load->view('cyaria',$data);
-        $this->load->view('footer',$data);
+       // $this->load->view('footer',$data);
         
 	}
 	
@@ -49,7 +49,7 @@ class Welcome extends CI_Controller {
 		
         $this->load->view('header',$data);
         $this->load->view('kisyu',$data);
-        $this->load->view('footer',$data);
+        //$this->load->view('footer',$data);
 
 	}
 	
@@ -64,7 +64,7 @@ class Welcome extends CI_Controller {
 		
         $this->load->view('header',$data);
         $this->load->view('kaisen_tv',$data);
-        $this->load->view('footer',$data);
+        //$this->load->view('footer',$data);
 
 	}
 	
@@ -79,7 +79,7 @@ class Welcome extends CI_Controller {
 		
 		$this->load->view('header',$data);
 		$this->load->view('ruta',$data);
-		$this->load->view('footer',$data);
+		//$this->load->view('footer',$data);
 
 	}
 	
@@ -94,7 +94,7 @@ class Welcome extends CI_Controller {
 		
         $this->load->view('header',$data);
         $this->load->view('packet',$data);
-        $this->load->view('footer',$data);
+        //$this->load->view('footer',$data);
 
 	}
 	
@@ -109,7 +109,7 @@ class Welcome extends CI_Controller {
 		$_SESSION['packet'] = mb_convert_kana($_SESSION['packet'], "a", "UTF-8");#全角数字を半角に変換してます
         $this->load->view('header',$data);
         $this->load->view('suuti',$data);
-        $this->load->view('footer',$data);
+       // $this->load->view('footer',$data);
 
 	}
 	
@@ -1403,7 +1403,7 @@ class Welcome extends CI_Controller {
 		
         $this->load->view('header',$data);
         $this->load->view('kekka',$data);
-        $this->load->view('footer',$data);
+        //$this->load->view('footer',$data);
         
 	}
 	
@@ -1417,7 +1417,7 @@ class Welcome extends CI_Controller {
 
         $this->load->view('header',$data);
         $this->load->view('book');
-        $this->load->view('footer',$data);
+        //$this->load->view('footer',$data);
         
 	}
 }
