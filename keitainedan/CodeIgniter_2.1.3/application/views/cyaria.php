@@ -7,7 +7,7 @@
 <input type="radio" name="kyaria" value="au">au
 <input type="radio" name="kyaria" value="softbanak">softbank
 
-<input type="checkbox" name="gakusei" value="学生">学生である
+<input type="checkbox" name="gakusei" value="gakusei">学生である
 
 <input type="submit"></a>
 

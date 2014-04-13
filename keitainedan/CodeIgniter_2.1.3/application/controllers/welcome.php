@@ -32,6 +32,7 @@ class Welcome extends CI_Controller {
 	{
 		$this->load->helper('url');
 		$data['page_title'] = 'モバイル料金ラボ';
+		$gakusei=NULL;
 		
         $this->load->view('header',$data);
         $this->load->view('cyaria',$data);
@@ -46,6 +47,7 @@ class Welcome extends CI_Controller {
 		
 		session_start();
 		$_SESSION['kyaria']=$_REQUEST['kyaria'];
+		$_SESSION["gakusei"]=$_REQUEST["gakusei"];
 		
         $this->load->view('header',$data);
         $this->load->view('kisyu',$data);
