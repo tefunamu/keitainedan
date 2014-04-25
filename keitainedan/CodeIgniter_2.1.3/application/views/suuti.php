@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="../../css/welcome.css">
 <link href="../../js/pagefile.js" type="text/javascript" />
 <img src="../../images/book.png" alt=""></br>
-<form action="kekka">
+<form action="kekka"><br><br><br><br><br><br><br><br>
 通話時間を以下に入力</br>
 <input type="text" name="tuuwazikan" value="100">分
 <input type="submit"></a>

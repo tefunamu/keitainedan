@@ -2,7 +2,7 @@
 <link href="../../js/pagefile.js" type="text/javascript" />
 <img src="../../images/book.png" alt=""></br>
 <form action="kisyu">
-
+<br><br><br><br><br><br><br><br>
 <input type="radio" name="kyaria" value="docomo">docomo
 <input type="radio" name="kyaria" value="au">au
 <input type="radio" name="kyaria" value="softbanak">softbank

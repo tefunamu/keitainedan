@@ -24,7 +24,7 @@ class Welcome extends CI_Controller {
 		
         $this->load->view('header',$data);
         $this->load->view('top');
-       // $this->load->view('footer',$data);
+        // $this->load->view('footer',$data);
         
 	}
 
@@ -56,7 +56,7 @@ class Welcome extends CI_Controller {
 	}
 	
 	
-	public function kaisen_tv()#ガラケの場合は関係なし
+	public function kaisen()#ガラケの場合は関係なし
 	{
 		$this->load->helper('url'); 
 		$data['page_title'] = 'モバイル料金ラボ';
@@ -65,7 +65,7 @@ class Welcome extends CI_Controller {
 		$_SESSION['kisyu']=$_REQUEST['kisyu'];
 		
         $this->load->view('header',$data);
-        $this->load->view('kaisen_tv',$data);
+        $this->load->view('kaisen',$data);
         //$this->load->view('footer',$data);
 
 	}
@@ -125,9 +125,13 @@ class Welcome extends CI_Controller {
 		$_SESSION['tuuwazikan']=$_REQUEST['tuuwazikan'];
 		$_SESSION['tuuwazikan'] = mb_convert_kana($_SESSION['tuuwazikan'], "a", "UTF-8");#全角数字を半角に変換してます
 		
-		$docomo_ryoukin=743+5700+300;#もっとも一般的な料金を表示、他も一緒
+		#もっとも一般的な料金を表示、他も一緒
+		
+		
+		$docomo_ryoukin=743+5700+300;
 		$au_ryoukin=934+5700+300;
 		$softbank_ryoukin=934+5700+300;
+		
 		
 		#ソフバンに下取りあり。組み込まれてない。
 		#auにも下取りあり。組み込まれていない。
@@ -138,9 +142,6 @@ class Welcome extends CI_Controller {
 		switch($_SESSION['kisyu']){
 			
 			case "iphone":
-				$docomo_ryoukin=743+5700+300;#もっとも一般的なスマホの料金を表示、他も一緒
-				$au_ryoukin=934+5700+300;
-				$softbank_ryoukin=934+5700+300;
 				
 				$docomo_ryoukin-=500;#iphoneの場合、各社で500円の割引が入る。
 				$au_ryoukin-=500;
@@ -151,7 +152,7 @@ class Welcome extends CI_Controller {
 						$au_ryoukin=-934;
 						$softbank_ryoukin-=934;
 						
-						switch($_SESSION['kaisen_tv']){
+						switch($_SESSION['kaisen']){
 							case "au_kaisen":#本来スマートバリューは1410円マイナスだが、iphoneの500円割りと併用できない。
 								$au_ryoukin-=910;
 								#パケット数により、docomoの安いプランがある。ソフバンもほんとに少なければ(30Mbyteレベル)安いやつがある。
@@ -287,7 +288,7 @@ class Welcome extends CI_Controller {
 						$docomo_ryoukin-=743;
 						$softbank_ryoukin-=934;
 						
-						switch($_SESSION['kaisen_tv']){
+						switch($_SESSION['kaisen']){
 							case "au_kaisen":
 								$au_ryoukin-=910;
 								if ($_SESSION['packet'] < 114000){
@@ -422,7 +423,7 @@ class Welcome extends CI_Controller {
 						$docomo_ryoukin-=743;
 						$au_ryoukin-=934;
 						
-						switch($_SESSION['kaisen_tv']){
+						switch($_SESSION['kaisen']){
 							case "au_kaisen":
 								$au_ryoukin-=910;
 								if ($_SESSION['packet'] < 114000){
@@ -556,16 +557,13 @@ class Welcome extends CI_Controller {
 				break;#機種に対する
 							
 			case "sumaho":
-				$docomo_ryoukin=743+5700+300;#もっとも一般的なスマホの料金を表示、他も一緒
-				$au_ryoukin=934+5700+300;
-				$softbank_ryoukin=934+5700+300;
 				
 				switch($_SESSION['kyaria']){
 					case "docomo":
 						$au_ryoukin=-934;
 						$softbank_ryoukin-=934;
 						
-						switch($_SESSION['kaisen_tv']){
+						switch($_SESSION['kaisen']){
 							case "au_kaisen":
 								$au_ryoukin-=1410;
 								if ($_SESSION['packet'] < 114000){
@@ -592,7 +590,7 @@ class Welcome extends CI_Controller {
 								break;
 								
 							case "softbank_kaisen":
-								$s-=934;
+								$softbank_ryoukin-=934;
 								if ($_SESSION['packet'] < 114000){
 									$docomo_ryoukin-=1000;
 									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
@@ -700,7 +698,7 @@ class Welcome extends CI_Controller {
 						$docomo_ryoukin-=743;
 						$softbank_ryoukin-=934;
 						
-						switch($_SESSION['kaisen_tv']){
+						switch($_SESSION['kaisen']){
 							case "au_kaisen":
 								$au_ryoukin-=1410;
 								if ($_SESSION['packet'] < 114000){
@@ -835,7 +833,7 @@ class Welcome extends CI_Controller {
 						$docomo_ryoukin-=743;
 						$au_ryoukin-=934;
 						
-						switch($_SESSION['kaisen_tv']){
+						switch($_SESSION['kaisen']){
 							case "au_kaisen":
 								$au_ryoukin-=1410;
 								if ($_SESSION['packet'] < 114000){
@@ -1396,11 +1394,12 @@ class Welcome extends CI_Controller {
 				}
 			}
 		
-		/*以下3行は自分でもなんで書いたかわからんからとりあえずコメントに
-		$data['docomo']=$d;
-		$data['au']=$a;
-		$data['softbank']=$s;
-		*/
+		echo $docomo_ryoukin;
+		echo $au_ryoukin;
+		echo $softbank_ryoukin;
+		session_start();
+		$_SESSION['docomo_ryoukin']=$docomo_ryoukin;
+		$_SESSION['packet'] = mb_convert_kana($_SESSION['packet'], "a", "UTF-8");#全角数字を半角に変換してます
 		
 		
         $this->load->view('header',$data);
