@@ -20,8 +20,16 @@
 		 <a href="<?php echo base_url("index.php"); ?>" class="order2"><img src = "<?php echo base_url("images/Q&A.gif"); ?>" alt="Q&A" align="center"></a>
 		</div>
 		<div id="accsess">
-		<a href="<?php echo base_url("index.php"); ?>" class="order"><img src = "<?php echo base_url("images/access.gif"); ?>" alt="お問い合わせ" align="right"></a>
+		<a href="<?php echo base_url("index.php/welcome/otoiawase"); ?>" class="order"><img src = "<?php echo base_url("images/access.gif"); ?>" alt="お問い合わせ" align="right"></a>
 		<div id="profile">
+			</br>
+			</br>
+			</br>
+			</br>
+			</br>
+			</br>
+			</br>
+			</br>
 		<img src = "<?php echo base_url("images/author.gif"); ?>" alt="profile" align="">
 	</div>
 	</nav>

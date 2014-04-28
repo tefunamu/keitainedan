@@ -1409,7 +1409,7 @@ class Welcome extends CI_Controller {
 	}
 	
 		
-	public function book()
+	public function otoiawase()
 	{
 		$this->load->helper('file');
 
@@ -1417,7 +1417,7 @@ class Welcome extends CI_Controller {
 		$this->load->helper('url');
 
         $this->load->view('header',$data);
-        $this->load->view('book');
+        $this->load->view('otoiawase');
         //$this->load->view('footer',$data);
         
 	}
