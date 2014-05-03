@@ -184,7 +184,7 @@ class Welcome extends CI_Controller {
 		
 		switch($_SESSION['kaisen']){
 			case "au_kaisen":
-				if($_SESSION['kisyu']==iphone){
+				if($_SESSION['kisyu']=="iphone"){
 					$au_ryoukin=-910;
 				} else{
 					$au_ryoukin=-1410;
@@ -192,7 +192,7 @@ class Welcome extends CI_Controller {
 				break;
 				
 			case "softbank_kaisen":
-				if($_SESSION['kisyu']==iphone){
+				if($_SESSION['kisyu'] == "iphone"){
 					$softbank_ryoukin=-910;
 				} else{
 					$softbank_ryoukin=-1410;
@@ -211,14 +211,14 @@ class Welcome extends CI_Controller {
 				}
 				break;#kaisenから出た
 		}
-		if ($_SESSION['kisyu'] == iphone || sumaho){
+		if ($_SESSION['kisyu'] == "iphone" || "sumaho"){
 			#具体的なスマホの通話量と通信料へ
 			#パケット数により、docomoの安いプランがある。ソフバンもほんとに少なければ(30Mbyteレベル)安いやつがある
 			
 			if ($_SESSION['packet'] < 114000){
 				#パケット使用料
 				$docomo_ryoukin-=1000;
-				$softbank_ryoukin+=0.05*$packet-5700;
+				$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
 				
 				#通話量
 				$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
@@ -670,9 +670,9 @@ class Welcome extends CI_Controller {
 		
 		
 		
-		echo $docomo_ryoukin;
-		echo $au_ryoukin;
-		echo $softbank_ryoukin;
+		echo "docomonの料金は$docomo_ryoukin ";
+		echo "auの料金は$au_ryoukin ";
+		echo "softbankも料金は$softbank_ryoukin";
 		
 		
         $this->load->view('header',$data);

@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="../../css/welcome.css">
 <link href="../../js/pagefile.js" type="text/javascript" />
-<img src="../../images/book.png" alt=""></br>
-<form action="kaisen_tv">
+<img src="../../images/book.png" alt="">
+<form action="kaisen">
 <br><br><br><br><br><br><br><br>
 <input type="radio" name="kisyu" value="iphone">iphone
 <input type="radio" name="kisyu" value="sumaho">sumaho
