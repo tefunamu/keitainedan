@@ -126,8 +126,6 @@ class Welcome extends CI_Controller {
 		$_SESSION['tuuwazikan'] = mb_convert_kana($_SESSION['tuuwazikan'], "a", "UTF-8");#全角数字を半角に変換してます
 		
 		#もっとも一般的な料金を表示、他も一緒
-		
-		
 		$docomo_ryoukin=743+5700+300;
 		$au_ryoukin=934+5700+300;
 		$softbank_ryoukin=934+5700+300;
@@ -138,840 +136,119 @@ class Welcome extends CI_Controller {
 		#docomoの学割はスマホのみなので、あまり意味ない。基本料金無料が3年間に延長になる
 		#au,softbankはガラケにも適用されるため、意味ある。ただし、日中使うプランのが多いからあれかも
 		
+		switch($_SESSION['kyaria']){
+			case "docomo":
+				$au_ryoukin-=934;
+				$softbank_ryoukin-=934;
+				break;
+			
+			case "au":
+				$docomo_ryoukin-=743;
+				$softbank_ryoukin-=934;
+				break;
+			
+			case "softbank":
+				$docomo_ryoukin-=743;
+				$au_ryoukin-=934;
+				break;
+		}
+		
 		
 		switch($_SESSION['kisyu']){
-			
 			case "iphone":
+				#変数=基本料金+パケホプラン+ネット通信料(spモード)
+				$docomo_ryoukin=743+5700+300;
+				$au_ryoukin=934+5700+300;
+				$softbank_ryoukin=934+5700+300;
 				
-				$docomo_ryoukin-=500;#iphoneの場合、各社で500円の割引が入る。
+				#iPhoneにはパケホプランが500円安い
+				$docomo_ryoukin-=500;
 				$au_ryoukin-=500;
 				$softbank_ryoukin-=500;
-				
-				switch($_SESSION['kyaria']){
-					case "docomo":#docomo以外の乗り換え割り
-						$au_ryoukin=-934;
-						$softbank_ryoukin-=934;
-						
-						switch($_SESSION['kaisen']){
-							case "au_kaisen":#本来スマートバリューは1410円マイナスだが、iphoneの500円割りと併用できない。
-								$au_ryoukin-=910;
-								#パケット数により、docomoの安いプランがある。ソフバンもほんとに少なければ(30Mbyteレベル)安いやつがある。
-								if ($_SESSION['packet'] < 114000){
-									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$packet-5700;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								}elseif ($_SESSION['packet'] < 25165824){
-									$docomo_ryoukin-=1000;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								} else {
-									$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-									$docomo_ryoukin+=$tuuwaryoukin;
-									$au_ryoukin+=$tuuwaryoukin;
-									$softbank_ryoukin+=$tuuwaryoukin;
-								}
-								break;
-								
-							case "softbank_kaisen":
-								$softbank_ryoukin-=934;
-								if ($_SESSION['packet'] < 114000){
-									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$packet-5700;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								}elseif ($_SESSION['packet'] < 25165824){
-									$docomo_ryoukin-=1000;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-								
-								} else {
-									$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-									$docomo_ryoukin+=$tuuwaryoukin;
-									$au_ryoukin+=$tuuwaryoukin;
-									$softbank_ryoukin+=$tuuwaryoukin;
-								}
-								break;
-								
-							default:
-								switch($_SESSION['ruta']){
-									case "au_ruta":#これは2年間。2014/8/31まで
-										$au_ryouin-=934;
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-								
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;
-									
-									case"softbank_ruta":
-									$softbank_ryoukin-=934;
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$packet-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-								
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;
-										
-									default:
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;#ルータに対する
-								}
-							break;#kaisenに対する
-							}
-						break;#キャリアに対する
-						
-					case "au":
-						$docomo_ryoukin-=743;
-						$softbank_ryoukin-=934;
-						
-						switch($_SESSION['kaisen']){
-							case "au_kaisen":
-								$au_ryoukin-=910;
-								if ($_SESSION['packet'] < 114000){
-									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								}elseif ($_SESSION['packet'] < 25165824){
-									$docomo_ryoukin-=1000;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								} else {
-									$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-									$docomo_ryoukin+=$tuuwaryoukin;
-									$au_ryoukin+=$tuuwaryoukin;
-									$softbank_ryoukin+=$tuuwaryoukin;
-								}
-								break;
-								
-							case "softbank_kaisen":
-								$s-=934;
-								if ($_SESSION['packet'] < 114000){
-									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								}elseif ($_SESSION['packet'] < 25165824){
-									$docomo_ryoukin-=1000;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-								
-								} else {
-									$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-									$docomo_ryoukin+=$tuuwaryoukin;
-									$au_ryoukin+=$tuuwaryoukin;
-									$softbank_ryoukin+=$tuuwaryoukin;
-								}
-								break;
-								
-							default:
-								switch($_SESSION['ruta']){
-									case "au_ruta":#これは2年間。2014/8/31まで
-										$au_ryouin-=934;
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-								
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;
-									
-									case"softbank_ruta":
-									$softbank_ryoukin-=934;
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-								
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;
-										
-									default:
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;#ルータに対する
-								}
-							break;#kaisenに対する
-							}
-						break;#キャリアに対する
-						
-					case "softbank":
-						$docomo_ryoukin-=743;
-						$au_ryoukin-=934;
-						
-						switch($_SESSION['kaisen']){
-							case "au_kaisen":
-								$au_ryoukin-=910;
-								if ($_SESSION['packet'] < 114000){
-									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								}elseif ($_SESSION['packet'] < 25165824){
-									$docomo_ryoukin-=1000;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								} else {
-									$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-									$docomo_ryoukin+=$tuuwaryoukin;
-									$au_ryoukin+=$tuuwaryoukin;
-									$softbank_ryoukin+=$tuuwaryoukin;
-								}
-								break;
-								
-							case "softbank_kaisen":
-								$s-=934;
-								if ($_SESSION['packet'] < 114000){
-									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								}elseif ($_SESSION['packet'] < 25165824){
-									$docomo_ryoukin-=1000;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-								
-								} else {
-									$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-									$docomo_ryoukin+=$tuuwaryoukin;
-									$au_ryoukin+=$tuuwaryoukin;
-									$softbank_ryoukin+=$tuuwaryoukin;
-								}
-								break;
-								
-							default:
-								switch($_SESSION['ruta']){
-									case "au_ruta":#これは2年間。2014/8/31まで
-										$au_ryouin-=934;
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-								
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;
-									
-									case"softbank_ruta":
-									$softbank_ryoukin-=934;
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-								
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;
-										
-									default:
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;#ルータに対する
-								}
-							break;#kaisenに対する
-							}
-						break;#キャリアに対する
-				}		
-				break;#機種に対する
-							
-			case "sumaho":
-				
-				switch($_SESSION['kyaria']){
-					case "docomo":
-						$au_ryoukin=-934;
-						$softbank_ryoukin-=934;
-						
-						switch($_SESSION['kaisen']){
-							case "au_kaisen":
-								$au_ryoukin-=1410;
-								if ($_SESSION['packet'] < 114000){
-									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								}elseif ($_SESSION['packet'] < 25165824){
-									$docomo_ryoukin-=1000;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								} else {
-									$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-									$docomo_ryoukin+=$tuuwaryoukin;
-									$au_ryoukin+=$tuuwaryoukin;
-									$softbank_ryoukin+=$tuuwaryoukin;
-								}
-								break;
-								
-							case "softbank_kaisen":
-								$softbank_ryoukin-=934;
-								if ($_SESSION['packet'] < 114000){
-									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								}elseif ($_SESSION['packet'] < 25165824){
-									$docomo_ryoukin-=1000;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-								
-								} else {
-									$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-									$docomo_ryoukin+=$tuuwaryoukin;
-									$au_ryoukin+=$tuuwaryoukin;
-									$softbank_ryoukin+=$tuuwaryoukin;
-								}
-								break;
-								
-							default:
-								switch($_SESSION['ruta']){
-									case "au_ruta":#これは2年間。2014/8/31まで
-										$au_ryouin-=934;
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-								
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;
-									
-									case"softbank_ruta":
-									$softbank_ryoukin-=934;
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-								
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;
-										
-									default:
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;#ルータに対する
-								}
-							break;#kaisenに対する
-							}
-						break;#キャリアに対する
-						
-					case "au":
-						$docomo_ryoukin-=743;
-						$softbank_ryoukin-=934;
-						
-						switch($_SESSION['kaisen']){
-							case "au_kaisen":
-								$au_ryoukin-=1410;
-								if ($_SESSION['packet'] < 114000){
-									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								}elseif ($_SESSION['packet'] < 25165824){
-									$docomo_ryoukin-=1000;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								} else {
-									$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-									$docomo_ryoukin+=$tuuwaryoukin;
-									$au_ryoukin+=$tuuwaryoukin;
-									$softbank_ryoukin+=$tuuwaryoukin;
-								}
-								break;
-								
-							case "softbank_kaisen":
-								$s-=934;
-								if ($_SESSION['packet'] < 114000){
-									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								}elseif ($_SESSION['packet'] < 25165824){
-									$docomo_ryoukin-=1000;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-								
-								} else {
-									$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-									$docomo_ryoukin+=$tuuwaryoukin;
-									$au_ryoukin+=$tuuwaryoukin;
-									$softbank_ryoukin+=$tuuwaryoukin;
-								}
-								break;
-								
-							default:
-								switch($_SESSION['ruta']){
-									case "au_ruta":#これは2年間。2014/8/31まで
-										$au_ryouin-=934;
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-								
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;
-									
-									case"softbank_ruta":
-									$softbank_ryoukin-=934;
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-								
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;
-										
-									default:
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;#ルータに対する
-								}
-							break;#kaisenに対する
-							}
-						break;#キャリアに対する
-						
-					case "softbank":
-						$docomo_ryoukin-=743;
-						$au_ryoukin-=934;
-						
-						switch($_SESSION['kaisen']){
-							case "au_kaisen":
-								$au_ryoukin-=1410;
-								if ($_SESSION['packet'] < 114000){
-									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								}elseif ($_SESSION['packet'] < 25165824){
-									$docomo_ryoukin-=1000;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								} else {
-									$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-									$docomo_ryoukin+=$tuuwaryoukin;
-									$au_ryoukin+=$tuuwaryoukin;
-									$softbank_ryoukin+=$tuuwaryoukin;
-								}
-								break;
-								
-							case "softbank_kaisen":
-								$s-=934;
-								if ($_SESSION['packet'] < 114000){
-									$docomo_ryoukin-=1000;
-									$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-									
-								}elseif ($_SESSION['packet'] < 25165824){
-									$docomo_ryoukin-=1000;
-										$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-										$docomo_ryoukin+=$tuuwaryoukin;
-										$au_ryoukin+=$tuuwaryoukin;
-										$softbank_ryoukin+=$tuuwaryoukin;
-								
-								} else {
-									$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-									$docomo_ryoukin+=$tuuwaryoukin;
-									$au_ryoukin+=$tuuwaryoukin;
-									$softbank_ryoukin+=$tuuwaryoukin;
-								}
-								break;
-								
-							default:
-								switch($_SESSION['ruta']){
-									case "au_ruta":#これは2年間。2014/8/31まで
-										$au_ryouin-=934;
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-								
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;
-									
-									case"softbank_ruta":
-									$softbank_ryoukin-=934;
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-								
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;
-										
-									default:
-										if ($_SESSION['packet'] < 114000){
-											$docomo_ryoukin-=1000;
-											$softbank_ryoukin+=0.05*$_SESSION['packet']-5700;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										}elseif ($_SESSION['packet'] < 25165824){
-											$docomo_ryoukin-=1000;
-												$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-												$docomo_ryoukin+=$tuuwaryoukin;
-												$au_ryoukin+=$tuuwaryoukin;
-												$softbank_ryoukin+=$tuuwaryoukin;
-											
-										} else {
-											$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
-											$docomo_ryoukin+=$tuuwaryoukin;
-											$au_ryoukin+=$tuuwaryoukin;
-											$softbank_ryoukin+=$tuuwaryoukin;
-										}
-										break;#ルータに対する
-								}
-							break;#kaisenに対する
-							}
-						break;#キャリアに対する
-				}		
-				break;#機種に対する
-				
+				break;
+			
+			case"sumaho":
+				#変数=基本料金+パケホプラン+ネット通信料(spモード)
+				$docomo_ryoukin=743+5700+300;
+				$au_ryoukin=934+5700+300;
+				$softbank_ryoukin=934+5700+300;
 				break;
 				
-			default:#ここには定数garakeと定数doredemoが該当します。
-				switch ($_SESSION['gakusei']){
-					case "zibun // kazoku":
-						#以下通話時間。かなり細かく分けているが、誤差5分いないの物は省略している場合がある。
+			case"garake":
+				#変数=基本料金(通話量に依存するため非表示)+パケホプラン+ネット通信料(iモード)
+				$docomo_ryoukin+=4200+300;
+				$au_ryoukin+=4200+300;
+				$softbank_ryoukin+=4200+300;
+				break;
+		}
+		
+		switch($_SESSION['kaisen']){
+			case "au_kaisen":
+				if($_SESSION['kisyu']==iphone){
+					$au_ryoukin=-910;
+				} else{
+					$au_ryoukin=-1410;
+				}
+				break;
+				
+			case "softbank_kaisen":
+				if($_SESSION['kisyu']==iphone){
+					$softbank_ryoukin=-910;
+				} else{
+					$softbank_ryoukin=-1410;
+				}
+				break;
+			
+			default:
+				switch($_SESSION['ruta']){
+					case "au_ruta":
+						$au_ryoukin=-934;
+						break;
+					
+					case "softbank_ruta":
+						$softbank_ryoukin=-934;
+						break;
+				}
+				break;#kaisenから出た
+		}
+		if ($_SESSION['kisyu'] == iphone || sumaho){
+			#具体的なスマホの通話量と通信料へ
+			#パケット数により、docomoの安いプランがある。ソフバンもほんとに少なければ(30Mbyteレベル)安いやつがある
+			
+			if ($_SESSION['packet'] < 114000){
+				#パケット使用料
+				$docomo_ryoukin-=1000;
+				$softbank_ryoukin+=0.05*$packet-5700;
+				
+				#通話量
+				$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
+				$docomo_ryoukin+=$tuuwaryoukin;
+				$au_ryoukin+=$tuuwaryoukin;
+				$softbank_ryoukin+=$tuuwaryoukin;
+			
+			} elseif ($_SESSION['packet'] < 25165824){
+				#パケット使用料
+				$docomo_ryoukin-=1000;
+				
+				#通話量
+				$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
+				$docomo_ryoukin+=$tuuwaryoukin;
+				$au_ryoukin+=$tuuwaryoukin;
+				$softbank_ryoukin+=$tuuwaryoukin;
+			
+			} else {
+				#パケット数による割引なし
+				$tuuwaryoukin = $_SESSION['tuuwazikan']*40;
+				$docomo_ryoukin+=$tuuwaryoukin;
+				$au_ryoukin+=$tuuwaryoukin;
+				$softbank_ryoukin+=$tuuwaryoukin;
+			}
+		
+		} else{
+			#具体的なガラケの通話量と通信料へ
+			switch ($_SESSION['gakusei']){
+				case "zibun"||"kazoku":
+					#以下通話時間。かなり細かく分けているが、誤差5分いないの物は省略している場合がある。
 					if ($_SESSION['tuuwazikan'] < 26) {
 						$docomo_ryoukin += $_SESSION['tuuwazikan']*40;
 						$au_ryoukin += 40*0.741*$_SESSION['tuuwazikan'];
@@ -979,7 +256,7 @@ class Welcome extends CI_Controller {
 						#docomo:タイプシンプル
 						#au:プランZシンプル
 						#softbank:ホワイトプラン
-			
+		
 					} elseif (26<= $_SESSION['tuuwazikan'] || $_SESSION['tuuwazikan'] <40){
 						$docomo_ryoukin += 40*($_SESSION['tuuwazikan']-26)+934;
 						$au_ryoukin += 40*0.741*$_SESSION['tuuwazikan'];
@@ -1165,8 +442,7 @@ class Welcome extends CI_Controller {
 						#softbank:ブループラン・LLプラン
 					}
 					break;
-			
-			
+					
 				dafalt:
 					#以下通話時間。かなり細かく分けているが、誤差5分いないの物は省略している場合がある。
 					if ($_SESSION['tuuwazikan'] < 5) {
@@ -1363,7 +639,6 @@ class Welcome extends CI_Controller {
 					}
 					break;
 				}#通話時間からでた
-					
 				
 				#以下パケット。パケット数はあまりかかわらないです。
 				if ($_SESSION['packet'] < 9800) {
@@ -1389,27 +664,25 @@ class Welcome extends CI_Controller {
 					#docomo:パケ・ホーダイ シンプル(ダブルとの違いが不明。シンプルが完全に上位互換。あきとに確認)
 					#au:ダブル定額
 					#softbank:パケットし放題(フラットとの違いが不明。無印が完全に上位互換。)
-				
+				}#packetから出た
 			break;
-				}
 			}
+		
+		
 		
 		echo $docomo_ryoukin;
 		echo $au_ryoukin;
 		echo $softbank_ryoukin;
-		session_start();
-		$_SESSION['docomo_ryoukin']=$docomo_ryoukin;
-		$_SESSION['packet'] = mb_convert_kana($_SESSION['packet'], "a", "UTF-8");#全角数字を半角に変換してます
 		
 		
         $this->load->view('header',$data);
         $this->load->view('kekka',$data);
         //$this->load->view('footer',$data);
-        
 	}
 	
-		
-	public function otoiawase()
+	
+	
+	public function book()
 	{
 		$this->load->helper('file');
 
@@ -1417,7 +690,7 @@ class Welcome extends CI_Controller {
 		$this->load->helper('url');
 
         $this->load->view('header',$data);
-        $this->load->view('otoiawase');
+        $this->load->view('book');
         //$this->load->view('footer',$data);
         
 	}
