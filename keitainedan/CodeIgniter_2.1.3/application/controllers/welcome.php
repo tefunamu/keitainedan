@@ -136,23 +136,41 @@ class Welcome extends CI_Controller {
 		#docomoの学割はスマホのみなので、あまり意味ない。基本料金無料が3年間に延長になる
 		#au,softbankはガラケにも適用されるため、意味ある。ただし、日中使うプランのが多いからあれかも
 		
-		switch($_SESSION['kyaria']){
-			case "docomo":
-				$au_ryoukin-=934;
-				$softbank_ryoukin-=934;
-				break;
-			
-			case "au":
-				$docomo_ryoukin-=743;
-				$softbank_ryoukin-=934;
-				break;
-			
-			case "softbank":
+		if ($_SESSION["gakusei"] = "zibun" || "kazoku"){
+		#このif内は学割
+			if($_SESSION["kisyu"] = sumaho || iphone){
+				#基本料金が引かれる
 				$docomo_ryoukin-=743;
 				$au_ryoukin-=934;
-				break;
-		}
+				$softbank_ryoukin-=934;
+					
+			} else{
+				#docomoの場合、ガラケは学割の対象外
+				$au_ryoukin-=934;
+				$softbank_ryoukin-=934;
+			}
+			
+		} else if ($_SESSION["kisyu"] = sumaho || iphone){
+		#このif内は乗り換え割り
+			switch($_SESSION['kyaria']){
+				case "docomo":
+					$au_ryoukin-=934;
+					$softbank_ryoukin-=934;
+					break;
+					
+				case "au":
+					$docomo_ryoukin-=743;
+					$softbank_ryoukin-=934;
+					break;
+				
+				case "softbank":
+					$docomo_ryoukin-=743;
+					$au_ryoukin-=934;
+					break;
 		
+		}else{
+		#学生または家族に学生がなく、ガラケにしたい場合何も起きない。
+		}
 		
 		switch($_SESSION['kisyu']){
 			case "iphone":
@@ -175,38 +193,38 @@ class Welcome extends CI_Controller {
 				break;
 				
 			case"garake":
-				#変数=基本料金(通話量に依存するため非表示)+パケホプラン+ネット通信料(iモード)
-				$docomo_ryoukin+=4200+300;
-				$au_ryoukin+=4200+300;
-				$softbank_ryoukin+=4200+300;
+				#変数=基本料金(通話量に依存するため非表示)+パケホプランも非表示+ネット通信料(iモード)
+				$docomo_ryoukin+=300;
+				$au_ryoukin+=300;
+				$softbank_ryoukin+=300;
 				break;
 		}
 		
 		switch($_SESSION['kaisen']){
 			case "au_kaisen":
 				if($_SESSION['kisyu']=="iphone"){
-					$au_ryoukin=-910;
+					$au_ryoukin-=910;
 				} else{
-					$au_ryoukin=-1410;
+					$au_ryoukin-=1410;
 				}
 				break;
 				
 			case "softbank_kaisen":
 				if($_SESSION['kisyu'] == "iphone"){
-					$softbank_ryoukin=-910;
+					$softbank_ryoukin-=910;
 				} else{
-					$softbank_ryoukin=-1410;
+					$softbank_ryoukin-=1410;
 				}
 				break;
 			
 			default:
 				switch($_SESSION['ruta']){
 					case "au_ruta":
-						$au_ryoukin=-934;
+						$au_ryoukin-=934;
 						break;
 					
 					case "softbank_ruta":
-						$softbank_ryoukin=-934;
+						$softbank_ryoukin-=934;
 						break;
 				}
 				break;#kaisenから出た
