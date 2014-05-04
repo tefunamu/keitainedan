@@ -50,7 +50,7 @@ class Welcome extends CI_Controller {
 		$_SESSION["gakusei"]=$_REQUEST["gakusei"];
 		
         $this->load->view('header',$data);
-        $this->load->view('kisyu',$data);
+        if($_SESSION['kisyu']==TRUE)$this->load->view('kisyu',$data);
         //$this->load->view('footer',$data);
 
 	}
@@ -65,7 +65,7 @@ class Welcome extends CI_Controller {
 		$_SESSION['kisyu']=$_REQUEST['kisyu'];
 		
         $this->load->view('header',$data);
-        $this->load->view('kaisen',$data);
+        if($_SESSION['kyaria']==TRUE)$this->load->view('kaisen',$data);
         //$this->load->view('footer',$data);
 
 	}
@@ -80,7 +80,7 @@ class Welcome extends CI_Controller {
 		$_SESSION['kaisen']=$_REQUEST['kaisen'];
 		
 		$this->load->view('header',$data);
-		$this->load->view('ruta',$data);
+		if($_SESSION['kisyu']==TRUE)$this->load->view('ruta',$data);
 		//$this->load->view('footer',$data);
 
 	}
@@ -95,7 +95,7 @@ class Welcome extends CI_Controller {
 		$_SESSION['ruta']=$_REQUEST['ruta'];
 		
         $this->load->view('header',$data);
-        $this->load->view('packet',$data);
+        if($_SESSION['kaisen']==TRUE)$this->load->view('packet',$data);
         //$this->load->view('footer',$data);
 
 	}
@@ -110,7 +110,7 @@ class Welcome extends CI_Controller {
 		$_SESSION['packet']=$_REQUEST['packet'];
 		$_SESSION['packet'] = mb_convert_kana($_SESSION['packet'], "a", "UTF-8");#全角数字を半角に変換してます
         $this->load->view('header',$data);
-        $this->load->view('suuti',$data);
+        if($_SESSION['ruta']==TRUE)$this->load->view('suuti',$data);
        // $this->load->view('footer',$data);
 
 	}
@@ -138,7 +138,7 @@ class Welcome extends CI_Controller {
 		
 		if ($_SESSION["gakusei"] = "zibun" || "kazoku"){
 		#このif内は学割
-			if($_SESSION["kisyu"] = sumaho || iphone){
+			if($_SESSION["kisyu"] = "sumaho" || "iphone"){
 				#基本料金が引かれる
 				$docomo_ryoukin-=743;
 				$au_ryoukin-=934;
@@ -150,7 +150,7 @@ class Welcome extends CI_Controller {
 				$softbank_ryoukin-=934;
 			}
 			
-		} else if ($_SESSION["kisyu"] = sumaho || iphone){
+		} else if ($_SESSION["kisyu"] = "sumaho" || "iphone"){
 		#このif内は乗り換え割り
 			switch($_SESSION['kyaria']){
 				case "docomo":
@@ -167,8 +167,8 @@ class Welcome extends CI_Controller {
 					$docomo_ryoukin-=743;
 					$au_ryoukin-=934;
 					break;
-		
-		}else{
+			}
+		} else{
 		#学生または家族に学生がなく、ガラケにしたい場合何も起きない。
 		}
 		
@@ -694,7 +694,7 @@ class Welcome extends CI_Controller {
 		
 		
         $this->load->view('header',$data);
-        $this->load->view('kekka',$data);
+        if($_SESSION['packet']==TRUE)$this->load->view('kekka',$data);
         //$this->load->view('footer',$data);
 	}
 	
