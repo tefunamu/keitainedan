@@ -704,7 +704,7 @@ class Welcome extends CI_Controller {
 	
 	
 	
-	public function book()
+	/*public function book()
 	{
 		$this->load->helper('file');
 
@@ -715,7 +715,7 @@ class Welcome extends CI_Controller {
         $this->load->view('book');
         //$this->load->view('footer',$data);
         
-	}
+	}*/
 }
 
 /* End of file welcome.php */

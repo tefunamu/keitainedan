@@ -15,12 +15,12 @@
 	 <a href="<?php echo base_url("index.php"); ?> " class="goods-menu"><img src = "<?php echo base_url("images/logo.gif"); ?>" alt="モバイル料金ラボ" align="left"></a>
 	 <div id="goods">
 	 <nav>
-		 <a href="<?php echo base_url("index.php"); ?>"class="order" ><img src = "<?php echo base_url("images/title.gif"); ?>" alt="about" align="left"></a>
-		 <a href="<?php echo base_url("index.php"); ?>"class="order" ><img src = "<?php echo base_url("images/about.gif"); ?>" alt="about" align="left"></a>
-		 <a href="<?php echo base_url("index.php"); ?>" class="order2"><img src = "<?php echo base_url("images/Q&A.gif"); ?>" alt="Q&A" align="center"></a>
+		 <a class="order" ><img src = "<?php echo base_url("images/title.gif"); ?>" alt="about" align="left"></a>
+		 <a href="<?php echo base_url("index.php/about"); ?>"class="order" ><img src = "<?php echo base_url("images/about.gif"); ?>" alt="about" align="left"></a>
+		 <a href="<?php echo base_url("index.php/q&a"); ?>" class="order2"><img src = "<?php echo base_url("images/Q&A.gif"); ?>" alt="Q&A" align="center"></a>
 		</div>
 		<div id="accsess">
-		<a href="<?php echo base_url("index.php/welcome/otoiawase"); ?>" class="order"><img src = "<?php echo base_url("images/access.gif"); ?>" alt="お問い合わせ" align="right"></a>
+		<a href="<?php echo base_url("index.php/otoiawase"); ?>" class="order"><img src = "<?php echo base_url("images/access.gif"); ?>" alt="お問い合わせ" align="right"></a>
 		<div id="profile">
 			</br>
 			</br>
