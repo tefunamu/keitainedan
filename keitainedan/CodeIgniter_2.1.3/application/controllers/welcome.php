@@ -50,7 +50,11 @@ class Welcome extends CI_Controller {
 		$_SESSION["gakusei"]=$_REQUEST["gakusei"];
 		
         $this->load->view('header',$data);
-        if($_SESSION['kisyu']==TRUE)$this->load->view('kisyu',$data);
+        if($_SESSION['kyaria']==FALSE){
+			$this->load->view('cyaria',$data);
+		}else{
+			$this->load->view('kisyu',$data);
+		}
         //$this->load->view('footer',$data);
 
 	}
