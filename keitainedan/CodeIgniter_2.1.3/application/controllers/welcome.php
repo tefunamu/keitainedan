@@ -69,7 +69,11 @@ class Welcome extends CI_Controller {
 		$_SESSION['kisyu']=$_REQUEST['kisyu'];
 		
         $this->load->view('header',$data);
-        if($_SESSION['kyaria']==TRUE)$this->load->view('kaisen',$data);
+        if($_SESSION['kisyu']==FALSE){
+			$this->load->view('kisyu',$data);
+		}else{
+			$this->load->view('kaisen',$data);
+		}
         //$this->load->view('footer',$data);
 
 	}
@@ -84,7 +88,15 @@ class Welcome extends CI_Controller {
 		$_SESSION['kaisen']=$_REQUEST['kaisen'];
 		
 		$this->load->view('header',$data);
-		if($_SESSION['kisyu']==TRUE)$this->load->view('ruta',$data);
+		if($_SESSION['kaisen']==FALSE){
+			$this->load->view('kaisen',$data);
+		}else{
+			if($_SESSION['kaisen']=='nashi'){
+				$this->load->view('ruta',$data);
+			}else{
+				$this->load->view('packet',$data);
+			}
+		}
 		//$this->load->view('footer',$data);
 
 	}
@@ -95,11 +107,16 @@ class Welcome extends CI_Controller {
 		$this->load->helper('url'); 
 		$data['page_title'] = 'モバイル料金ラボ';
 		
+		#ここのエラーは無視して平気。ルータから飛んだ場合、変数kaisenをリクエストできないから怒るだけ。値は入ってる。
 		session_start();
-		$_SESSION['ruta']=$_REQUEST['ruta'];
+		$_SESSION['kaisen']=$_REQUEST['kaisen'];
 		
         $this->load->view('header',$data);
-        if($_SESSION['kaisen']==TRUE)$this->load->view('packet',$data);
+        if($_SESSION['packet']==FALSE){
+			$this->load->view('packet',$data);
+		}else{
+			$this->load->view('suuti',$data);
+		}
         //$this->load->view('footer',$data);
 
 	}
@@ -109,12 +126,15 @@ class Welcome extends CI_Controller {
 	{
 		$this->load->helper('url'); 
 		$data['page_title'] = 'モバイル料金ラボ';
-		
 		session_start();
 		$_SESSION['packet']=$_REQUEST['packet'];
-		$_SESSION['packet'] = mb_convert_kana($_SESSION['packet'], "a", "UTF-8");#全角数字を半角に変換してます
-        $this->load->view('header',$data);
-        if($_SESSION['ruta']==TRUE)$this->load->view('suuti',$data);
+		
+		$this->load->view('header',$data);
+		if($_SESSION['tuuwazikan']==FALSE){
+			$this->load->view('suuti',$data);
+		}else{
+			$this->load->view('kekka',$data);
+		}
        // $this->load->view('footer',$data);
 
 	}
@@ -691,14 +711,13 @@ class Welcome extends CI_Controller {
 			}
 		
 		
-		
 		echo "docomonの料金は$docomo_ryoukin ";
 		echo "auの料金は$au_ryoukin ";
 		echo "softbankも料金は$softbank_ryoukin";
 		
 		
         $this->load->view('header',$data);
-        if($_SESSION['packet']==TRUE)$this->load->view('kekka',$data);
+        $this->load->view('kekka',$data);
         //$this->load->view('footer',$data);
 	}
 	
