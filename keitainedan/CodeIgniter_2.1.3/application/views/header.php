@@ -17,7 +17,7 @@
 	 <nav>
 		 <a class="order" ><img src = "<?php echo base_url("images/title.gif"); ?>" alt="about" align="left"></a>
 		 <a href="<?php echo base_url("index.php/about"); ?>"class="order" ><img src = "<?php echo base_url("images/about.gif"); ?>" alt="about" align="left"></a>
-		 <a href="<?php echo base_url("index.php/q&a"); ?>" class="order2"><img src = "<?php echo base_url("images/Q&A.gif"); ?>" alt="Q&A" align="center"></a>
+		 <a href="<?php echo base_url("index.php/qa"); ?>" class="order2"><img src = "<?php echo base_url("images/Q&A.gif"); ?>" alt="Q&A" align="center"></a>
 		</div>
 		<div id="accsess">
 		<a href="<?php echo base_url("index.php/otoiawase"); ?>" class="order"><img src = "<?php echo base_url("images/access.gif"); ?>" alt="お問い合わせ" align="right"></a>
