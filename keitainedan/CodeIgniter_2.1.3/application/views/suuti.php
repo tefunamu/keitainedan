@@ -8,5 +8,5 @@
 <br>
 <input type="text" name="gakusei" value="zibun">自分が学生
 <input type="text" name="gakusei" value="kazoku">家族の中に学生がいる
-
+入力した機種は<?php echo $_SESSION['kisyu']; ?><Br>
 </form>
