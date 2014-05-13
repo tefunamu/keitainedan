@@ -3,12 +3,12 @@
 <img src="../../images/book.png" alt=""></br>
 <form action="kisyu">
 <br><br><br><br><br><br><br><br>
-<a img src="images/hon.gif" alt="judge"></a>
-<input type="radio" name="kyaria" value="docomo">docomo
-<input type="radio" name="kyaria" value="au">au
-<input type="radio" name="kyaria" value="softbanak">softbank
+<center><img src="../../images/hon.gif" alt= ></center>
+<input type="radio" name="kyaria" value="docomo">docomo</br>
+<input type="radio" name="kyaria" value="au">au</br>
+<input type="radio" name="kyaria" value="softbanak">softbank</br>
 
-<input type="checkbox" name="gakusei" value="gakusei">学生である
+<input type="checkbox" name="gakusei" value="gakusei">学生である</br>
 
 <input type="submit"></a>
 
