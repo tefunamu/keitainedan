@@ -3,8 +3,8 @@
 <img src="../../images/book.png" alt=""></br>
 <form action="packet">
 <br><br><br><br><br><br><br><br>
-<input type="radio" name="kaisen" value="au_ruta">auのルータ
-<input type="radio" name="kaisen" value="softbanak_ruta">softbankのルータ
+<input type="radio" name="kaisen" value="au_ruta">auの回線
+<input type="radio" name="kaisen" value="softbanak_ruta">softbankの回線
 <input type="radio" name="kaisen" value="nashi">該当なし
 <input type="submit"></a>
 

@@ -2,9 +2,10 @@
 <link href="../../js/pagefile.js" type="text/javascript" />
 <img src="../../images/book.png" alt=""></br>
 結果
-docomo<?php echo $_SESSION['docomo_ryokin']; ?>円</br>
-au<?php echo $_SESSION['au_ryokin']; ?>円</br>
-softbank<?php echo $_SESSION['softbank_ryokin']; ?>円</br>
+<Br><Br><Br><Br><Br><Br><Br><Br><Br><Br><Br><Br>
+docomo<?php echo $_SESSION["docomo_ryoukin"]; ?>円</br>
+au<?php echo $_SESSION["au_ryoukin"]; ?>円</br>
+softbank<?php echo $_SESSION["softbank_ryoukin"]; ?>円</br>
 
 入力内容<Br>
 入力したキャリアは<?php echo $_SESSION['kyaria']?><Br>

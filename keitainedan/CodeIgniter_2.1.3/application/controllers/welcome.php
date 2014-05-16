@@ -91,8 +91,7 @@ class Welcome extends CI_Controller {
 			$this->load->view("kaisen",$data);
 		}else{
 			if($_SESSION["kaisen"]=="nashi"){
-				unset($_SESSION["kaisen"]);
-				$this->load->view("ruta",$data);
+				$this->load->view("packet",$data);
 			}else{
 				$this->load->view("packet",$data);
 			}
@@ -127,6 +126,7 @@ class Welcome extends CI_Controller {
 		$data["page_title"] = "モバイル料金ラボ";
 		session_start();
 		$_SESSION["packet"]=$_REQUEST["packet"];
+		$_SESSION["packet"] = mb_convert_kana($_SESSION["packet"], "a", "UTF-8");#全角数字を半角に変換してます
 		
 		$this->load->view("header",$data);
 		if($_SESSION["tuuwazikan"]==FALSE){
@@ -707,10 +707,10 @@ class Welcome extends CI_Controller {
 			break;
 			}
 		
+		$_SESSION["docomo_ryoukin"]=$docomo_ryoukin;
+		$_SESSION["au_ryoukin"]=$au_ryoukin;
+		$_SESSION["softbank_ryoukin"]=$softbank_ryoukin;
 		
-		echo "docomonの料金は$docomo_ryoukin ";
-		echo "auの料金は$au_ryoukin ";
-		echo "softbankも料金は$softbank_ryoukin";
 		
 		
         $this->load->view("header",$data);
