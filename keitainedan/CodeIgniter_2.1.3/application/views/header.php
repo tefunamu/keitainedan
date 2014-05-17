@@ -26,16 +26,8 @@
 		</class>
 		</div>
 		<div id="profile">
-			</br>
-			</br>
-			</br>
-			</br>
-			</br>
-			</br>
-			</br>
-			</br>
 		<img src = "<?php echo base_url("images/author.gif"); ?>" alt="profile" align="">
-	</div>
 	</nav>
+	</div>
 
 	</header>

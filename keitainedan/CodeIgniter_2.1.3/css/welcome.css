@@ -7,9 +7,7 @@ body{
     background: url("../images/background.jpg")
 }
 
-#header {
-	margin-bottom:50px;
-}
+
 
 footer {
     margin-top:10px;
@@ -27,7 +25,8 @@ footer {
 #profile{
 	top:90px;
 	float:right;
-	display: block; 
+	display: block;
+	margin:150px; 
 }
 
 #goods {
@@ -54,7 +53,7 @@ a.order2 {
     background: url("../../images/hon.gif") ;
     position: absolute;
 	margin-top;200px;
-	float:center;
+	left: 200px;
 }
 
 #content_left {
