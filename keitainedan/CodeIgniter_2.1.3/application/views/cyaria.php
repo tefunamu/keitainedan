@@ -1,29 +1,19 @@
 <link rel="stylesheet" href="../../css/welcome.css">
 <link href="../../js/pagefile.js" type="text/javascript" />
-<img src="../../images/book.png" alt=""></br>
-<form action="kisyu">
-<br><br><br><br><br><br><br><br>
-<<<<<<< HEAD
-<center><img src="../../images/hon.gif" alt= ></center>
-<input type="radio" name="kyaria" value="docomo">docomo</br>
-<input type="radio" name="kyaria" value="au">au</br>
-<input type="radio" name="kyaria" value="softbanak">softbank</br>
 
-<input type="checkbox" name="gakusei" value="gakusei">学生である</br>
-=======
-<a img src="images/hon.gif" alt="judge"></a>
-<input type="radio" name="kyaria" value="docomo">docomo
-<input type="radio" name="kyaria" value="au">au
-<input type="radio" name="kyaria" value="softbanak">softbank
-<br>
-学生ですか
-<br>
-<input type="radio" name="gakusei" value="gakusei">学生である
-<input type="radio" name="gakusei" value="kazoku">家族に学生がいる
-<input type="radio" name="gakusei" value="kara">いない
+<div id="wrapper">
+   <img src="../../images/hon.gif"  alt= ></br>
+   <div id="content_left">
+      <form action="kisyu">
+	<input type="radio" name="kyaria" value="docomo">docomo</br>
+	<input type="radio" name="kyaria" value="au">au</br>
+	<input type="radio" name="kyaria" value="softbanak">softbank</br>
 
->>>>>>> FETCH_HEAD
+	<input type="checkbox" name="gakusei" value="gakusei">学生である</br>
+
 
 <input type="submit"></a>
 
 </form>
+</div>
+</div>

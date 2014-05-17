@@ -21,7 +21,7 @@ footer {
 
 #bottun{
 	top:300px;
-	 left:200px;
+	 margin:130px;
 	}
 	
 #profile{
@@ -32,7 +32,7 @@ footer {
 
 #goods {
  position: relative;
- margin-bottom: 10px;
+ margin-bottom: 150px;
  top:90px;
  float:center;
  left:200px;
@@ -49,3 +49,30 @@ a.order {
 a.order2 {
  position: relative;
 }
+
+#wrapper {
+    background: url("../../images/hon.gif") ;
+    position: absolute;
+	margin-top;200px;
+	float:center;
+}
+
+#content_left {
+    height: 420px;
+    left: 90px;
+    position: absolute;
+    top: 150px;
+    width: 255px;    
+}
+
+#content_right {
+    height: 420px;
+    left: 350px;
+    position: absolute;
+    top: 150px;
+
+}
+
+.access{
+	margin-left:500px:	
+}	

@@ -21,9 +21,10 @@
 		 
 		 <a href="<?php echo base_url("index.php/qa"); ?>" class="order2"><img src = "<?php echo base_url("images/Q&A.gif"); ?>" alt="Q&A" align="center"></a></a>
 		 
-		</div>
-		<div id="accsess">
+		<div class="accsess">
 		<a href="<?php echo base_url("index.php/otoiawase"); ?>" class="order"><img src = "<?php echo base_url("images/access.gif"); ?>" alt="お問い合わせ" align="right"></a>
+		</class>
+		</div>
 		<div id="profile">
 			</br>
 			</br>
@@ -36,5 +37,5 @@
 		<img src = "<?php echo base_url("images/author.gif"); ?>" alt="profile" align="">
 	</div>
 	</nav>
-	</div>
+
 	</header>
