@@ -18,8 +18,8 @@ footer {
 }
 
 #bottun{
-	top:300px;
-	 margin:130px;
+	 position:absolute;
+	 left:200px;
 	}
 	
 #profile{
