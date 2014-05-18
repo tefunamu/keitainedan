@@ -37,7 +37,8 @@
 		<div id="profile">
 			<img src = "<?php echo base_url("images/author.gif"); ?>" alt="" align="">
 			<div id="profile_text">
-				デモ
+				デモ</br>
+				<a href="<?php echo base_url("index.php/otoiawase"); ?>" >お問い合わせ</a>
 			</div>
 		</div>
 
