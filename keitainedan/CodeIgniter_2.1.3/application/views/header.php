@@ -11,23 +11,34 @@
  </head>
  
  <body>
-	 <headerid="goods">
-	 <a href="<?php echo base_url("index.php"); ?> " class="goods-menu"><img src = "<?php echo base_url("images/logo.gif"); ?>" alt="モバイル料金ラボ" align="left"></a>
-	 <div id="goods">
-	 <nav>
-		 <a class="order" ><img src = "<?php echo base_url("images/title.gif"); ?>" alt="about" align="left"></a>
-		 
-		 <a href="<?php echo base_url("index.php/about"); ?>"class="order" ><img src = "<?php echo base_url("images/about.gif"); ?>" alt="about" align="left"></a></a>
-		 
-		 <a href="<?php echo base_url("index.php/qa"); ?>" class="order2"><img src = "<?php echo base_url("images/Q&A.gif"); ?>" alt="Q&A" align="center"></a></a>
-		 
-		<div class="accsess">
-		<a href="<?php echo base_url("index.php/otoiawase"); ?>" class="order"><img src = "<?php echo base_url("images/access.gif"); ?>" alt="お問い合わせ" align="right"></a>
-		</class>
-		</div>
-		<div id="profile">
-		<img src = "<?php echo base_url("images/author.gif"); ?>" alt="profile" align="">
-	</nav>
-	</div>
+		 <header>
+			 <div id ="backtitle">
+			<!-- <a href="<?php echo base_url("index.php"); ?> " class="goods-menu"><img src = "<?php echo base_url("images/logo.gif"); ?>" alt="モバイル料金ラボ" align="left"></a>
+			-->
+				 <img src = "<?php echo base_url("images/backtitle.png"); ?>" alt="" align="">
+			 
+			 
+				 <div id="rogo">
+					 <a href="<?php echo base_url("index.php"); ?>" ><img src = "<?php echo base_url("images/rogo.gif"); ?>" alt="" align=""></a>
+				 </div>
+				 <div id="content_title1">
+					 <a href="<?php echo base_url("index.php/about"); ?>" ><img src = "<?php echo base_url("images/about.gif"); ?>" alt="" align=""></a>
+				 </div>
+				 <div id="content_title2">
+					 <a href="<?php echo base_url("index.php/qa"); ?>" ><img src = "<?php echo base_url("images/Q&A.gif"); ?>" alt="Q&A" align=""></a>
+				 </div>
+				 <div id="content_title3">
+					 <a href="<?php echo base_url("index.php/word"); ?>" ><img src = "<?php echo base_url("images/word.gif"); ?>" alt="" align=""></a>
+				 </div>
+			</div>
 
-	</header>
+
+			
+		<div id="profile">
+			<img src = "<?php echo base_url("images/author.gif"); ?>" alt="" align="">
+				<div id="accsess">
+					 <!--<a href="<?php echo base_url("index.php/otoiawase"); ?>" >--><img src = "<?php echo base_url("images/access.gif"); ?>" alt="" align="">
+				 </div>
+		</div>
+
+	</header> 

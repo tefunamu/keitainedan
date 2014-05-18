@@ -1,3 +1,36 @@
+#rogo{
+	top:10px;
+	position:absolute;
+}
+
+#content_title1{
+	top:140px;
+	left:200px;
+    position: absolute;
+
+}
+
+#content_title2{
+	top:140px;
+	left:400px;
+    position: absolute;
+
+}
+
+#content_title3{
+	top:140px;
+	left:600px;
+    position: absolute;
+
+}
+
+#backtitle{
+	 position:relative;
+	 left:10px;
+	 top:10px;
+	 float:left;
+}
+
 #bottun{
 	float:left;
 	}
@@ -20,39 +53,22 @@ footer {
 #bottun{
 	 position:absolute;
 	 left:200px;
+	 top:250px;
 	}
 	
 #profile{
-	top:90px;
+	top:200px;
 	float:right;
 	display: block;
-	margin:150px; 
+	position:relative; 
 }
 
-#goods {
- position: relative;
- margin-bottom: 150px;
- top:90px;
- float:center;
- left:200px;
-}
-#goods a {
- display: block; 
- }
-a.goods-menu {
- border: 1px solid #777;
-}
-a.order {
- position: absolute;
-}
-a.order2 {
- position: relative;
-}
+
 
 #wrapper {
     background: url("../../images/hon.gif") ;
     position: absolute;
-	margin-top;200px;
+	top:250px;
 	left: 200px;
 }
 
@@ -72,6 +88,13 @@ a.order2 {
 
 }
 
-.access{
-	margin-left:500px:	
+#otoiawase{
+	position:absolute;
+	left:850px;
+}
+
+#access{
+	position:absolute;
+	left:850px;
+	top:100px;
 }	
