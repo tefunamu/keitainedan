@@ -39,9 +39,10 @@
 			<div id="profile_text">
 				デモ
 			</div>
-			<div id="accsess">
-				 <!--<a href="<?php echo base_url("index.php/otoiawase"); ?>" >--><img src = "<?php echo base_url("images/access.gif"); ?>" alt="" align="">
-			 </div>
 		</div>
+
+		<!--<div id="accsess">
+				 <a href="<?php echo base_url("index.php/otoiawase"); ?>" ><img src = "<?php echo base_url("images/access.gif"); ?>" alt="" align="">
+			 </div>-->
 
 	</header> 

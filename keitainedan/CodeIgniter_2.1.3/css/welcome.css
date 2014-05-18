@@ -109,7 +109,7 @@ footer {
 }
 
 #access{
-	position:absolute;
-	left:850px;
+	position:relative;
+	right:10px;
 	top:100px;
 }	
