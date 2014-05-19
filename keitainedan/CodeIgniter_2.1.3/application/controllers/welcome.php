@@ -88,10 +88,10 @@ class Welcome extends CI_Controller {
 		
 		$this->load->view("header",$data);
 		if($_SESSION["kaisen"]==FALSE){
-			$this->load->view("kaisen",$data);
+			$this->load->view("ruta",$data);
 		}else{
 			if($_SESSION["kaisen"]=="nashi"){
-				$this->load->view("packet",$data);
+				$this->load->view("ruta",$data);
 			}else{
 				$this->load->view("packet",$data);
 			}
@@ -110,10 +110,10 @@ class Welcome extends CI_Controller {
 		$_SESSION["kaisen"]=$_REQUEST["kaisen"];
 		
         $this->load->view("header",$data);
-        if($_SESSION["packet"]==FALSE){
-			$this->load->view("packet",$data);
+        if($_SESSION["kaisen"]==FALSE){
+			$this->load->view("ruta",$data);
 		}else{
-			$this->load->view("suuti",$data);
+			$this->load->view("packet",$data);
 		}
         //$this->load->view("footer",$data);
 

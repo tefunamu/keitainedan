@@ -6,13 +6,10 @@
    <div id="content_left">
 
 <form action="kekka">
-通話時間を以下に入力</br>
-<input type="text" name="tuuwazikan" value="0">分
-<input type="submit"></a>
+一ヶ月間の通話時間を入力してください</br>
+<input type="text" name="tuuwazikan" value="0">分</br>
+<input type="submit" value="次へ"></a>
 <br>
-<input type="text" name="gakusei" value="zibun">自分が学生</br>
-<input type="text" name="gakusei" value="kazoku">家族の中に学生がいる</br>
-入力した機種は<?php echo $_SESSION['kisyu']; ?><Br>
 </form>
 
 </div>
