@@ -158,7 +158,7 @@ class Welcome extends CI_Controller {
 		#$softbank_ryoukin=934+5700+300;
 		
 		
-		
+		#機種の選択
 		switch($_SESSION["kisyu"]){
 			case "iphone":
 				#変数=基本料金+パケホプラン+ネット通信料(spモード)
@@ -199,11 +199,11 @@ class Welcome extends CI_Controller {
 		}
 		
 		
-		#ソフバンに下取りあり。組み込まれてない。
-		#auにも下取りあり。組み込まれていない。
-		#docomoの学割はスマホのみなので、あまり意味ない。基本料金無料が3年間に延長になる
-		#au,softbankはガラケにも適用されるため、意味ある。ただし、日中使うプランのが多いからあれかも
-		
+		#学割及び乗り換えわりの選択
+			#ソフバンに下取りあり。組み込まれてない。
+			#auにも下取りあり。組み込まれていない。
+			#docomoの学割はスマホのみなので、あまり意味ない。基本料金無料が3年間に延長になる
+			#au,softbankはガラケにも適用されるため、意味ある。ただし、日中使うプランのが多いからあれかも
 		if ($_SESSION["gakusei"] == "zibun" or $_SESSION["gakusei"] == "kazoku"){
 		#このif内は学割
 			if($_SESSION["kisyu"] == "sumaho" or "iphone"){
@@ -218,7 +218,7 @@ class Welcome extends CI_Controller {
 				$softbank_ryoukin-=934;
 			}
 			
-		} else if ($_SESSION["kisyu"] == "sumaho" || $_SESSION["kisyu"] =="iphone"){
+		} elseif ($_SESSION["kisyu"] == "sumaho" || $_SESSION["kisyu"] =="iphone"){
 		#このif内は乗り換え割り
 			switch($_SESSION["kyaria"]){
 				case "docomo":
@@ -237,9 +237,10 @@ class Welcome extends CI_Controller {
 					break;
 			}
 		} else{
-		#学生または家族に学生がなく、ガラケにしたい場合何も起きない。
+		#学生ではなく家族に学生もおらず、ガラケにしたい場合何も起きない。
 		}
-		
+	
+		#ここから回線割引き
 		switch($_SESSION["kaisen"]){
 			case "au_kaisen":
 				if($_SESSION["kisyu"]=="iphone"){
@@ -264,50 +265,49 @@ class Welcome extends CI_Controller {
 			case "softbank_ruta":
 				$softbank_ryoukin-=934;
 				break;
-		#kaisenから出た
 		}
 		
+		#具体的なスマホの通話量と通信料へ
 		if ($_SESSION["kisyu"] == "iphone" or $_SESSION["kisyu"] =="sumaho"){
-			#具体的なスマホの通話量と通信料へ
-			#通話量
+			
+			#スマホの通話量
 			$tuuwaryoukin = $_SESSION["tuuwazikan"]*40;
 			$docomo_ryoukin += $tuuwaryoukin;
 			$au_ryoukin += $tuuwaryoukin;
 			$softbank_ryoukin += $tuuwaryoukin;
 			
+			
+			#スマホの通信料
 			#パケット数により、docomoの安いプランがある。ソフバンもほんとに少なければ(15Mbyteレベル)安いやつがある
-						
 			if ($_SESSION["packet"] < 114000){
-				#パケット使用料
 				$docomo_ryoukin-=1000;
 				$softbank_ryoukin+=0.05*$_SESSION["packet"];
 				$docomo_new+=3500;
 			
 			} elseif (114000<= $_SESSION["packet"] && $_SESSION["packet"] < 16777216){
+				$docomo_ryoukin-=1000;
 				if($_SESSION["years"]<15){
 					$docomo_new+=3500;
 				} else{
 					$docomo_new+=2900;
 				}
-				$docomo_ryoukin-=1000;
 			
 			} elseif (16777216<= $_SESSION["packet"] && $_SESSION["packet"] < 25165824){
-				#パケット使用料
+				$docomo_ryoukin-=1000;
 				#2GBパックに1000円で1GBつけた方がまし、だけど10年以上docomo使ってると打ち消される
 				if($_SESSION["years"]<10){
 					$docomo_new+=4500;#3GB使える
-				}else if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+				}elseif (10<=$_SESSION["years"] && $_SESSION["years"]<15){
 					$docomo_new+=4400;#5GB使える
-				}else {
+				}elseif (15 < $_SESSION["years"]){
 					$docomo_new+=4200;#5GB使える
 				}
-				$docomo_ryoukin-=1000;
 				
 			} elseif (25165824<= $_SESSION["packet"] && $_SESSION["packet"] < 41943040){
 				$docomo_new += 5000;
-				if (10 <= $_SESSION["years"]){
+				if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
 					$docomo_new-=600;#5GB使える
-				}elseif(10<=$_SESSION["years"] && $_SESSION["years"]<15){
+				}elseif (15 <= $_SESSION["years"]){
 					$docomo_new-=800;#5GB使える
 				}
 			
@@ -319,19 +319,20 @@ class Welcome extends CI_Controller {
 					$docomo_new+=1000;
 				}
 				
-				if (10<=$_SESSION["years"]){
+				if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
 					$docomo_new-=600;#5GB使える
-				}elseif (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+				}elseif (15 <= $_SESSION["years"]){
 					$docomo_new-=800;#5GB使える
 				}
 			}
 		
 		} else{
 			#具体的なガラケの通話量と通信料へ
+			#ガラケの通話時間へ
 			switch ($_SESSION["gakusei"]){
 				case "zibun":
 				case "kazoku":
-					#以下通話時間。かなり細かく分けているが、誤差5分いないの物は省略している場合がある。
+					#通話時間。かなり細かく分けているが、誤差5分以内の際は省略している場合がある。学割適用
 					if ($_SESSION["tuuwazikan"] < 26) {
 						$docomo_ryoukin += ($_SESSION["tuuwazikan"]*40);
 						$au_ryoukin += 40*0.741*$_SESSION["tuuwazikan"];
@@ -527,7 +528,7 @@ class Welcome extends CI_Controller {
 					break;
 					
 				dafalt:
-					#以下通話時間。かなり細かく分けているが、誤差5分いないの物は省略している場合がある。
+					#以下通話時間。かなり細かく分けているが、誤差5分いないの物は省略している場合がある。学割未適用
 					if ($_SESSION["tuuwazikan"] < 5) {
 						$docomo_ryoukin += 40*$_SESSION["tuuwazikan"]+743;
 						$au_ryoukin +=40*0.741*$_SESSION["tuuwazikan"]+934;
@@ -721,9 +722,9 @@ class Welcome extends CI_Controller {
 						#softbank:ブループラン・LLプラン
 					}
 					break;
-				}#通話時間からでた
+				}
 				
-				#以下パケット。パケット数はあまりかかわらないです。
+				#以下通信料
 				if ($_SESSION["packet"] < 9800) {
 					$docomo_ryoukin += 0.08*$_SESSION["packet"];
 					$au_ryoukin +=0.1*$_SESSION["packet"];
@@ -748,7 +749,6 @@ class Welcome extends CI_Controller {
 					#au:ダブル定額
 					#softbank:パケットし放題(フラットとの違いが不明。無印が完全に上位互換。)
 				}#packetから出た
-			#break;
 			}
 		echo "hello $docomo_new";
 		
