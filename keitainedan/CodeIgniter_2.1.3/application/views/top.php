@@ -4,7 +4,7 @@
 
 <div id="bottun">
 
-	<a href="index.php/welcome/kyaria"><img src="images/judge.gif" alt=""></a>
+	<a href="index.php/welcome/kyaria"><img src="images/judge.onmouse.gif" alt=""></a>
 	</br>
 	<div id="whatsnew">
 	<img src="images/whatsnew.gif" alt="">
