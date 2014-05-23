@@ -68,6 +68,7 @@ class Welcome extends CI_Controller {
 		
 		session_start();
 		$_SESSION["kisyu"]=$_REQUEST["kisyu"];
+		$_SESSION["years"]=$_REQUEST["years"];
 		
         $this->load->view("header",$data);
         if($_SESSION["kisyu"]==FALSE){
@@ -90,7 +91,7 @@ class Welcome extends CI_Controller {
 		
 		$this->load->view("header",$data);
 		if($_SESSION["kaisen"]==FALSE){
-			$this->load->view("ruta",$data);
+			$this->load->view("kaisen",$data);
 		}else{
 			if($_SESSION["kaisen"]=="nashi"){
 				$this->load->view("ruta",$data);
@@ -129,12 +130,13 @@ class Welcome extends CI_Controller {
 		session_start();
 		$_SESSION["packet"]=$_REQUEST["packet"];
 		$_SESSION["packet"] = mb_convert_kana($_SESSION["packet"], "a", "UTF-8");#全角数字を半角に変換してます
+		$_SESSION["packet"] = $_SESSION["packet"]*1000000/128;
 		
 		$this->load->view("header",$data);
-		if($_SESSION["tuuwazikan"]==FALSE){
-			$this->load->view("suuti",$data);
+		if($_SESSION["packet"]==FALSE){
+			$this->load->view("packet",$data);
 		}else{
-			$this->load->view("kekka",$data);
+			$this->load->view("suuti",$data);
 		}
        // $this->load->view("footer",$data);
 
@@ -151,9 +153,50 @@ class Welcome extends CI_Controller {
 		$_SESSION["tuuwazikan"] = mb_convert_kana($_SESSION["tuuwazikan"], "a", "UTF-8");#全角数字を半角に変換してます
 		
 		#もっとも一般的な料金を表示、他も一緒
-		$docomo_ryoukin=743+5700+300;
-		$au_ryoukin=934+5700+300;
-		$softbank_ryoukin=934+5700+300;
+		$docomo_ryoukin;
+		#$au_ryoukin=934+5700+300;
+		#$softbank_ryoukin=934+5700+300;
+		
+		
+		
+		switch($_SESSION["kisyu"]){
+			case "iphone":
+				#変数=基本料金+パケホプラン+ネット通信料(spモード)
+				$docomo_ryoukin=743+5700+300;
+				$au_ryoukin=934+5700+300;
+				$softbank_ryoukin=934+5700+300;
+				$docomo_new=2700;
+				
+				#iPhoneにはパケホプランが500円安い
+				$docomo_ryoukin-=500;
+				$au_ryoukin-=500;
+				$softbank_ryoukin-=500;
+				break;
+			
+			case "sumaho":
+				#変数=基本料金+パケホプラン+ネット通信料(spモード)
+				$docomo_ryoukin=743+5700+300;
+				$au_ryoukin=934+5700+300;
+				$softbank_ryoukin=934+5700+300;
+				$docomo_new=2700;
+				break;
+				
+			case "garake":
+				#変数=基本料金(通話量に依存するため非表示)+パケホプランも非表示+ネット通信料(iモード)
+				$docomo_ryoukin=743+300;
+				$au_ryoukin=934+300;
+				$softbank_ryoukin=934+300;
+				$docomo_new=2200;
+				break;
+				
+			case "doredemo":#ガラケです
+				#変数=基本料金(通話量に依存するため非表示)+パケホプランも非表示+ネット通信料(iモード)
+				$docomo_ryoukin=743+300;
+				$au_ryoukin=934+300;
+				$softbank_ryoukin=934+300;
+				$docomo_new=2200;
+				break;
+		}
 		
 		
 		#ソフバンに下取りあり。組み込まれてない。
@@ -161,13 +204,13 @@ class Welcome extends CI_Controller {
 		#docomoの学割はスマホのみなので、あまり意味ない。基本料金無料が3年間に延長になる
 		#au,softbankはガラケにも適用されるため、意味ある。ただし、日中使うプランのが多いからあれかも
 		
-		if ($_SESSION["gakusei"] == "zibun" || "kazoku"){
+		if ($_SESSION["gakusei"] == "zibun" or $_SESSION["gakusei"] == "kazoku"){
 		#このif内は学割
-			if($_SESSION["kisyu"] == "sumaho" || "iphone"){
+			if($_SESSION["kisyu"] == "sumaho" or "iphone"){
 				#基本料金が引かれる
-				$docomo_ryoukin-=743;
-				$au_ryoukin-=934;
-				$softbank_ryoukin-=934;
+				$docomo_ryoukin=$docomo_ryoukin - 743;
+				$au_ryoukin -= 934;
+				$softbank_ryoukin -= 934;
 					
 			} else{
 				#docomoの場合、ガラケは学割の対象外
@@ -175,7 +218,7 @@ class Welcome extends CI_Controller {
 				$softbank_ryoukin-=934;
 			}
 			
-		} else if ($_SESSION["kisyu"] == "sumaho" || "iphone"){
+		} else if ($_SESSION["kisyu"] == "sumaho" || $_SESSION["kisyu"] =="iphone"){
 		#このif内は乗り換え割り
 			switch($_SESSION["kyaria"]){
 				case "docomo":
@@ -195,34 +238,6 @@ class Welcome extends CI_Controller {
 			}
 		} else{
 		#学生または家族に学生がなく、ガラケにしたい場合何も起きない。
-		}
-		
-		switch($_SESSION["kisyu"]){
-			case "iphone":
-				#変数=基本料金+パケホプラン+ネット通信料(spモード)
-				$docomo_ryoukin=743+5700+300;
-				$au_ryoukin=934+5700+300;
-				$softbank_ryoukin=934+5700+300;
-				
-				#iPhoneにはパケホプランが500円安い
-				$docomo_ryoukin-=500;
-				$au_ryoukin-=500;
-				$softbank_ryoukin-=500;
-				break;
-			
-			case"sumaho":
-				#変数=基本料金+パケホプラン+ネット通信料(spモード)
-				$docomo_ryoukin=743+5700+300;
-				$au_ryoukin=934+5700+300;
-				$softbank_ryoukin=934+5700+300;
-				break;
-				
-			case"garake":
-				#変数=基本料金(通話量に依存するため非表示)+パケホプランも非表示+ネット通信料(iモード)
-				$docomo_ryoukin+=300;
-				$au_ryoukin+=300;
-				$softbank_ryoukin+=300;
-				break;
 		}
 		
 		switch($_SESSION["kaisen"]){
@@ -252,46 +267,73 @@ class Welcome extends CI_Controller {
 		#kaisenから出た
 		}
 		
-		if ($_SESSION["kisyu"] == "iphone" || "sumaho"){
+		if ($_SESSION["kisyu"] == "iphone" or $_SESSION["kisyu"] =="sumaho"){
 			#具体的なスマホの通話量と通信料へ
-			#パケット数により、docomoの安いプランがある。ソフバンもほんとに少なければ(30Mbyteレベル)安いやつがある
+			#通話量
+			$tuuwaryoukin = $_SESSION["tuuwazikan"]*40;
+			$docomo_ryoukin += $tuuwaryoukin;
+			$au_ryoukin += $tuuwaryoukin;
+			$softbank_ryoukin += $tuuwaryoukin;
 			
+			#パケット数により、docomoの安いプランがある。ソフバンもほんとに少なければ(15Mbyteレベル)安いやつがある
+						
 			if ($_SESSION["packet"] < 114000){
 				#パケット使用料
 				$docomo_ryoukin-=1000;
-				$softbank_ryoukin+=0.05*$_SESSION["packet"]-5700;
-				
-				#通話量
-				$tuuwaryoukin = $_SESSION["tuuwazikan"]*40;
-				$docomo_ryoukin+=$tuuwaryoukin;
-				$au_ryoukin+=$tuuwaryoukin;
-				$softbank_ryoukin+=$tuuwaryoukin;
+				$softbank_ryoukin+=0.05*$_SESSION["packet"];
+				$docomo_new+=3500;
 			
-			} elseif ($_SESSION["packet"] < 25165824){
+			} elseif (114000<= $_SESSION["packet"] && $_SESSION["packet"] < 16777216){
+				if($_SESSION["years"]<15){
+					$docomo_new+=3500;
+				} else{
+					$docomo_new+=2900;
+				}
+				$docomo_ryoukin-=1000;
+			
+			} elseif (16777216<= $_SESSION["packet"] && $_SESSION["packet"] < 25165824){
 				#パケット使用料
+				#2GBパックに1000円で1GBつけた方がまし、だけど10年以上docomo使ってると打ち消される
+				if($_SESSION["years"]<10){
+					$docomo_new+=4500;#3GB使える
+				}else if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+					$docomo_new+=4400;#5GB使える
+				}else {
+					$docomo_new+=4200;#5GB使える
+				}
 				$docomo_ryoukin-=1000;
 				
-				#通話量
-				$tuuwaryoukin = $_SESSION["tuuwazikan"]*40;
-				$docomo_ryoukin+=$tuuwaryoukin;
-				$au_ryoukin+=$tuuwaryoukin;
-				$softbank_ryoukin+=$tuuwaryoukin;
+			} elseif (25165824<= $_SESSION["packet"] && $_SESSION["packet"] < 41943040){
+				$docomo_new += 5000;
+				if (10 <= $_SESSION["years"]){
+					$docomo_new-=600;#5GB使える
+				}elseif(10<=$_SESSION["years"] && $_SESSION["years"]<15){
+					$docomo_new-=800;#5GB使える
+				}
 			
 			} else {
-				#パケット数による割引なし
-				$tuuwaryoukin = $_SESSION["tuuwazikan"]*40;
-				$docomo_ryoukin+=$tuuwaryoukin;
-				$au_ryoukin+=$tuuwaryoukin;
-				$softbank_ryoukin+=$tuuwaryoukin;
+				#通信料1GB増加につき1000円足してく
+				$docomo_new += 5000;
+				$_SESSION["packet"] -= 41943040;
+				for ( ; 0<$_SESSION["packet"] ; $_SESSION["packet"]-=8388608){
+					$docomo_new+=1000;
+				}
+				
+				if (10<=$_SESSION["years"]){
+					$docomo_new-=600;#5GB使える
+				}elseif (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+					$docomo_new-=800;#5GB使える
+				}
 			}
 		
 		} else{
 			#具体的なガラケの通話量と通信料へ
 			switch ($_SESSION["gakusei"]){
-				case "zibun"||"kazoku":
+				case "zibun":
+				case "kazoku":
 					#以下通話時間。かなり細かく分けているが、誤差5分いないの物は省略している場合がある。
 					if ($_SESSION["tuuwazikan"] < 26) {
-						$docomo_ryoukin += $_SESSION["tuuwazikan"]*40;
+						$docomo_ryoukin += ($_SESSION["tuuwazikan"]*40);
 						$au_ryoukin += 40*0.741*$_SESSION["tuuwazikan"];
 						$softbank_ryoukin +=40*0.784*$_SESSION["tuuwazikan"];
 						#docomo:タイプシンプル
@@ -685,7 +727,7 @@ class Welcome extends CI_Controller {
 				if ($_SESSION["packet"] < 9800) {
 					$docomo_ryoukin += 0.08*$_SESSION["packet"];
 					$au_ryoukin +=0.1*$_SESSION["packet"];
-					$softbank_ryoukin +=0.1*$_SESSION["packet"];
+					$softbank_ryoukin+=0.1*$_SESSION["packet"];
 					#docomo:パケ・ホーダイ シンプル(ダブルとの違いが不明、あきとに確認)
 					#au:ダブル定額スーパーライト
 					#softbank:パケットし放題S
@@ -706,8 +748,15 @@ class Welcome extends CI_Controller {
 					#au:ダブル定額
 					#softbank:パケットし放題(フラットとの違いが不明。無印が完全に上位互換。)
 				}#packetから出た
-			break;
+			#break;
 			}
+		echo "hello $docomo_new";
+		
+		if($docomo_ryoukin >= $docomo_new){
+			$docomo_ryoukin = $docomo_new;
+			$d="新体系";
+		}
+		
 		
 		$_SESSION["docomo_ryoukin"]=$docomo_ryoukin;
 		$_SESSION["au_ryoukin"]=$au_ryoukin;
