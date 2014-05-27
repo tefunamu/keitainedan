@@ -143,7 +143,7 @@ class Welcome extends CI_Controller {
 	}
 	
 	
-	public function kekka()
+	/*public function kekka()
 	{
 		$this->load->helper("url"); 
 		$data["page_title"] = "モバイル料金ラボ";

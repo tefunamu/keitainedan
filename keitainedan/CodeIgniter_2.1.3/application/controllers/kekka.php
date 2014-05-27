@@ -10,7 +10,6 @@ public function kekka()
 	{
 		$this->load->helper("url"); 
 		$data["page_title"] = "モバイル料金ラボ";
-		$data["unko"]="unko";
 		
 		session_start();
 		$_SESSION["tuuwazikan"]=$_REQUEST["tuuwazikan"];
@@ -574,18 +573,15 @@ public function kekka()
 				}#packetから出た
 			break;
 			}
-		//$unko="unko";
-		//$data["unko"]="$unko";
 		
-		echo "docomonの料金は$docomo_ryoukin ";
-		echo "auの料金は$au_ryoukin ";
-		echo "softbankも料金は$softbank_ryoukin";
+		$_SESSION["docomo_ryoukin"]=$docomo_ryoukin;
+		$_SESSION["au_ryoukin"]=$au_ryoukin;
+		$_SESSION["softbank_ryoukin"]=$softbank_ryoukin;
 		
-		$data["docomo_ryoukin"]=$docomo_ryoukin;
-		$data["au_ryoukin"]=$au_ryoukin;
-		$data["softbank_ryoukin"]=$softbank_ryoukin;
+		
 		
         $this->load->view("header",$data);
         $this->load->view("kekka",$data);
         //$this->load->view("footer",$data);
 	}
+}
