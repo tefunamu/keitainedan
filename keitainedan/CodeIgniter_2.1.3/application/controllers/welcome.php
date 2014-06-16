@@ -130,7 +130,7 @@ class Welcome extends CI_Controller {
 		session_start();
 		$_SESSION["packet"]=$_REQUEST["packet"];
 		$_SESSION["packet"] = mb_convert_kana($_SESSION["packet"], "a", "UTF-8");#全角数字を半角に変換してます
-		$_SESSION["packet"] = $_SESSION["packet"]*1000000/128;
+		$_SESSION["packet"] = $_SESSION["packet"]*1000000/128;#MB→パケットへの換算
 		
 		$this->load->view("header",$data);
 		if($_SESSION["packet"]==FALSE){
@@ -143,7 +143,7 @@ class Welcome extends CI_Controller {
 	}
 	
 	
-	/*public function kekka()
+	public function kekka()
 	{
 		$this->load->helper("url"); 
 		$data["page_title"] = "モバイル料金ラボ";
@@ -329,439 +329,295 @@ class Welcome extends CI_Controller {
 		} else{
 			#具体的なガラケの通話量と通信料へ
 			#ガラケの通話時間へ
-			switch ($_SESSION["gakusei"]){
-				case "zibun":
-				case "kazoku":
-					#通話時間。かなり細かく分けているが、誤差5分以内の際は省略している場合がある。学割適用
-					if ($_SESSION["tuuwazikan"] < 26) {
-						$docomo_ryoukin += ($_SESSION["tuuwazikan"]*40);
-						$au_ryoukin += 40*0.741*$_SESSION["tuuwazikan"];
-						$softbank_ryoukin +=40*0.784*$_SESSION["tuuwazikan"];
-						#docomo:タイプシンプル
-						#au:プランZシンプル
-						#softbank:ホワイトプラン
-		
-					} elseif (26<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <40){
-						$docomo_ryoukin += 40*($_SESSION["tuuwazikan"]-26)+934;
-						$au_ryoukin += 40*0.741*$_SESSION["tuuwazikan"];
-						$softbank_ryoukin +=40*0.784*$_SESSION["tuuwazikan"];
-						#docomo:タイプSSバリュー
-						#au:プランZシンプル
-						#softbank:ホワイトプラン
-					
-					} elseif (40<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <41){
-						$docomo_ryoukin += 1500;
-						$au_ryoukin += 40*0.741*$_SESSION["tuuwazikan"];
-						$softbank_ryoukin +=40*0.784*$_SESSION["tuuwazikan"];
-						#docomo:タイプSバリュー
-						#au:プランZシンプル
-						#softbank:ホワイトプラン
-					
-					} elseif (41<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <50){
-						$docomo_ryoukin += 1500;
-						$au_ryoukin += 40*0.741*$_SESSION["tuuwazikan"];
-						$softbank_ryoukin +=40*0.784*$_SESSION["tuuwazikan"];
-						#docomo:タイプSバリュー
-						#au:プランZシンプル
-						#softbank:ホワイトプラン
-						
-					} elseif (50<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <56){
-						$docomo_ryoukin += 1500;
-						$au_ryoukin += 1550;
-						$softbank_ryoukin +=40*0.784*$_SESSION["tuuwazikan"];
-						#docomo:タイプSバリュー
-						#au:プランZシンプル
-						#softbank:ホワイトプラン
-					
-					} elseif (56<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <57){
-						$docomo_ryoukin += 18*($_SESSION["tuuwazikan"]-55)+1500;
-						$au_ryoukin += 1550;
-						$softbank_ryoukin +=40*0.784*$_SESSION["tuuwazikan"];
-						#docomo:タイプSバリュー
-						#au:プランSシンプル
-						#softbank:ホワイトプラン
-					
-					} elseif (57<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <63){
-						$docomo_ryoukin += 18*($_SESSION["tuuwazikan"]-55)+1500;
-						$au_ryoukin += 1550;
-						$softbank_ryoukin +=40*0.784*$_SESSION["tuuwazikan"];
-						#docomo:タイプSバリュー
-						#au:プランSシンプル
-						#softbank:ホワイトプラン
-					
-					} elseif (63<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <83){
-						$docomo_ryoukin += 18*($_SESSION["tuuwazikan"]-55)+1500;
-						$au_ryoukin += 32*($_SESSION["tuuwazikan"]-62)+1550;
-						$softbank_ryoukin +=40*0.784*$_SESSION["tuuwazikan"];
-						#docomo:タイプSバリュー
-						#au:プランSシンプル
-						#softbank:ホワイトプラン
-					
-					} elseif (83<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <92){
-						$docomo_ryoukin += 2500;
-						$au_ryoukin += 32*($_SESSION["tuuwazikan"]-62)+1550;
-						$softbank_ryoukin +=40*0.784*$_SESSION["tuuwazikan"];
-						#docomo:タイプMバリュー
-						#au:プランSシンプル
-						#softbank:ホワイトプラン
-					
-					} elseif (92<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <103){
-						$docomo_ryoukin += 2500;
-						$au_ryoukin += 2500;
-						$softbank_ryoukin +=40*0.784*$_SESSION["tuuwazikan"];
-						#docomo:タイプMバリュー
-						#au:プランMシンプル
-						#softbank:ホワイトプラン
-						
-					} elseif (103<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <143){
-						$docomo_ryoukin += 2500;
-						$au_ryoukin += 2500;
-						$softbank_ryoukin += 3200;
-						#docomo:タイプMバリュー
-						#au:プランMシンプル
-						#softbank:オレンジプラン・Mプラン
-					
-					} elseif (143<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <145){
-						$docomo_ryoukin += 28*($_SESSION["tuuwazikan"]-142)+2500;
-						$au_ryoukin += 2500;
-						$softbank_ryoukin += 3200;
-						#docomo:タイプMバリュー
-						#au:プランMシンプル
-						#softbank:オレンジプラン・Mプラン
-					
-					} elseif (145<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <196){
-						$docomo_ryoukin += 28*($_SESSION["tuuwazikan"]-142)+2500;
-						$au_ryoukin += 28*($_SESSION["tuuwazikan"]-144)+2500;
-						$softbank_ryoukin += 28*($_SESSION["tuuwazikan"]-144)+3200;
-						#docomo:タイプMバリュー
-						#au:プランMシンプル
-						#softbank:オレンジプラン・Mプラン
-					
-					} elseif (196<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <203){
-						$docomo_ryoukin += 4000;
-						$au_ryoukin += 3950;
-						$softbank_ryoukin += 28*($_SESSION["tuuwazikan"]-144)+3200;
-						#docomo:タイプLバリュー
-						#au:プランLシンプル
-						#softbank:オレンジプラン・Mプラン
-					
-					} elseif (203<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <263){
-						$docomo_ryoukin += 4000;
-						$au_ryoukin += 3950;
-						$softbank_ryoukin += 4650;
-						#docomo:タイプLバリュー
-						#au:プランLシンプル
-						#softbank:オレンジプラン・Lプラン
-					
-					} elseif (263<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <265){
-						$docomo_ryoukin += 4000;
-						$au_ryoukin += 24*($_SESSION["tuuwazikan"]-262)+3950;
-						$softbank_ryoukin += 4650;
-						#docomo:タイプLバリュー
-						#au:プランLシンプル
-						#softbank:オレンジプラン・Lプラン
-					
-					} elseif (265<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <301){
-						$docomo_ryoukin += 4000;
-						$au_ryoukin += 24*($_SESSION["tuuwazikan"]-262)+3950;
-						$softbank_ryoukin += 4700;
-						#docomo:タイプLバリュー
-						#au:プランLシンプル
-						#softbank:ブループラン・Lプラン
-					
-					} elseif (301<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <377){
-						$docomo_ryoukin += 20*($_SESSION["tuuwazikan"]-300)+4000;
-						$au_ryoukin += 24*($_SESSION["tuuwazikan"]-262)+3950;
-						$softbank_ryoukin += 20*($_SESSION["tuuwazikan"]-300)+4700;
-						#docomo:タイプLバリュー
-						#au:プランLシンプル
-						#softbank:ブループラン・Lプラン
-					
-					} elseif (377<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <425){
-						$docomo_ryoukin += 20*(tuuwazikan-300)+4000;
-						$au_ryoukin += 6700;
-						$softbank_ryoukin += 20*($_SESSION["tuuwazikan"]-300)+4700;
-						#docomo:タイプLバリュー
-						#au:プランLLシンプル
-						#softbank:ブループラン・Lプラン
-					
-					} elseif (425<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <426){
-						$docomo_ryoukin += 20*(tuuwazikan-300)+4000;
-						$au_ryoukin += 6700;
-						$softbank_ryoukin += 7200;
-						#docomo:タイプLバリュー
-						#au:プランLLシンプル
-						#softbank:ブループラン・LLプラン
-					
-					} elseif (426<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <733){
-						$docomo_ryoukin += 6500;
-						$au_ryoukin += 6700;
-						$softbank_ryoukin += 7200;
-						#docomo:タイプLLバリュー
-						#au:プランLLシンプル
-						#softbank:ブループラン・LLプラン
-					
-					} elseif (733<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <786){
-						$docomo_ryoukin += 15*($_SESSION["tuuwazikan"]-732)+6500;
-						$au_ryoukin += 6700;
-						$softbank_ryoukin += 7200;
-						#docomo:タイプLLバリュー
-						#au:プランLLシンプル
-						#softbank:ブループラン・LLプラン
-					
-					} elseif (786<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <801){
-						$docomo_ryoukin += 15*($_SESSION["tuuwazikan"]-732)+6500;
-						$au_ryoukin += 6700;
-						$softbank_ryoukin += 14*($_SESSION["tuuwazikan"]-785)+7200;
-						#docomo:タイプLLバリュー
-						#au:プランLLシンプル
-						#softbank:ブループラン・LLプラン
-					
-					} elseif (801<= $_SESSION["tuuwazikan"]) {
-						$docomo_ryoukin += 15*($_SESSION["tuuwazikan"]-732)+6500;
-						$au_ryoukin += 15*($_SESSION["tuuwazikan"]-800)+6700;
-						$softbank_ryoukin += 14*($_SESSION["tuuwazikan"]-785)+7200;
-						#docomo:タイプLLバリュー
-						#au:プランLLシンプル
-						#softbank:ブループラン・LLプラン
-					}
-					break;
-					
-				dafalt:
-					#以下通話時間。かなり細かく分けているが、誤差5分いないの物は省略している場合がある。学割未適用
-					if ($_SESSION["tuuwazikan"] < 5) {
-						$docomo_ryoukin += 40*$_SESSION["tuuwazikan"]+743;
-						$au_ryoukin +=40*0.741*$_SESSION["tuuwazikan"]+934;
-						$softbank_ryoukin +=40*0.784*$_SESSION["tuuwazikan"]+934;
-						#docomo:タイプシンプルバリュー
-						#au:プランEシンプル
-						#softbank:ホワイトプラン
-						
-					} elseif (5 <= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] < 25){
-						$docomo_ryoukin += 934;
-						$au_ryoukin += 934;
-						$softbank_ryoukin += 40*0.784*$_SESSION["tuuwazikan"]+934;
-						#docomo:タイプSSバリュー
-						#au:プランSSシンプル
-						#softbank:ホワイトプラン
-					
-					} elseif (25<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <26){
-						$docomo_ryoukin += 934;
-						$au_ryoukin += 934;
-						$softbank_ryoukin += 40*($_SESSION["tuuwazikan"]-25)+1700;
-						#docomo:タイプSSバリュー
-						#au:プランSSシンプル
-						#softbank:オレンジプラン・SSプラン
+			if ($_SESSION["tuuwazikan"] < 5) {
+				$docomo_ryoukin += 40*$_SESSION["tuuwazikan"]+743;
+				$au_ryoukin +=40*0.741*$_SESSION["tuuwazikan"]+934;
+				$softbank_ryoukin +=40*0.784*$_SESSION["tuuwazikan"]+934;
+				$d_plan="タイプシンプルバリュー";;
+				$a_plan="プランEシンプル";
+				$s_plan="ホワイトプラン";
+				
+			} elseif (5 <= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] < 25){
+				$docomo_ryoukin += 934;
+				$au_ryoukin += 934;
+				$softbank_ryoukin += 40*0.784*$_SESSION["tuuwazikan"]+934;
+				$d_plan="タイプSSバリュー";
+				$a_plan="プランSSシンプル";
+				$s_plan="ホワイトプラン";
 			
-					} elseif (26<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <40){
-						$docomo_ryoukin += 40*($_SESSION["tuuwazikan"]-26)+934;
-						$au_ryoukin += 40*($_SESSION["tuuwazikan"]-26)+934;
-						$softbank_ryoukin += 40*($_SESSION["tuuwazikan"]-25)+1700;
-						#docomo:タイプSSバリュー
-						#au:プランSSシンプル
-						#softbank:オレンジプラン・SSプラン
-					
-					} elseif (40<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <41){
-						$docomo_ryoukin += 1500;
-						$au_ryoukin += 40*($_SESSION["tuuwazikan"]-26)+934;
-						$softbank_ryoukin += 40*($_SESSION["tuuwazikan"]-25)+1700;
-						#docomo:タイプSバリュー
-						#au:プランSSシンプル
-						#softbank:オレンジプラン・SSプラン
-					
-					} elseif (41<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <56){
-						$docomo_ryoukin += 1500;
-						$au_ryoukin += 1550;
-						$softbank_ryoukin += 2200;
-						#docomo:タイプSバリュー
-						#au:プランSシンプル
-						#softbank:ブループラン・Sプラン
-					
-					} elseif (56<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <57){
-						$docomo_ryoukin += 18*($_SESSION["tuuwazikan"]-55)+1500;
-						$au_ryoukin += 1550;
-						$softbank_ryoukin += 2200;
-						#docomo:タイプSバリュー
-						#au:プランSシンプル
-						#softbank:ブループラン・Sプラン
-					
-					} elseif (57<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <63){
-						$docomo_ryoukin += 18*($_SESSION["tuuwazikan"]-55)+1500;
-						$au_ryoukin += 1550;
-						$softbank_ryoukin += 2250;
-						#docomo:タイプSバリュー
-						#au:プランSシンプル
-						#softbank:オレンジプラン・Sプラン
-					
-					} elseif (63<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <83){
-						$docomo_ryoukin += 18*($_SESSION["tuuwazikan"]-55)+1500;
-						$au_ryoukin += 32*($_SESSION["tuuwazikan"]-62)+1550;
-						$softbank_ryoukin += 32*($_SESSION["tuuwazikan"]-62)+2250;
-						#docomo:タイプSバリュー
-						#au:プランSシンプル
-						#softbank:オレンジプラン・Sプラン
-					
-					} elseif (83<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <92){
-						$docomo_ryoukin += 2500;
-						$au_ryoukin += 32*($_SESSION["tuuwazikan"]-62)+1550;
-						$softbank_ryoukin += 32*($_SESSION["tuuwazikan"]-62)+2250;
-						#docomo:タイプMバリュー
-						#au:プランSシンプル
-						#softbank:オレンジプラン・Sプラン
-					
-					} elseif (92<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <143){
-						$docomo_ryoukin += 2500;
-						$au_ryoukin += 2500;
-						$softbank_ryoukin += 3200;
-						#docomo:タイプMバリュー
-						#au:プランMシンプル
-						#softbank:オレンジプラン・Mプラン
-					
-					} elseif (143<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <145){
-						$docomo_ryoukin += 28*($_SESSION["tuuwazikan"]-142)+2500;
-						$au_ryoukin += 2500;
-						$softbank_ryoukin += 3200;
-						#docomo:タイプMバリュー
-						#au:プランMシンプル
-						#softbank:オレンジプラン・Mプラン
-					
-					} elseif (145<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <196){
-						$docomo_ryoukin += 28*($_SESSION["tuuwazikan"]-142)+2500;
-						$au_ryoukin += 28*($_SESSION["tuuwazikan"]-144)+2500;
-						$softbank_ryoukin += 28*($_SESSION["tuuwazikan"]-144)+3200;
-						#docomo:タイプMバリュー
-						#au:プランMシンプル
-						#softbank:オレンジプラン・Mプラン
-					
-					} elseif (196<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <203){
-						$docomo_ryoukin += 4000;
-						$au_ryoukin += 3950;
-						$softbank_ryoukin += 28*($_SESSION["tuuwazikan"]-144)+3200;
-						#docomo:タイプLバリュー
-						#au:プランLシンプル
-						#softbank:オレンジプラン・Mプラン
-					
-					} elseif (203<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <263){
-						$docomo_ryoukin += 4000;
-						$au_ryoukin += 3950;
-						$softbank_ryoukin += 4650;
-						#docomo:タイプLバリュー
-						#au:プランLシンプル
-						#softbank:オレンジプラン・Lプラン
-					
-					} elseif (263<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <265){
-						$docomo_ryoukin += 4000;
-						$au_ryoukin += 24*($_SESSION["tuuwazikan"]-262)+3950;
-						$softbank_ryoukin += 4650;
-						#docomo:タイプLバリュー
-						#au:プランLシンプル
-						#softbank:オレンジプラン・Lプラン
-					
-					} elseif (265<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <301){
-						$docomo_ryoukin += 4000;
-						$au_ryoukin += 24*($_SESSION["tuuwazikan"]-262)+3950;
-						$softbank_ryoukin += 4700;
-						#docomo:タイプLバリュー
-						#au:プランLシンプル
-						#softbank:ブループラン・Lプラン
-					
-					} elseif (301<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <377){
-						$docomo_ryoukin += 20*($_SESSION["tuuwazikan"]-300)+4000;
-						$au_ryoukin += 24*($_SESSION["tuuwazikan"]-262)+3950;
-						$softbank_ryoukin += 20*($_SESSION["tuuwazikan"]-300)+4700;
-						#docomo:タイプLバリュー
-						#au:プランLシンプル
-						#softbank:ブループラン・Lプラン
-					
-					} elseif (377<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <425){
-						$docomo_ryoukin += 20*(tuuwazikan-300)+4000;
-						$au_ryoukin += 6700;
-						$softbank_ryoukin += 20*($_SESSION["tuuwazikan"]-300)+4700;
-						#docomo:タイプLバリュー
-						#au:プランLLシンプル
-						#softbank:ブループラン・Lプラン
-					
-					} elseif (425<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <426){
-						$docomo_ryoukin += 20*(tuuwazikan-300)+4000;
-						$au_ryoukin += 6700;
-						$softbank_ryoukin += 7200;
-						#docomo:タイプLバリュー
-						#au:プランLLシンプル
-						#softbank:ブループラン・LLプラン
-					
-					} elseif (426<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <733){
-						$docomo_ryoukin += 6500;
-						$au_ryoukin += 6700;
-						$softbank_ryoukin += 7200;
-						#docomo:タイプLLバリュー
-						#au:プランLLシンプル
-						#softbank:ブループラン・LLプラン
-					
-					} elseif (733<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <786){
-						$docomo_ryoukin += 15*($_SESSION["tuuwazikan"]-732)+6500;
-						$au_ryoukin += 6700;
-						$softbank_ryoukin += 7200;
-						#docomo:タイプLLバリュー
-						#au:プランLLシンプル
-						#softbank:ブループラン・LLプラン
-					
-					} elseif (786<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <801){
-						$docomo_ryoukin += 15*($_SESSION["tuuwazikan"]-732)+6500;
-						$au_ryoukin += 6700;
-						$softbank_ryoukin += 14*($_SESSION["tuuwazikan"]-785)+7200;
-						#docomo:タイプLLバリュー
-						#au:プランLLシンプル
-						#softbank:ブループラン・LLプラン
-					
-					} elseif (801<= $_SESSION["tuuwazikan"]) {
-						$docomo_ryoukin += 15*($_SESSION["tuuwazikan"]-732)+6500;
-						$au_ryoukin += 15*($_SESSION["tuuwazikan"]-800)+6700;
-						$softbank_ryoukin += 14*($_SESSION["tuuwazikan"]-785)+7200;
-						#docomo:タイプLLバリュー
-						#au:プランLLシンプル
-						#softbank:ブループラン・LLプラン
-					}
-					break;
+			} elseif (25<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <26){
+				$docomo_ryoukin += 934;
+				$au_ryoukin += 934;
+				$softbank_ryoukin += 40*($_SESSION["tuuwazikan"]-25)+1700;
+				$d_plan="タイプSSバリュー";
+				$a_plan="プランSSシンプル";
+				$s_plan="オレンジプラン・SSプラン";
+	
+			} elseif (26<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <40){
+				$docomo_ryoukin += 40*($_SESSION["tuuwazikan"]-26)+934;
+				$au_ryoukin += 40*($_SESSION["tuuwazikan"]-26)+934;
+				$softbank_ryoukin += 40*($_SESSION["tuuwazikan"]-25)+1700;
+				$d_plan="タイプSSバリュー";
+				$a_plan="プランSSシンプル";
+				$s_plan="オレンジプラン・SSプラン";
+			
+			} elseif (40<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <41){
+				$docomo_ryoukin += 1500;
+				$au_ryoukin += 40*($_SESSION["tuuwazikan"]-26)+934;
+				$softbank_ryoukin += 40*($_SESSION["tuuwazikan"]-25)+1700;
+				$d_plan="タイプSバリュー";
+				$a_plan="プランSSシンプル";
+				$s_plan="オレンジプラン・SSプラン";
+			
+			} elseif (41<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <56){
+				$docomo_ryoukin += 1500;
+				$au_ryoukin += 1550;
+				$softbank_ryoukin += 2200;
+				$d_plan="タイプSバリュー";
+				$a_plan="プランSシンプル";
+				$s_plan="ブループラン・Sプラン";
+			
+			} elseif (56<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <57){
+				$docomo_ryoukin += 18*($_SESSION["tuuwazikan"]-55)+1500;
+				$au_ryoukin += 1550;
+				$softbank_ryoukin += 2200;
+				$d_plan="タイプSバリュー";
+				$a_plan="プランSシンプル";
+				$s_plan="ブループラン・Sプラン";
+			
+			} elseif (57<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <63){
+				$docomo_ryoukin += 18*($_SESSION["tuuwazikan"]-55)+1500;
+				$au_ryoukin += 1550;
+				$softbank_ryoukin += 2250;
+				$d_plan="タイプSバリュー";
+				$a_plan="プランSシンプル";
+				$s_plan="オレンジプラン・Sプラン";
+			
+			} elseif (63<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <83){
+				$docomo_ryoukin += 18*($_SESSION["tuuwazikan"]-55)+1500;
+				$au_ryoukin += 32*($_SESSION["tuuwazikan"]-62)+1550;
+				$softbank_ryoukin += 32*($_SESSION["tuuwazikan"]-62)+2250;
+				$d_plan="タイプSバリュー";
+				$a_plan="プランSシンプル";
+				$s_plan="オレンジプラン・Sプラン";
+			
+			} elseif (83<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <92){
+				$docomo_ryoukin += 2500;
+				$au_ryoukin += 32*($_SESSION["tuuwazikan"]-62)+1550;
+				$softbank_ryoukin += 32*($_SESSION["tuuwazikan"]-62)+2250;
+				$d_plan="タイプMバリュー";
+				$a_plan="プランSシンプル";
+				$s_plan="オレンジプラン・Sプラン";
+			
+			} elseif (92<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <143){
+				$docomo_ryoukin += 2500;
+				$au_ryoukin += 2500;
+				$softbank_ryoukin += 3200;
+				$d_plan="タイプMバリュー";
+				$a_plan="プランMシンプル";
+				$s_plan="オレンジプラン・Mプラン";
+			
+			} elseif (143<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <145){
+				$docomo_ryoukin += 28*($_SESSION["tuuwazikan"]-142)+2500;
+				$au_ryoukin += 2500;
+				$softbank_ryoukin += 3200;
+				$d_plan="タイプMバリュー";
+				$a_plan="プランMシンプル";
+				$s_plan="オレンジプラン・Mプラン";
+			
+			} elseif (145<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <196){
+				$docomo_ryoukin += 28*($_SESSION["tuuwazikan"]-142)+2500;
+				$au_ryoukin += 28*($_SESSION["tuuwazikan"]-144)+2500;
+				$softbank_ryoukin += 28*($_SESSION["tuuwazikan"]-144)+3200;
+				$d_plan="タイプMバリュー";
+				$a_plan="プランMシンプル";
+				$s_plan="オレンジプラン・Mプラン";
+			
+			} elseif (196<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <203){
+				$docomo_ryoukin += 4000;
+				$au_ryoukin += 3950;
+				$softbank_ryoukin += 28*($_SESSION["tuuwazikan"]-144)+3200;
+				$d_plan="タイプLバリュー";
+				$a_plan="プランLシンプル";
+				$s_plan="オレンジプラン・Mプラン";
+			
+			} elseif (203<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <263){
+				$docomo_ryoukin += 4000;
+				$au_ryoukin += 3950;
+				$softbank_ryoukin += 4650;
+				$d_plan="タイプLバリュー";
+				$a_plan="プランLシンプル";
+				$s_plan="オレンジプラン・Lプラン";
+			
+			} elseif (263<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <265){
+				$docomo_ryoukin += 4000;
+				$au_ryoukin += 24*($_SESSION["tuuwazikan"]-262)+3950;
+				$softbank_ryoukin += 4650;
+				$d_plan="タイプLバリュー";
+				$a_plan="プランLシンプル";
+				$s_plan="オレンジプラン・Lプラン";
+			
+			} elseif (265<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <301){
+				$docomo_ryoukin += 4000;
+				$au_ryoukin += 24*($_SESSION["tuuwazikan"]-262)+3950;
+				$softbank_ryoukin += 4700;
+				$d_plan="タイプLバリュー";
+				$a_plan="プランLシンプル";
+				$s_plan="ブループラン・Lプラン";
+			
+			} elseif (301<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <377){
+				$docomo_ryoukin += 20*($_SESSION["tuuwazikan"]-300)+4000;
+				$au_ryoukin += 24*($_SESSION["tuuwazikan"]-262)+3950;
+				$softbank_ryoukin += 20*($_SESSION["tuuwazikan"]-300)+4700;
+				$d_plan="タイプLバリュー";
+				$a_plan="プランLシンプル";
+				$s_plan="ブループラン・Lプラン";
+			
+			} elseif (377<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <425){
+				$docomo_ryoukin += 20*(tuuwazikan-300)+4000;
+				$au_ryoukin += 6700;
+				$softbank_ryoukin += 20*($_SESSION["tuuwazikan"]-300)+4700;
+				$d_plan="タイプLバリュー";
+				$a_plan="プランLLシンプル";
+				$s_plan="ブループラン・Lプラン";
+			
+			} elseif (425<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <426){
+				$docomo_ryoukin += 20*(tuuwazikan-300)+4000;
+				$au_ryoukin += 6700;
+				$softbank_ryoukin += 7200;
+				$d_plan="タイプLバリュー";
+				$a_plan="プランLLシンプル";
+				$s_plan="ブループラン・LLプラン";
+			
+			} elseif (426<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <733){
+				$docomo_ryoukin += 6500;
+				$au_ryoukin += 6700;
+				$softbank_ryoukin += 7200;
+				$d_plan="タイプLLバリュー";
+				$a_plan="プランLLシンプル";
+				$s_plan="ブループラン・LLプラン";
+			
+			} elseif (733<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <786){
+				$docomo_ryoukin += 15*($_SESSION["tuuwazikan"]-732)+6500;
+				$au_ryoukin += 6700;
+				$softbank_ryoukin += 7200;
+				$d_plan="タイプLLバリュー";
+				$a_plan="プランLLシンプル";
+				$s_plan="ブループラン・LLプラン";
+			
+			} elseif (786<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <801){
+				$docomo_ryoukin += 15*($_SESSION["tuuwazikan"]-732)+6500;
+				$au_ryoukin += 6700;
+				$softbank_ryoukin += 14*($_SESSION["tuuwazikan"]-785)+7200;
+				$d_plan="タイプLLバリュー";
+				$a_plan="プランLLシンプル";
+				$s_plan="ブループラン・LLプラン";
+			
+			} elseif (801<= $_SESSION["tuuwazikan"]) {
+				$docomo_ryoukin += 15*($_SESSION["tuuwazikan"]-732)+6500;
+				$au_ryoukin += 15*($_SESSION["tuuwazikan"]-800)+6700;
+				$softbank_ryoukin += 14*($_SESSION["tuuwazikan"]-785)+7200;
+				$d_plan="タイプLLバリュー";
+				$a_plan="プランLLシンプル";
+				$s_plan="ブループラン・LLプラン";
+			}
+			
+				
+		#以下通信料
+			if ($_SESSION["packet"] < 9800) {
+				$docomo_ryoukin += 0.08*$_SESSION["packet"];
+				$au_ryoukin +=0.1*$_SESSION["packet"];
+				$softbank_ryoukin+=0.1*$_SESSION["packet"];
+				$d_pakeho="パケ・ホーダイ シンプル";#(ダブルとの違いが不明、あきとに確認)
+				$a_pakeho="ダブル定額スーパーライト";
+				$s_pakeho="パケットし放題S";
+			
+			} elseif (9800 <= $_SESSION["packet"] && $_SESSION["packet"] < 25000){
+				$docomo_ryoukin += 0.08*$_SESSION["packet"];
+				$au_ryoukin +=0.08*$_SESSION["packet"];
+				$softbank_ryoukin +=0.08*$_SESSION["packet"];
+				$d_pakeho="パケ・ホーダイ シンプル";#(ダブルとの違いが不明。シンプルが完全に上位互換。あきとに確認)
+				$a_pakeho="ダブル定額ライト";
+				$s_pakeho="パケットし放題";#(フラットとの違いが不明。無印が完全に上位互換。)
+			
+			} elseif (25000 <= $_SESSION["packet"] &&  $_SESSION["packet"] < 52500){
+				$docomo_ryoukin += 0.08*$_SESSION["packet"];
+				$au_ryoukin +=0.05*$_SESSION["packet"];
+				$softbank_ryoukin +=0.08*$_SESSION["packet"];
+				$d_pakeho="パケ・ホーダイ シンプル";#(ダブルとの違いが不明。シンプルが完全に上位互換。あきとに確認)
+				$a_pakeho="ダブル定額";
+				$s_pakeho="パケットし放題";#(フラットとの違いが不明。無印が完全に上位互換。)
+			
+			} else{
+				$docomo_ryoukin += 4200;
+				$au_ryoukin += 4200;
+				$softbank_ryoukin += 4200;
+				$d_pakeho="パケ・ホーダイ シンプル";#(ダブルとの違いが不明。シンプルが完全に上位互換。あきとに確認)
+				$a_pakeho="ダブル定額";
+				$s_pakeho="パケットし放題";
+				
+			}#packetから出た
+		}
+		
+		#新料金プランのパケット数計算
+			if ($_SESSION["packet"] < 114000){
+				$docomo_new+=3500;
+			
+			} elseif (114000<= $_SESSION["packet"] && $_SESSION["packet"] < 16777216){
+				if($_SESSION["years"]<15){
+					$docomo_new+=3500;
+				} else{
+					$docomo_new+=2900;
+				}
+			
+			} elseif (16777216<= $_SESSION["packet"] && $_SESSION["packet"] < 25165824){
+				#2GBパックに1000円で1GBつけた方がまし、だけど10年以上docomo使ってると打ち消される
+				if($_SESSION["years"]<10){
+					$docomo_new+=4500;#3GB使える
+				}elseif (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+					$docomo_new+=4400;#5GB使える
+				}elseif (15 < $_SESSION["years"]){
+					$docomo_new+=4200;#5GB使える
 				}
 				
-				#以下通信料
-				if ($_SESSION["packet"] < 9800) {
-					$docomo_ryoukin += 0.08*$_SESSION["packet"];
-					$au_ryoukin +=0.1*$_SESSION["packet"];
-					$softbank_ryoukin+=0.1*$_SESSION["packet"];
-					#docomo:パケ・ホーダイ シンプル(ダブルとの違いが不明、あきとに確認)
-					#au:ダブル定額スーパーライト
-					#softbank:パケットし放題S
-					
-				} elseif (9800 <= $_SESSION["packet"] || $_SESSION["packet"] < 25000){
-					$docomo_ryoukin += 0.08*$_SESSION["packet"];
-					$au_ryoukin +=0.08*$_SESSION["packet"];
-					$softbank_ryoukin +=0.08*$_SESSION["packet"];
-					#docomo:パケ・ホーダイ シンプル(ダブルとの違いが不明。シンプルが完全に上位互換。あきとに確認)
-					#au:ダブル定額ライト
-					#softbank:パケットし放題(フラットとの違いが不明。無印が完全に上位互換。)
+			} elseif (25165824<= $_SESSION["packet"] && $_SESSION["packet"] < 41943040){
+				$docomo_new += 5000;
+				if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+					$docomo_new-=600;#5GB使える
+				}elseif (15 <= $_SESSION["years"]){
+					$docomo_new-=800;#5GB使える
+				}
+			
+			} else {
+				#通信料1GB増加につき1000円足してく
+				$docomo_new += 5000;
+				$_SESSION["packet"] -= 41943040;
+				for ( ; 0<$_SESSION["packet"] ; $_SESSION["packet"]-=8388608){
+					$docomo_new+=1000;
+				}
 				
-				} elseif (25000 <=$_SESSION["packet"]){
-					$docomo_ryoukin += 0.08*$_SESSION["packet"];
-					$au_ryoukin +=0.05*$_SESSION["packet"];
-					$softbank_ryoukin +=0.08*$_SESSION["packet"];
-					#docomo:パケ・ホーダイ シンプル(ダブルとの違いが不明。シンプルが完全に上位互換。あきとに確認)
-					#au:ダブル定額
-					#softbank:パケットし放題(フラットとの違いが不明。無印が完全に上位互換。)
-				}#packetから出た
+				if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+					$docomo_new-=600;#5GB使える
+				}elseif (15 <= $_SESSION["years"]){
+					$docomo_new-=800;#5GB使える
+				}
 			}
-		echo "hello $docomo_new";
 		
 		if($docomo_ryoukin >= $docomo_new){
 			$docomo_ryoukin = $docomo_new;
-			$d="新体系";
+			$d_plan="新体系";
 		}
 		
 		
 		$_SESSION["docomo_ryoukin"]=$docomo_ryoukin;
 		$_SESSION["au_ryoukin"]=$au_ryoukin;
 		$_SESSION["softbank_ryoukin"]=$softbank_ryoukin;
-		
+		$_SESSION["d_plan"]=$d_plan;
+		$_SESSION["d_pakeho"]=$d_pakeho;
+		$_SESSION["a_plan"]=$a_plan;
+		$_SESSION["a_pakeho"]=$a_pakeho;
+		$_SESSION["s_plan"]=$s_plan;
+		$_SESSION["s_pakeho"]=$s_pakeho;
 		
 		
         $this->load->view("header",$data);

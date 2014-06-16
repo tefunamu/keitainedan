@@ -3,10 +3,24 @@
 <div id="wrapper">
    <img src="../../images/hon.gif"  alt= ></br>
    <div id="content_left">
-結果
-docomo<?php echo $_SESSION["docomo_ryoukin"]; ?>円</br>
+結果</Br>
+docomo <?php echo $_SESSION["docomo_ryoukin"]; ?>円</br>
+料金プラン:<?php echo $_SESSION["d_plan"]; ?></br>
+パケホーダイ：<?php echo $_SESSION["d_pakeho"]; ?></br>
+
 au<?php echo $_SESSION["au_ryoukin"]; ?>円</br>
+料金プラン：<?php echo $_SESSION["a_plan"]; ?></br>
+パケホーダイ：<?php echo $_SESSION["a_pakeho"]; ?></br>
+
 softbank<?php echo $_SESSION["softbank_ryoukin"]; ?>円</br>
+料金プラン：<?php echo $_SESSION["s_plan"]; ?></br>
+パケホーダイ：<?php echo $_SESSION["s_pakeho"]; ?></br>
+
+</Br>
+共通</br>
+spモード：300円</br>
+ユニバーサル料：3円</br>
+
 </div>
 <div id="content_right">
 入力内容<Br>

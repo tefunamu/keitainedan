@@ -5,7 +5,7 @@
    <img src="../../images/hon.gif"  alt= ></br>
    <div id="content_left">
 
-<form action="../kekka">
+<form action="kekka">
 一ヶ月間の通話時間を入力してください</br>
 <input type="text" name="tuuwazikan" value="0">分</br>
 <input type="submit" value="次へ"></a>

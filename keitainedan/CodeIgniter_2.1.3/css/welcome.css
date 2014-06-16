@@ -74,6 +74,7 @@ footer {
 #profile{
 	top:200px;
 	float:right;
+	width:300px;#éwíËÇµÇÎÇ¡ÇƒåæÇÌÇÍÇƒÇÈÇ©ÇÁÇ∆ÇËÇ†Ç¶Ç∏
 	display: block;
 	position:relative; 
 }
@@ -83,8 +84,9 @@ footer {
 #wrapper {
     background: url("../../images/hon.gif") ;
     position: absolute;
-	top:250px;
-	left: 200px;
+    top:250px;
+	left: 100px;#200Å®100Ç…
+	
 }
 
 #content_left {
@@ -92,7 +94,7 @@ footer {
     left: 90px;
     position: absolute;
     top: 150px;
-    width: 255px;    
+    width: 250px;#255ÇæÇ∆é·ä±ïˆÇÍÇÈÇÃÇ≈250Ç…ÅB6/15
 }
 
 #content_right {
