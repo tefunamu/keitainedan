@@ -6,7 +6,7 @@
    <div id="content_left">
       <form action="kisyu">
       使用中のキャリアを選択してください
-	<input type="radio" name="kyaria" value="docomo">NTT docomo</br>
+	<input type="radio" name="kyaria" value="docomo" checked="">NTT docomo</br>
 	<input type="radio" name="kyaria" value="au">au by KDDI</br>
 	<input type="radio" name="kyaria" value="softbanak">SoftBank</br>
 	<!--<input type="radio" name="shinki" value="shinki">-->
