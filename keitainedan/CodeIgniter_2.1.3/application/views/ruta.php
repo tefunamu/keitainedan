@@ -15,8 +15,6 @@
 
 <input type="radio" name="kaisen" value="nashi" checked="">該当なし</br>
 <input type="submit" value="次へ"></a>
-</br></br></br>
-ここも表示の仕方を考えなければならない
 
 	</div>
 	<div id="content_right">

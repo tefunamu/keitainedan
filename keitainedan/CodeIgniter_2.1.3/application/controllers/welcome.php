@@ -49,9 +49,7 @@ class Welcome extends CI_Controller {
 		$_SESSION["gakusei"]=$_REQUEST["gakusei"];
 		
         $this->load->view("header",$data);
-        if($_SESSION["kyaria"]==FALSE || $_SESSION["gakusei"]==FALSE){
-			$_SESSION["kyaria"]=0;
-			$_SESSION["gakusei"]=0;
+        if($_SESSION["kyaria"]==FALSE){
 			$this->load->view("cyaria",$data);
 		}else{
 			$this->load->view("kisyu",$data);
@@ -167,7 +165,7 @@ class Welcome extends CI_Controller {
 				$softbank_ryoukin=934+5700+300;
 				$docomo_new=2700;
 				
-				#iPhoneにはパケホプランが500円安い
+				#iPhoneのパケホプランは500円安い
 				$docomo_ryoukin-=500;
 				$au_ryoukin-=500;
 				$softbank_ryoukin-=500;
@@ -276,6 +274,9 @@ class Welcome extends CI_Controller {
 			$au_ryoukin += $tuuwaryoukin;
 			$softbank_ryoukin += $tuuwaryoukin;
 			
+			$d_plan = タイプXiにねん;
+			$a_plan = "LTEプラン";
+			$_SESSION["s_plan"]=ホワイトプラン;
 			
 			#スマホの通信料
 			#パケット数により、docomoの安いプランがある。ソフバンもほんとに少なければ(15Mbyteレベル)安いやつがある
@@ -283,6 +284,11 @@ class Welcome extends CI_Controller {
 				$docomo_ryoukin-=1000;
 				$softbank_ryoukin+=0.05*$_SESSION["packet"];
 				$docomo_new+=3500;
+				
+				$d_pakeho = "Xiパケ・ホーダイ ライト";
+				$a_pakeho = "";
+				$s_pakeho = "";
+			
 			
 			} elseif (114000<= $_SESSION["packet"] && $_SESSION["packet"] < 16777216){
 				$docomo_ryoukin-=1000;

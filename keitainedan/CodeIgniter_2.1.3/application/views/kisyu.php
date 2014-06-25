@@ -8,7 +8,7 @@
 希望の機種を選択してください。<br>
 <input type="radio" name="kisyu" value="doredemo" checked="">とくにこだわらない(最安値)</br>
 <input type="radio" name="kisyu" value="iphone">iPhone</br>
-<input type="radio" name="kisyu" value="sumaho">smart phone(スマホ)</br>
+<input type="radio" name="kisyu" value="sumaho">その他smart phone(スマホ)</br>
 <input type="radio" name="kisyu" value="garake">future phone(ガラケ)</br>
 
 </br>
