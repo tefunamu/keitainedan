@@ -286,8 +286,8 @@ class Welcome extends CI_Controller {
 				$docomo_new+=3500;
 				
 				$d_pakeho = "Xiパケ・ホーダイ ライト";
-				$a_pakeho = "";
-				$s_pakeho = "";
+				$a_pakeho = "LTE フラット";
+				$s_pakeho = "パケット定額サービス無し";
 			
 			
 			} elseif (114000<= $_SESSION["packet"] && $_SESSION["packet"] < 16777216){
