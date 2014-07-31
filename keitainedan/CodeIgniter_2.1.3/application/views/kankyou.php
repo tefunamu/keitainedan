@@ -15,11 +15,14 @@
 	
 	<div id="content_right">
 	現在、<br>
-	XXXXXXXXXXXXX<br>
-	YYYYYYYYYYYYY<br>
+	Internet Explorer 11.0<br>
+	Fire Fox 31.0<br>
+	Google chrome<br>
 	において動作状況を確認しています。<br>
 	これ以外の場合、正常に動作しない可能性があるため、
 	なるべくこちらのブラウザをご利用ください。
 
+	また、算出結果の表示の際に、文字化けの方が確認されております。
+	文字化けが起きた場合、EncordingをUnicorde(UTF-8)へ変更すると、解消できる場合がございます。
 	
 </div>

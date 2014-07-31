@@ -40,6 +40,7 @@ class Welcome extends CI_Controller {
 
 	public function kyaria()
 	{
+		
 		$this->load->helper("url");
 		$data["page_title"] = "モバイル料金ラボ";
         
@@ -56,7 +57,6 @@ class Welcome extends CI_Controller {
 		
 		session_start();
 		$_SESSION["kyaria"]=$_REQUEST["kyaria"];
-		$_SESSION["gakusei"]=$_REQUEST["gakusei"];
 		
         $this->load->view("header",$data);
         if($_SESSION["kyaria"]==FALSE){
@@ -151,6 +151,24 @@ class Welcome extends CI_Controller {
 	}
 	
 	
+	public function extra()
+	{
+		$this->load->helper("url"); 
+		$data["page_title"] = "モバイル料金ラボ";
+		session_start();
+		$_SESSION["tuuwazikan"]=$_REQUEST["tuuwazikan"];
+		$_SESSION["tuuwazikan"] = mb_convert_kana($_SESSION["tuuwazikan"], "a", "UTF-8");#全角数字を半角に変換してます
+
+		$this->load->view("header",$data);
+		if($_SESSION["packet"]==FALSE){
+			$this->load->view("suuti",$data);
+		}else{
+			$this->load->view("extra",$data);
+		}
+       // $this->load->view("footer",$data);
+
+	}
+	
 	public function kekka()
 	{
 		$this->load->helper("url"); 
@@ -158,8 +176,8 @@ class Welcome extends CI_Controller {
 		
 		
 		session_start();
-		$_SESSION["tuuwazikan"]=$_REQUEST["tuuwazikan"];
-		$_SESSION["tuuwazikan"] = mb_convert_kana($_SESSION["tuuwazikan"], "a", "UTF-8");#全角数字を半角に変換してます
+		$_SESSION["U25"]=$_REQUEST["U25"];
+		$_SESSION["familyotoku"]=$_REQUEST["familyotoku"];
 		
 		#もっとも一般的な料金を表示、他も一緒
 		$docomo_ryoukin;
@@ -208,45 +226,24 @@ class Welcome extends CI_Controller {
 		}
 		
 		
-		#学割及び乗り換えわりの選択
-			#ソフバンに下取りあり。組み込まれてない。
-			#auにも下取りあり。組み込まれていない。
-			#docomoの学割はスマホのみなので、あまり意味ない。基本料金無料が3年間に延長になる
-			#au,softbankはガラケにも適用されるため、意味ある。ただし、日中使うプランのが多いからあれかも
-		if ($_SESSION["gakusei"] == "zibun" or $_SESSION["gakusei"] == "kazoku"){
-		#このif内は学割
-			if($_SESSION["kisyu"] == "sumaho" or "iphone"){
-				#基本料金が引かれる
-				$docomo_ryoukin=$docomo_ryoukin - 743;
-				$au_ryoukin -= 934;
-				$softbank_ryoukin -= 934;
-					
-			} else{
-				#docomoの場合、ガラケは学割の対象外
-				$au_ryoukin-=934;
-				$softbank_ryoukin-=934;
-			}
-			
-		} elseif ($_SESSION["kisyu"] == "sumaho" || $_SESSION["kisyu"] =="iphone"){
-		#このif内は乗り換え割り
+		#学割及び乗り換えわりの選択。学割は星になった。
+		
+		if ($_SESSION["kisyu"] == "sumaho" || $_SESSION["kisyu"] =="iphone"){
+		#このif内は乗り換え割り。乗り換えはスマホのみ対象
 			switch($_SESSION["kyaria"]){
 				case "docomo":
-					$au_ryoukin-=934;
+					$au_ryoukin-=934;#8/31マデ
 					$softbank_ryoukin-=934;
 					break;
 					
 				case "au":
-					$docomo_ryoukin-=743;
 					$softbank_ryoukin-=934;
 					break;
 				
 				case "softbank":
-					$docomo_ryoukin-=743;
 					$au_ryoukin-=934;
 					break;
 			}
-		} else{
-		#学生ではなく家族に学生もおらず、ガラケにしたい場合何も起きない。
 		}
 	
 		#ここから回線割引き
@@ -575,29 +572,57 @@ class Welcome extends CI_Controller {
 				
 			}#packetから出た
 		}
+
+
+#ここから新体系
+#めんどいからギガに戻す。2gbまでは3500円だけど2.0001gbからは4500円だよって計算してる。ceil関数さま様
+	$_SESSION["packet"] = $_SESSION["packet"] / 8388608;
 		
-		#新料金プランのパケット数計算
-			if ($_SESSION["packet"] < 114000){
+	#docomo新体系
+		
+		if($_SESSION["kisyu"] == "sumaho" or "iphone"){
+		
+			$docomo_new += 2200 + 300;
+			#U25応援割。
+			if( $_SESSION["U25"] == "yes"){
+				$_SESSION["packet"] -= 1;
+				$docomo_new -= 500;
+			}
+			#13ヶ月1GBゲット
+			if( $_SESSION["kisyu"] ==  "iphone"){
+				$_SESSION["packet"] -= 1;
+			}
+			
+		
+		} else{#ガラケ
+		$docomo_new += 2200 + 300;
+		}
+
+	#docomoデータパック(ガラスマ共通)
+
+		if($_SESSION["packet"] < 0.005215){		#5.3MBです
+			$docomo_new+= 0.08*$_SESSION["packet"];
+		
+		} elseif (0.005215 <= $_SESSION["packet"] && $_SESSION["packet"] < 2){
+			if($_SESSION["years"]<15){
 				$docomo_new+=3500;
+			} else{
+				$docomo_new+=2900;
+			}
+		
+		} elseif (2<= $_SESSION["packet"] && $_SESSION["packet"] < 3){
+			#2GBパックに1000円で1GBつけた方がまし、だけど10年以上docomo使ってると打ち消される
+			if($_SESSION["years"]<10){
+			$docomo_new+=4500;#3GB使える
 			
-			} elseif (114000<= $_SESSION["packet"] && $_SESSION["packet"] < 16777216){
-				if($_SESSION["years"]<15){
-					$docomo_new+=3500;
-				} else{
-					$docomo_new+=2900;
-				}
+		}elseif (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+			$docomo_new+=4400;#5GB使える
 			
-			} elseif (16777216<= $_SESSION["packet"] && $_SESSION["packet"] < 25165824){
-				#2GBパックに1000円で1GBつけた方がまし、だけど10年以上docomo使ってると打ち消される
-				if($_SESSION["years"]<10){
-					$docomo_new+=4500;#3GB使える
-				}elseif (10<=$_SESSION["years"] && $_SESSION["years"]<15){
-					$docomo_new+=4400;#5GB使える
-				}elseif (15 < $_SESSION["years"]){
-					$docomo_new+=4200;#5GB使える
-				}
+			}elseif (15 < $_SESSION["years"]){
+				$docomo_new+=4200;#5GB使える
+			}
 				
-			} elseif (25165824<= $_SESSION["packet"] && $_SESSION["packet"] < 41943040){
+			} elseif (3<= $_SESSION["packet"] && $_SESSION["packet"] < 5){
 				$docomo_new += 5000;
 				if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
 					$docomo_new-=600;#5GB使える
@@ -608,8 +633,8 @@ class Welcome extends CI_Controller {
 			} else {
 				#通信料1GB増加につき1000円足してく
 				$docomo_new += 5000;
-				$_SESSION["packet"] -= 41943040;
-				for ( ; 0<$_SESSION["packet"] ; $_SESSION["packet"]-=8388608){
+				$_SESSION["packet"] -= 5;
+				for ( ; 0<$_SESSION["packet"] ; $_SESSION["packet"] -= 1){
 					$docomo_new+=1000;
 				}
 				
@@ -620,11 +645,10 @@ class Welcome extends CI_Controller {
 				}
 			}
 		
-#ここからソフバンの新体系
-/*
-#スマホパケット料金
-#めんどいからギガに戻す
-
+		
+		
+	#ここからソフバンの新体系
+	#ソフバンのスマホ
 
 	if($_SESSION["kisyu"] == "sumaho" or "iphone"){
 		$softbank_new = 2700+300;
@@ -636,78 +660,118 @@ class Welcome extends CI_Controller {
 						break;
 						
 					case "sumaho":#yys
-						if ($_SESSION["packet"] <5){
+						if ($_SESSION["packet"] <= 3){
 							$sn_pakeho = "定額2GB";
-							$sn_service="iphoneボナス+U25";
-							if ($_SESSION["paccket"]< "4"){
+							$sn_service="家族でお得+スマホ2GB";
+							if ($_SESSION["packet"] <= 2){
+								$softbank_new += 3500;
+							} else{
+								$softbank_new += 4500;
+							}
+						
+						} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
+							$sn_pakeho = "定額5GB";
+							$sn_service="家族でお得+スマホ2GB";
+							if ($_SESSION["packet"] <= 7){
+								$softbank_new += 4700;
+							} else{
+								$softbank_new += 4700+1000*(ceil($_SESSION["packet"])-7);
+							}
+							
+						
+						} elseif(10 < $_SESSION["packet"] && $_SESSION["packet"] <= 15){
+							$sn_pakeho = "定額10GB";
+							$sn_service="10GBお得";
+							if ($_SESSION["packet"] <= 12){
+								$softbank_new += 8000;
+							} else{
+								$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-12);
+							}
+							
+						} elseif(15 < $_SESSION["packet"] && $_SESSION["packet"] <= 20){
+							$sn_pakeho = "定額15GB";
+							$sn_service="10GBお得+スマホ2GB";
+							if ($_SESSION["packet"] <= 17){
+								$softbank_new += 11000;
+							} else{
+								$softbank_new += 11000+1000*(ceil($_SESSION["packet"])-17);
+							}
+							
+						} elseif(20 < $_SESSION["packet"] && $_SESSION["packet"] <= 27){
+							$sn_pakeho = "定額20GB";
+							$sn_service="家族でお得+スマホ2GB";
+							if ($_SESSION["packet"] <= 22){
+								$softbank_new += 14000;
+							} else{
+								$softbank_new += 14000+1000*(ceil($_SESSION["packet"])-22);
+							}
+							
+						} else {
+							$sn_pakeho = "定額30GB";
+							$sn_pakeho = "家族でお得+スマホ2GB";
+							if ($_SESSION["packet"]<= 32){
+								$softbank_new += 19500;
+							} else{
+								$softbank_new += 19500+1000*(ceil($_SESSION["packet"])-32);
+							}
+						}
+						break;
+						
+					case "iphone":#yyi
+						if ($_SESSION["packet"] <= 5){
+							$sn_pakeho = "定額2GB";
+							$sn_service="U25+iphoneお得";
+							if ($_SESSION["packet"] <= 4){
 								$softbank_new += 3000;
 							} else{
 								$softbank_new += 4000;
 							}
 						
-						} elseif(5 <= $_SESSION["packet"] && $_SESSION["packet"] < 10){
+						} elseif(5 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
 							$sn_pakeho = "定額5GB";
-							$sn_service="ボーナス2GB";
-							if ($_SESSION["paccket"]< "7"){
+							$sn_service="U25+iphoneお得";
+							if ($_SESSION["packet"] <= 7){
 								$softbank_new += 4500;
 							} else{
-								$softbank_new += 4500+1000*($_SESSION["packet"]-7);
+								$softbank_new += 4500+1000*(ceil($_SESSION["packet"])-7);
 							}
 							
-						
-						} elseif(10 <= $_SESSION["packet"] && $_SESSION["packet"] <15){
+						} elseif($_SESSION["packet"] == 11){
 							$sn_pakeho = "定額10GB";
-							if ($_SESSION["paccket"]< "14"){
-								$softbank_new += 8000;
-							} else{
-								$softbank_new += 8000+1000*($_SESSION["packet"]-12);
-							}
+							$sn_service="iphoneボナス1GB+10GBお得";
+							$softbank_new += 8000;
+						
+						} elseif(11 < $_SESSION["packet"] && $_SESSION["packet"] <= 14){
+							$sn_pakeho = "定額10GB";
+							$sn_service="U25+iphoneボナス";
+							$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-11);
 							
-						} elseif(15 <= $_SESSION["packet"] && $_SESSION["packet"] < 20){
+						} elseif(14 < $_SESSION["packet"] && $_SESSION["packet"] <= 19){
 							$sn_pakeho = "定額15GB";
-							if ($_SESSION["paccket"]< "17"){
-								$softbank_new += 8000;
+							$sn_service="家族でお得+iphoneボナス";
+							if ($_SESSION["packet"] <= 17){
+								$softbank_new += 11000;
 							} else{
-								$softbank_new += 8000+1000*($_SESSION["packet"]-17);
+								$softbank_new += 11000+1000*(ceil($_SESSION["packet"])-17);
 							}
 							
-						} elseif(20 <= $_SESSION["packet"] && $_SESSION["packet"] < 27){
+						} elseif(19 < $_SESSION["packet"] && $_SESSION["packet"] <= 26){
 							$sn_pakeho = "定額20GB";
-							if ($_SESSION["paccket"]< ""){
-								$softbank_new += 8000;
+							$sn_service="家族でお得+iphoneボナス";
+							if ($_SESSION["packet"] <= 21){
+								$softbank_new += 14000;
 							} else{
-								$softbank_new += 8000+1000*($_SESSION["packet"]-17);
+								$softbank_new += 14000+1000*(ceil($_SESSION["packet"])-21);
 							}
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						}
-						break;
-						
-					case "iphone":#yyi
-						if ($_SESSION["packet"] < ){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
+							
+						} else {
+							$sn_pakeho = "定額30GB";
+							$sn_service="家族でお得+iphoneボナス";
+							if ($_SESSION["packet"]<= 31){
+								$softbank_new += 19500;
+							} else{
+								$softbank_new += 19500+1000*(ceil($_SESSION["packet"])-31);
+							}
 						}
 						break;
 				}
@@ -718,187 +782,426 @@ class Welcome extends CI_Controller {
 						break;
 						
 					case "sumaho":#yns
-						if ($_SESSION["packet"] < ){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
+						if ($_SESSION["packet"] <= 3){
+							$sn_pakeho = "定額2GB";
+							$sn_service="家族でお得+スマホ2GB";
+							if ($_SESSION["packet"] <= 2){
+								$softbank_new += 3500;
+							} else{
+								$softbank_new += 4500;
+							}
 						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
+						} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 5){
+							$sn_pakeho = "定額5GB";
+							$sn_service="U25";
+							$softbank_new += 4500;
 						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
+						} elseif(5 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
+							$sn_pakeho = "定額5GB";
+							$sn_service="ボナス2GB";
+							if ($_SESSION["packet"] <= 7){
+								$softbank_new += 5000;
+							} else{
+								$softbank_new += 5000+1000*(ceil($_SESSION["packet"])-7);
+							}
+							
+						} elseif(10 < $_SESSION["packet"] && $_SESSION["packet"] <= 16){
+							$sn_pakeho = "定額10GB";
+							$sn_service="ボナス2GB+10GBおトク割";
+							if ($_SESSION["packet"] <= 12){
+								$softbank_new += 8000;
+							} else{
+								$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-12);
+							}
+							
+						} elseif(16 < $_SESSION["packet"] && $_SESSION["packet"] <= 18){
+							$sn_pakeho = "定額15GB";
+							$sn_service="ボナス2GB";
+							if ($_SESSION["packet"] <= 17){
+								$softbank_new += 12500;
+							} else{
+								$softbank_new += 13500;
+							}
 						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
+						} elseif(18 < $_SESSION["packet"] && $_SESSION["packet"] <= 25){
+							$sn_pakeho = "定額20GB";
+							$sn_service="U25";
+							if ($_SESSION["packet"] <= 20){
+								$softbank_new += 14000;
+							} else{
+								$softbank_new += 14000+1000*(ceil($_SESSION["packet"])-20);
+							}	
 						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
+						} else {
+							$sn_pakeho = "定額30GB";
+							$sn_service="U25";
+							if ($_SESSION["packet"]<= 32){
+								$softbank_new += 19500;
+							} else{
+								$softbank_new += 19500+1000*(ceil($_SESSION["packet"])-32);
+							}
 						}
 						break;
 						
 					case "iphone":#yni
-						if ($_SESSION["packet"] < ){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
+						if ($_SESSION["packet"] <= 5){
+							$sn_pakeho = "定額2GB";
+							$sn_service="U25+iphoneお得";
+							if ($_SESSION["packet"] <= 4){
+								$softbank_new += 3000;
+							} else{
+								$softbank_new += 4000;
+							}
 						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
+						} elseif(5 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
+							$sn_pakeho = "定額5GB";
+							$sn_service="U25+iphoneお得";
+							if ($_SESSION["packet"] <= 7){
+								$softbank_new += 4500;
+							} else{
+								$softbank_new += 4500+1000*(ceil($_SESSION["packet"])-7);
+							}
+							
+						} elseif($_SESSION["packet"] == 11){
+							$sn_pakeho = "定額10GB";
+							$sn_service="iphoneボナス1GB+10GBお得";
+							$softbank_new += 8000;
 						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
+						} elseif(11 < $_SESSION["packet"] && $_SESSION["packet"] <= 15){
+							$sn_pakeho = "定額10GB";
+							$sn_service="U25+iphoneボナス";
+							$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-11);
+							
+						} elseif(15 < $_SESSION["packet"] && $_SESSION["packet"] <= 20){
+							$sn_pakeho = "定額15GB";
+							$sn_service="U25+iphoneボナス";
+							if ($_SESSION["packet"] <= 17){
+								$softbank_new += 11000;
+							} else{
+								$softbank_new += 11000+1000*(ceil($_SESSION["packet"])-17);
+							}
+							
+						} elseif(20 < $_SESSION["packet"] && $_SESSION["packet"] <= 28){
+							$sn_pakeho = "定額20GB";
+							$sn_service="U25+iphoneボナス";
+							if ($_SESSION["packet"] <= 22){
+								$softbank_new += 15500;
+							} else{
+								$softbank_new += 15500+1000*(ceil($_SESSION["packet"])-22);
+							}
+							
+						} else {
+							$sn_pakeho = "定額30GB";
+							$sn_service="U25+iphoneボナス";
+							if ($_SESSION["packet"]<= 32){
+								$softbank_new += 22000;
+							} else{
+								$softbank_new += 22000+1000*(ceil($_SESSION["packet"])-32);
+							}
 						}
 						break;
+				}
 			}
 		} else{
-			switch ($_SESSION["kisyu"]){
+			if ($_SESSION["familyotoku"] == "yes"){
+				switch ($_SESSION["kisyu"]){
 					case "doredemo":
-					#not excist
+						#not excist
 						break;
 						
 					case "sumaho":#nys
-						if ($_SESSION["packet"] < ){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
+						if ($_SESSION["packet"] <= 3){
+							$sn_pakeho = "定額2GB";
+							$sn_service="家族でお得+スマホ2GB";
+							if ($_SESSION["packet"] <= 2){
+								$softbank_new += 3500;
+							} else{
+								$softbank_new += 4500;
+							}
 						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
+						} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
+							$sn_pakeho = "定額5GB";
+							$sn_service="家族でお得+スマホ2GB";
+							if ($_SESSION["packet"] <= 7){
+								$softbank_new += 4700;
+							} else{
+								$softbank_new += 4700+1000*(ceil($_SESSION["packet"])-7);
+							}
+							
 						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
+						} elseif(10 < $_SESSION["packet"] && $_SESSION["packet"] <= 15){
+							$sn_pakeho = "定額10GB";
+							$sn_service="10GBお得";
+							if ($_SESSION["packet"] <= 12){
+								$softbank_new += 8000;
+							} else{
+								$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-12);
+							}
+							
+						} elseif(15 < $_SESSION["packet"] && $_SESSION["packet"] <= 20){
+							$sn_pakeho = "定額15GB";
+							$sn_service="10GBお得+スマホ2GB";
+							if ($_SESSION["packet"] <= 17){
+								$softbank_new += 11000;
+							} else{
+								$softbank_new += 11000+1000*(ceil($_SESSION["packet"])-17);
+							}
+							
+						} elseif(20 < $_SESSION["packet"] && $_SESSION["packet"] <= 27){
+							$sn_pakeho = "定額20GB";
+							$sn_service="家族でお得+スマホ2GB";
+							if ($_SESSION["packet"] <= 22){
+								$softbank_new += 14000;
+							} else{
+								$softbank_new += 14000+1000*(ceil($_SESSION["packet"])-22);
+							}
+							
+						} else {
+							$sn_pakeho = "定額30GB";
+							$sn_pakeho = "家族でお得+スマホ2GB";
+							if ($_SESSION["packet"]<= 32){
+								$softbank_new += 19500;
+							} else{
+								$softbank_new += 19500+1000*(ceil($_SESSION["packet"])-32);
+							}
 						}
 						break;
 						
 					case "iphone":#nyi
-						if ($_SESSION["packet"] < ){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
+						if ($_SESSION["packet"] <= 4){
+							$sn_pakeho = "定額2GB";
+							$sn_service="iphoneお得";
+							if ($_SESSION["packet"] <= 3){
+								$softbank_new += 3500;
+							} else{
+								$softbank_new += 4500;
+							}
 						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
+						} elseif(4 < $_SESSION["packet"] && $_SESSION["packet"] <= 9){
+							$sn_pakeho = "定額5GB";
+							$sn_service="家族でお得+iphoneお得";
+							if ($_SESSION["packet"] <= 6){
+								$softbank_new += 4500;
+							} else{
+								$softbank_new += 4500+1000*(ceil($_SESSION["packet"])-6);
+							}
+							
+						} elseif(9 < $_SESSION["packet"] && $_SESSION["packet"] <= 13){
+							$sn_pakeho = "定額10GB";
+							$sn_service="iphoneボナス";
+							$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-11);
+							
+						} elseif(14 < $_SESSION["packet"] && $_SESSION["packet"] <= 19){
+							$sn_pakeho = "定額15GB";
+							$sn_service="家族でお得+iphoneボナス";
+							if ($_SESSION["packet"] <= 16){
+								$softbank_new += 11000;
+							} else{
+								$softbank_new += 11000+1000*(ceil($_SESSION["packet"])-16);
+							}
+							
+						} elseif(19 < $_SESSION["packet"] && $_SESSION["packet"] <= 26){
+							$sn_pakeho = "定額20GB";
+							$sn_service="家族でお得+iphoneボナス";
+							if ($_SESSION["packet"] <= 21){
+								$softbank_new += 14000;
+							} else{
+								$softbank_new += 14000+1000*(ceil($_SESSION["packet"])-21);
+							}
+							
+						} else {
+							$sn_pakeho = "定額30GB";
+							$sn_service="家族でお得+iphoneボナス";
+							if ($_SESSION["packet"]<= "31"){
+								$softbank_new += 19500;
+							} else{
+								$softbank_new += 19500+1000*(ceil($_SESSION["packet"])-31);
+							}
 						}
 						break;
 				}
 			} else{
 				switch ($_SESSION["kisyu"]){
 					case "doredemo":
-					#not excist
+						#not excist
 						break;
 						
 					case "sumaho":#nns
-						if ($_SESSION["packet"] < ){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
+						if ($_SESSION["packet"] <= 3){
+							$sn_pakeho = "定額2GB";
+							$sn_service="スマホ2GB";
+							if ($_SESSION["packet"] <= 2){
+								$softbank_new += 3500;
+							} else{
+								$softbank_new += 4500;
+							}
+					
+						} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
+							$sn_pakeho = "定額5GB";
+							$sn_service="スマホ2GB";
+							if ($_SESSION["packet"] <= 7){
+								$softbank_new += 5000;
+							} else{
+								$softbank_new += 5000+1000*(ceil($_SESSION["packet"])-7);
+							}
+							
+						} elseif(10 < $_SESSION["packet"] && $_SESSION["packet"] <= 16){
+							$sn_pakeho = "定額10GB";
+							$sn_service="ボナス2GB+10GBお得";
+							if ($_SESSION["packet"] <= 12){
+								$softbank_new += 8000;
+							} else{
+								$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-12);
+							}
+							
+						} elseif(16 < $_SESSION["packet"] && $_SESSION["packet"] <= 20){
+							$sn_pakeho = "定額15GB";
+							$sn_service="スマホ2GB";
+							$softbank_new += 12500+1000*(ceil($_SESSION["packet"])-17);
+							
+						} elseif(20 < $_SESSION["packet"] && $_SESSION["packet"] <= 28){
+							$sn_pakeho = "定額20GB";
+							$sn_service="スマホ2GB";
+							if ($_SESSION["packet"] <= 22){
+								$softbank_new += 16000;
+							} else{
+								$softbank_new += 16000+1000*(ceil($_SESSION["packet"])-22);
+							}
+							
+						} else {
+							$sn_pakeho = "定額30GB";
+							$sn_service = "家族でお得+スマホ2GB";
+							if ($_SESSION["packet"]<= 32){
+								$softbank_new += 22500;
+							} else{
+								$softbank_new += 22500+1000*(ceil($_SESSION["packet"])-32);
+							}
 						}
-						break;
-						
-					case "iphone":#nni
-						if ($_SESSION["packet"] < ){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
-						
-						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
-							$softbank_new+=$_SESSION["packet"];
-							$sn_pakeho = "";
+					break;
+					
+				case "iphone":#nni
+					if ($_SESSION["packet"] <= 4){
+						$sn_pakeho = "定額2GB";
+						$sn_service="iphoneボナス";
+						if ($_SESSION["packet"] <= 3){
+							$softbank_new += 3500;
+						} else{
+							$softbank_new += 4500;
 						}
-						break;
+					
+					} elseif(4 < $_SESSION["packet"] && $_SESSION["packet"] <= 9){
+						$sn_pakeho = "定額5GB";
+						$sn_service="iphoneボナス";
+						if ($_SESSION["packet"] <= 6){
+							$softbank_new += 4500;
+						} else{
+							$softbank_new += 4500+1000*(ceil($_SESSION["packet"])-6);
+						}
+						
+					} elseif(9 < $_SESSION["packet"] && $_SESSION["packet"] <= 15){
+						$sn_pakeho = "定額10GB";
+						$sn_service="iphoneボナス+10GBお得";
+						$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-11);
+						
+					} elseif(16 < $_SESSION["packet"] && $_SESSION["packet"] <= 19){
+						$sn_pakeho = "定額15GB";
+						$sn_service="家族でお得+iphoneボナス";
+						if ($_SESSION["packet"] <= 16){
+							$softbank_new += 12500;
+						} else{
+							$softbank_new += 12500+1000*(ceil($_SESSION["packet"])-16);
+						}
+						
+					} elseif(19 < $_SESSION["packet"] && $_SESSION["packet"] <= 27){
+						$sn_pakeho = "定額20GB";
+						$sn_service="家族でお得+iphoneボナス";
+						if ($_SESSION["packet"] <= 21){
+							$softbank_new += 16000;
+						} else{
+							$softbank_new += 16000+1000*(ceil($_SESSION["packet"])-21);
+						}
+						
+					} else {
+						$sn_pakeho = "定額30GB";
+						$sn_service="家族でお得+iphoneボナス";
+						if ($_SESSION["packet"]<= "31"){
+							$softbank_new += 22500;
+						} else{
+							$softbank_new += 22500+1000*(ceil($_SESSION["packet"])-31);
+						}
+					}
+					break;
+				}
+			}
 		}
-	} else{#softbank_garake
-			$softbank_new = 2200 + 300 + 3500;
-			
+	} else{
+	#ソフバンのガラケ
+		#softbank_garake
+		$softbank_new = 2200 + 300;
+		if ($_SESSION["packet"] < 0.005215){		#5.3MBです
+			$softbank_new+= 0.08*$_SESSION["packet"];
+			$sn_pakeho="定額パックなし";
+			$sn_service="特殊な割引なし";
+		}else {
+			$softbank_new+= 3500;
+			$sn_pakeho="3Gケータイ";
+			$sn_service="特殊な割引なし";
+		}
 	}
-*/	
-	if($docomo_ryoukin >= $docomo_new){
-		$docomo_ryoukin = $docomo_new;
+	
+	
+	#ここからauの新体系
+	if($_SESSION["kisyu"] == "sumaho" or "iphone"){
+		$au_new = 2700+300;
+		if ($_SESSION["packet"] <= 2){
+			$aun_pakeho = "定額2GB";
+			$au_new += 3500;
+			
+		} elseif(2 < $_SESSION["packet"] && $_SESSION["packet"] <= 3){
+			$aun_pakeho = "定額3GB";
+				$au_new += 4200;
+			
+		} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 6){
+			$aun_pakeho = "定額5GB";
+			if($_SESSION["packet"]==6){
+				$au_new += 6000;
+			} else{
+				$au_new += 5000;
+			}
+			
+		} elseif(6 < $_SESSION["packet"] && $_SESSION["packet"] <= 9){
+			$aun_pakeho = "定額8GB";
+				if($_SESSION["packet"]==9){
+					$au_new += 7800;
+				} else{
+					$au_new += 6800;
+				}
+		} elseif(9 < $_SESSION["packet"] && $_SESSION["packet"] <= 11){
+			$aun_pakeho = "定額10GB";
+				if($_SESSION["packet"]==11){
+					$au_new += 9000;
+				} else{
+					$au_new += 8000;
+				}
+		} else {
+			$aun_pakeho = "定額13GB";
+			$au_new += 9800;
+		}
+	}
+	#パケットを元に戻す。
+	$_SESSION["packet"] = $_SESSION["packet"]*8388608;
+	
+	
+	
+		if($docomo_ryoukin >= $docomo_new){
+			$docomo_ryoukin = $docomo_new;
 			$d_plan="新体系";
+		}
+		
+		if($softbank_ryoukin >= $softbank_new){
+			$softbank_ryoukin = $softbank_new;
+			$s_plan = $sn_pakeho;
+			$s_pakeho= $sn_service;
 		}
         
         $_SESSION["docomo_ryoukin"]=$docomo_ryoukin;
@@ -912,9 +1215,13 @@ class Welcome extends CI_Controller {
 		$_SESSION["s_pakeho"]=$s_pakeho;
 		
 		
-        $this->load->view("header",$data);
-        $this->load->view("kekka",$data);
-        //$this->load->view("footer",$data);
+		$this->load->view("header",$data);
+		if($_SESSION["U25"]==FALSE or $_SESSION["familyotoku"]==FALSE){
+			$this->load->view("extra",$data);
+		}else{
+			$this->load->view("kekka",$data);
+		}
+       // $this->load->view("footer",$data);
 	}
 	
 	
@@ -929,6 +1236,9 @@ class Welcome extends CI_Controller {
         $this->load->view("header",$data);
         $this->load->view("book");
         //$this->load->view("footer",$data);
+        
+        
+
         
 	}*/
 }

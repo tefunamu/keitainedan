@@ -13,13 +13,6 @@
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(ウィルコム及びEMOBILE 4G-S含む)
 	<!--<input type="radio" name="shinki" value="shinki">-->
 	<Br>
-	<!--
-	ご家族の学生の有無について選択してください</br>
-	<input type="radio" name="gakusei" value="zinbun">自分が学生である</br>
-	<input type="radio" name="gakusei" value="kazoku">家族に学生がいる</br>
-	<input type="radio" name="gakusei" value="nashi" checked="">家族に学生はいない</br>
-	-->
-
 <input type="submit" value="次へ"></a>
 
 </form>
