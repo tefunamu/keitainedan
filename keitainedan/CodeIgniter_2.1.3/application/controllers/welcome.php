@@ -28,11 +28,21 @@ class Welcome extends CI_Controller {
         
 	}
 
+####################################
+##
+##質問事項にU25以下orNOT
+##家族でソフバンにでき合計が10GB以上
+##を追加しなきやいけない
+##U25= yes or no
+##familyotoku = yes or no
+####################################
+
+
 	public function kyaria()
 	{
 		$this->load->helper("url");
 		$data["page_title"] = "モバイル料金ラボ";
-		
+        
         $this->load->view("header",$data);
         $this->load->view("cyaria",$data);
        // $this->load->view("footer",$data);
@@ -128,8 +138,8 @@ class Welcome extends CI_Controller {
 		session_start();
 		$_SESSION["packet"]=$_REQUEST["packet"];
 		$_SESSION["packet"] = mb_convert_kana($_SESSION["packet"], "a", "UTF-8");#全角数字を半角に変換してます
-		$_SESSION["packet"] = $_SESSION["packet"]*1000000/128;#MB→パケットへの換算
-		
+		$_SESSION["packet"] = $_SESSION["packet"]*1024*1024/128;#MB→パケットへの換算
+
 		$this->load->view("header",$data);
 		if($_SESSION["packet"]==FALSE){
 			$this->load->view("packet",$data);
@@ -145,6 +155,7 @@ class Welcome extends CI_Controller {
 	{
 		$this->load->helper("url"); 
 		$data["page_title"] = "モバイル料金ラボ";
+		
 		
 		session_start();
 		$_SESSION["tuuwazikan"]=$_REQUEST["tuuwazikan"];
@@ -609,13 +620,288 @@ class Welcome extends CI_Controller {
 				}
 			}
 		
-		if($docomo_ryoukin >= $docomo_new){
-			$docomo_ryoukin = $docomo_new;
+#ここからソフバンの新体系
+/*
+#スマホパケット料金
+#めんどいからギガに戻す
+
+
+	if($_SESSION["kisyu"] == "sumaho" or "iphone"){
+		$softbank_new = 2700+300;
+		if ($_SESSION["U25"] == "yes"){
+			if ($_SESSION["familyotoku"] == "yes"){
+				switch ($_SESSION["kisyu"]){
+					case "doredemo":
+					#not excist
+						break;
+						
+					case "sumaho":#yys
+						if ($_SESSION["packet"] <5){
+							$sn_pakeho = "定額2GB";
+							$sn_service="iphoneボナス+U25";
+							if ($_SESSION["paccket"]< "4"){
+								$softbank_new += 3000;
+							} else{
+								$softbank_new += 4000;
+							}
+						
+						} elseif(5 <= $_SESSION["packet"] && $_SESSION["packet"] < 10){
+							$sn_pakeho = "定額5GB";
+							$sn_service="ボーナス2GB";
+							if ($_SESSION["paccket"]< "7"){
+								$softbank_new += 4500;
+							} else{
+								$softbank_new += 4500+1000*($_SESSION["packet"]-7);
+							}
+							
+						
+						} elseif(10 <= $_SESSION["packet"] && $_SESSION["packet"] <15){
+							$sn_pakeho = "定額10GB";
+							if ($_SESSION["paccket"]< "14"){
+								$softbank_new += 8000;
+							} else{
+								$softbank_new += 8000+1000*($_SESSION["packet"]-12);
+							}
+							
+						} elseif(15 <= $_SESSION["packet"] && $_SESSION["packet"] < 20){
+							$sn_pakeho = "定額15GB";
+							if ($_SESSION["paccket"]< "17"){
+								$softbank_new += 8000;
+							} else{
+								$softbank_new += 8000+1000*($_SESSION["packet"]-17);
+							}
+							
+						} elseif(20 <= $_SESSION["packet"] && $_SESSION["packet"] < 27){
+							$sn_pakeho = "定額20GB";
+							if ($_SESSION["paccket"]< ""){
+								$softbank_new += 8000;
+							} else{
+								$softbank_new += 8000+1000*($_SESSION["packet"]-17);
+							}
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						}
+						break;
+						
+					case "iphone":#yyi
+						if ($_SESSION["packet"] < ){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						}
+						break;
+				}
+			} else{
+				switch ($_SESSION["kisyu"]){
+					case "doredemo":
+					#not excist
+						break;
+						
+					case "sumaho":#yns
+						if ($_SESSION["packet"] < ){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						}
+						break;
+						
+					case "iphone":#yni
+						if ($_SESSION["packet"] < ){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						}
+						break;
+			}
+		} else{
+			switch ($_SESSION["kisyu"]){
+					case "doredemo":
+					#not excist
+						break;
+						
+					case "sumaho":#nys
+						if ($_SESSION["packet"] < ){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						}
+						break;
+						
+					case "iphone":#nyi
+						if ($_SESSION["packet"] < ){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						}
+						break;
+				}
+			} else{
+				switch ($_SESSION["kisyu"]){
+					case "doredemo":
+					#not excist
+						break;
+						
+					case "sumaho":#nns
+						if ($_SESSION["packet"] < ){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						}
+						break;
+						
+					case "iphone":#nni
+						if ($_SESSION["packet"] < ){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						
+						} elseif( <= $_SESSION["packet"] && $_SESSION["packet"] <){
+							$softbank_new+=$_SESSION["packet"];
+							$sn_pakeho = "";
+						}
+						break;
+		}
+	} else{#softbank_garake
+			$softbank_new = 2200 + 300 + 3500;
+			
+	}
+*/	
+	if($docomo_ryoukin >= $docomo_new){
+		$docomo_ryoukin = $docomo_new;
 			$d_plan="新体系";
 		}
-		
-		
-		$_SESSION["docomo_ryoukin"]=$docomo_ryoukin;
+        
+        $_SESSION["docomo_ryoukin"]=$docomo_ryoukin;
 		$_SESSION["au_ryoukin"]=$au_ryoukin;
 		$_SESSION["softbank_ryoukin"]=$softbank_ryoukin;
 		$_SESSION["d_plan"]=$d_plan;

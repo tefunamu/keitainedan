@@ -29,7 +29,7 @@ spモード：300円</br>
 使用している提携回線、</br>
 またはルーター：<?php echo $_SESSION['kaisen']; ?><Br>
 入力した機種：<?php echo $_SESSION['kisyu']; ?><Br>
-入力した通信料：<?php echo $_SESSION['packet']/1000000*128; ?>MB<Br>
+入力した通信料：<?php echo $_SESSION['packet']/1024/1024*128; ?>MB<Br>
 <!--入力した学生：<?php echo $_SESSION['gakusei']; ?><Br>-->
 </Br></Br>
 <a href="<?php echo base_url("index.php"); ?>">トップへ戻る</a>
