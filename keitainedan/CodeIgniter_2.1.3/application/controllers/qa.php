@@ -12,7 +12,7 @@ public function index()
 		$data['page_title'] = 'モバイル料金ラボ';
 		
         $this->load->view('header',$data);
-        $this->load->view('about',$data);
+        $this->load->view('qa',$data);
         //$this->load->view('footer',$data);
 
 	}
@@ -38,7 +38,7 @@ public function doc_young()
         //$this->load->view('footer',$data);
 
 	}
-	
+
 public function fee()
 	{
 		$this->load->helper('url'); 
@@ -49,28 +49,49 @@ public function fee()
         //$this->load->view('footer',$data);
 
 	}
-	
-public function menseki()
+		
+public function plan()
 	{
 		$this->load->helper('url'); 
 		$data['page_title'] = 'モバイル料金ラボ';
 		
         $this->load->view('header',$data);
-        $this->load->view('menseki',$data);
+        $this->load->view('plan',$data);
         //$this->load->view('footer',$data);
 
 	}
-
-
-public function index()
+	
+public function docomo()
 	{
 		$this->load->helper('url'); 
 		$data['page_title'] = 'モバイル料金ラボ';
 		
         $this->load->view('header',$data);
-        $this->load->view('index',$data);
+        $this->load->view('docomo',$data);
         //$this->load->view('footer',$data);
 
 	}
 	
+public function au()
+	{
+		$this->load->helper('url'); 
+		$data['page_title'] = 'モバイル料金ラボ';
+		
+        $this->load->view('header',$data);
+        $this->load->view('au',$data);
+        //$this->load->view('footer',$data);
+
+	}
+	
+public function softbank()
+	{
+		$this->load->helper('url'); 
+		$data['page_title'] = 'モバイル料金ラボ';
+		
+        $this->load->view('header',$data);
+        $this->load->view('softbank',$data);
+        //$this->load->view('footer',$data);
+
+	}
+
 }
