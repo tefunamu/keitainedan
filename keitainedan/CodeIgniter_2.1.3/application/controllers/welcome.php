@@ -179,11 +179,6 @@ class Welcome extends CI_Controller {
 		$_SESSION["U25"]=$_REQUEST["U25"];
 		$_SESSION["familyotoku"]=$_REQUEST["familyotoku"];
 		
-		#もっとも一般的な料金を表示、他も一緒
-		$docomo_ryoukin;
-		#$au_ryoukin=934+5700+300;
-		#$softbank_ryoukin=934+5700+300;
-		
 		
 		#機種の選択
 		switch($_SESSION["kisyu"]){
@@ -202,26 +197,24 @@ class Welcome extends CI_Controller {
 			
 			case "sumaho":
 				#変数=基本料金+パケホプラン+ネット通信料(spモード)
+				#新体系=基本料金+(パケホプラン)+通信料
 				$docomo_ryoukin=743+5700+300;
 				$au_ryoukin=934+5700+300;
 				$softbank_ryoukin=934+5700+300;
-				$docomo_new=2700;
+				$docomo_new=2700+300;
+				$au_new=2700+300;
+				$softbank_new=2700+300;
 				break;
 				
-			case "garake":
-				#変数=基本料金(通話量に依存するため非表示)+パケホプランも非表示+ネット通信料(iモード)
-				$docomo_ryoukin=743+300;
-				$au_ryoukin=934+300;
-				$softbank_ryoukin=934+300;
-				$docomo_new=2200;
-				break;
-				
-			case "doredemo":#ガラケです
-				#変数=基本料金(通話量に依存するため非表示)+パケホプランも非表示+ネット通信料(iモード)
-				$docomo_ryoukin=743+300;
-				$au_ryoukin=934+300;
-				$softbank_ryoukin=934+300;
-				$docomo_new=2200;
+			default:#ガラケとdoredemo
+				#変数=(基本料金)+(パケホプラン)+ネット通信料
+				#新体系=基本料金+(パケホプラン)+通信料
+				$docomo_ryoukin=300;
+				$au_ryoukin=300;
+				$softbank_ryoukin=300;
+				$docomo_new=2200+300;
+				$au_new=2200+300;
+				$softbank_new=2200+300;
 				break;
 		}
 		
@@ -650,7 +643,7 @@ class Welcome extends CI_Controller {
 	#ここからソフバンの新体系
 	#ソフバンのスマホ
 
-	if($_SESSION["kisyu"] == "sumaho" or "iphone"){
+	if($_SESSION["kisyu"] == "sumaho" or $_SESSION["kisyu"] == "iphone"){echo"ここ入った?";
 		$softbank_new = 2700+300;
 		if ($_SESSION["U25"] == "yes"){
 			if ($_SESSION["familyotoku"] == "yes"){
@@ -775,7 +768,7 @@ class Welcome extends CI_Controller {
 						}
 						break;
 				}
-			} else{
+			} else{#ファミリー割引
 				switch ($_SESSION["kisyu"]){
 					case "doredemo":
 					#not excist
@@ -1077,73 +1070,72 @@ class Welcome extends CI_Controller {
 								$softbank_new += 22500+1000*(ceil($_SESSION["packet"])-32);
 							}
 						}
-					break;
+						break;
 					
-				case "iphone":#nni
-					if ($_SESSION["packet"] <= 4){
-						$sn_pakeho = "定額2GB";
-						$sn_service="iphoneボナス";
-						if ($_SESSION["packet"] <= 3){
-							$softbank_new += 3500;
-						} else{
-							$softbank_new += 4500;
-						}
+					case "iphone":#nni
+						if ($_SESSION["packet"] <= 4){
+							$sn_pakeho = "定額2GB";
+							$sn_service="iphoneボナス";
+							if ($_SESSION["packet"] <= 3){
+								$softbank_new += 3500;
+							} else{
+								$softbank_new += 4500;
+							}
 					
-					} elseif(4 < $_SESSION["packet"] && $_SESSION["packet"] <= 9){
-						$sn_pakeho = "定額5GB";
-						$sn_service="iphoneボナス";
-						if ($_SESSION["packet"] <= 6){
-							$softbank_new += 4500;
-						} else{
-							$softbank_new += 4500+1000*(ceil($_SESSION["packet"])-6);
-						}
+						} elseif(4 < $_SESSION["packet"] && $_SESSION["packet"] <= 9){
+							$sn_pakeho = "定額5GB";
+							$sn_service="iphoneボナス";
+							if ($_SESSION["packet"] <= 6){
+								$softbank_new += 4500;
+							} else{
+								$softbank_new += 4500+1000*(ceil($_SESSION["packet"])-6);
+							}
+							
+						} elseif(9 < $_SESSION["packet"] && $_SESSION["packet"] <= 15){
+							$sn_pakeho = "定額10GB";
+							$sn_service="iphoneボナス+10GBお得";
+							$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-11);
+							
+						} elseif(16 < $_SESSION["packet"] && $_SESSION["packet"] <= 19){
+							$sn_pakeho = "定額15GB";
+							$sn_service="家族でお得+iphoneボナス";
+							if ($_SESSION["packet"] <= 16){
+								$softbank_new += 12500;
+							} else{
+								$softbank_new += 12500+1000*(ceil($_SESSION["packet"])-16);
+							}
 						
-					} elseif(9 < $_SESSION["packet"] && $_SESSION["packet"] <= 15){
-						$sn_pakeho = "定額10GB";
-						$sn_service="iphoneボナス+10GBお得";
-						$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-11);
-						
-					} elseif(16 < $_SESSION["packet"] && $_SESSION["packet"] <= 19){
-						$sn_pakeho = "定額15GB";
-						$sn_service="家族でお得+iphoneボナス";
-						if ($_SESSION["packet"] <= 16){
-							$softbank_new += 12500;
-						} else{
-							$softbank_new += 12500+1000*(ceil($_SESSION["packet"])-16);
+						} elseif(19 < $_SESSION["packet"] && $_SESSION["packet"] <= 27){
+							$sn_pakeho = "定額20GB";
+							$sn_service="家族でお得+iphoneボナス";
+							if ($_SESSION["packet"] <= 21){
+								$softbank_new += 16000;
+							} else{
+								$softbank_new += 16000+1000*(ceil($_SESSION["packet"])-21);
+							}
+							
+						} else {
+							$sn_pakeho = "定額30GB";
+							$sn_service="家族でお得+iphoneボナス";
+							if ($_SESSION["packet"]<= "31"){
+								$softbank_new += 22500;
+							} else{
+								$softbank_new += 22500+1000*(ceil($_SESSION["packet"])-31);
+							}
 						}
-						
-					} elseif(19 < $_SESSION["packet"] && $_SESSION["packet"] <= 27){
-						$sn_pakeho = "定額20GB";
-						$sn_service="家族でお得+iphoneボナス";
-						if ($_SESSION["packet"] <= 21){
-							$softbank_new += 16000;
-						} else{
-							$softbank_new += 16000+1000*(ceil($_SESSION["packet"])-21);
-						}
-						
-					} else {
-						$sn_pakeho = "定額30GB";
-						$sn_service="家族でお得+iphoneボナス";
-						if ($_SESSION["packet"]<= "31"){
-							$softbank_new += 22500;
-						} else{
-							$softbank_new += 22500+1000*(ceil($_SESSION["packet"])-31);
-						}
-					}
-					break;
+						break;
 				}
 			}
 		}
 	} else{
 	#ソフバンのガラケ
-		#softbank_garake
 		$softbank_new = 2200 + 300;
 		if ($_SESSION["packet"] < 0.005215){		#5.3MBです
 			$softbank_new+= 0.08*$_SESSION["packet"];
 			$sn_pakeho="定額パックなし";
 			$sn_service="特殊な割引なし";
 		}else {
-			$softbank_new+= 3500;
+			$softbank_new += 3500;
 			$sn_pakeho="3Gケータイ";
 			$sn_service="特殊な割引なし";
 		}
@@ -1197,12 +1189,17 @@ class Welcome extends CI_Controller {
 			$docomo_ryoukin = $docomo_new;
 			$d_plan="新体系";
 		}
-		
+
+echo"$softbank_ryoukin";		
+
 		if($softbank_ryoukin >= $softbank_new){
 			$softbank_ryoukin = $softbank_new;
 			$s_plan = $sn_pakeho;
 			$s_pakeho= $sn_service;
 		}
+        
+        
+echo"$softbank_ryoukin";
         
         $_SESSION["docomo_ryoukin"]=$docomo_ryoukin;
 		$_SESSION["au_ryoukin"]=$au_ryoukin;
