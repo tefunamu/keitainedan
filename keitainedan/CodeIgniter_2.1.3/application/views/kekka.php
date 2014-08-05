@@ -24,11 +24,25 @@ spモード：300円</br>
 </div>
 <div id="content_right">
 入力内容<Br>
-使用中のしたキャリア：<?php echo $_SESSION['kyaria']?><Br>
+	<?php 	switch($_SESSION["kyaria"]){
+			case "docomo":
+				$_SESSION["kyaria"]="docomo";
+				break;
+			
+			case "au":
+				$_SESSION["kyaria"]="au";
+				break;
+		
+			case "softbank":
+				$_SESSION["kyaria"]="softbank";
+				break;
+	}
+	?>
+使用中のキャリア：<?php echo $_SESSION['kyaria']?><Br>
+入力した機種：<?php echo $_SESSION['kisyu']; ?><Br>
 1ヶ月あたりの通話時間：<?php echo $_SESSION['tuuwazikan'] ?>分<Br>
 使用している提携回線、</br>
 またはルーター：<?php echo $_SESSION['kaisen']; ?><Br>
-入力した機種：<?php echo $_SESSION['kisyu']; ?><Br>
 入力した通信料：<?php echo $_SESSION['packet']/1024/1024*128; ?>MB<Br>
 <!--入力した学生：<?php echo $_SESSION['gakusei']; ?><Br>-->
 </Br></Br>

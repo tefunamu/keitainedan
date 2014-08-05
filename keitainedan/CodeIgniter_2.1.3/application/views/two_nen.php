@@ -6,7 +6,7 @@
 		<a href="mnp" >MNP</a><br><br>
 		<a href="sumaho" >Smartphone</a><br><br>
 		<a href="iphone" >iPhone</a><br><br>
-		<a href="andor" >Andor</a><br><br>
+		<a href="android" >Android</a><br><br>
 		<a href="garake" >ガラケー</a><br><br>
 		
 		<a href="../../index.php">トップへ戻る</a>

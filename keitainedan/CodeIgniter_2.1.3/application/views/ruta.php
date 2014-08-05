@@ -5,9 +5,10 @@
    <div id="content_left">
 
 <form action="packet">
-ご利用中のルータがこざいましたら選択してください</br>
-<input type="radio" name="kaisen" value="au_ruta">auの割引対応ルーター</br>
+ご利用中のルータがこざいましたら選択してください</br></br>
+<input type="radio" name="kaisen" value="au_ruta">
 ・Wi-Fi WALKER WiMAX 2+ HWD14</br>
+(auの割引対応ルーター)</br>
 
 <!--
 <input type="radio" name="kaisen" value="softbanak_ruta">softbankの割引対応ルーター</br>

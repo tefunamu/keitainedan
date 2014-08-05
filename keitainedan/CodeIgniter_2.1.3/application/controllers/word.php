@@ -62,6 +62,17 @@ public function iphone()
 
 	}
 
+public function android()
+	{
+		$this->load->helper('url'); 
+		$data['page_title'] = 'モバイル料金ラボ';
+		
+        $this->load->view('header',$data);
+        $this->load->view('android',$data);
+        //$this->load->view('footer',$data);
+
+	}
+	
 public function garake()
 	{
 		$this->load->helper('url'); 
@@ -73,15 +84,4 @@ public function garake()
 
 	}
 
-public function andor()
-	{
-		$this->load->helper('url'); 
-		$data['page_title'] = 'モバイル料金ラボ';
-		
-        $this->load->view('header',$data);
-        $this->load->view('andor',$data);
-        //$this->load->view('footer',$data);
-
-	}
-	
 }
