@@ -181,13 +181,13 @@ class Welcome extends CI_Controller {
 		
 		
 		#機種の選択
+		#newプランは書いてないっす
 		switch($_SESSION["kisyu"]){
 			case "iphone":
 				#変数=基本料金+パケホプラン+ネット通信料(spモード)
 				$docomo_ryoukin=743+5700+300;
 				$au_ryoukin=934+5700+300;
 				$softbank_ryoukin=934+5700+300;
-				$docomo_new=2700;
 				
 				#iPhoneのパケホプランは500円安い
 				$docomo_ryoukin-=500;
@@ -201,9 +201,6 @@ class Welcome extends CI_Controller {
 				$docomo_ryoukin=743+5700+300;
 				$au_ryoukin=934+5700+300;
 				$softbank_ryoukin=934+5700+300;
-				$docomo_new=2700+300;
-				$au_new=2700+300;
-				$softbank_new=2700+300;
 				break;
 				
 			default:#ガラケとdoredemo
@@ -212,9 +209,6 @@ class Welcome extends CI_Controller {
 				$docomo_ryoukin=300;
 				$au_ryoukin=300;
 				$softbank_ryoukin=300;
-				$docomo_new=2200+300;
-				$au_new=2200+300;
-				$softbank_new=2200+300;
 				break;
 		}
 		
@@ -282,7 +276,7 @@ class Welcome extends CI_Controller {
 			#パケット数により、docomoの安いプランがある。ソフバンもほんとに少なければ(15Mbyteレベル)安いやつがある
 			if ($_SESSION["packet"] < 114000){
 				$docomo_ryoukin-=1000;
-				$softbank_ryoukin+=0.05*$_SESSION["packet"];
+				$softbank_ryoukin+=0.05*$_SESSION["packet"]-5700;
 				$docomo_new+=3500;
 				
 				$d_pakeho = "Xiパケ・ホーダイ ライト";
@@ -292,46 +286,9 @@ class Welcome extends CI_Controller {
 			
 			} elseif (114000<= $_SESSION["packet"] && $_SESSION["packet"] < 16777216){
 				$docomo_ryoukin-=1000;
-				if($_SESSION["years"]<15){
-					$docomo_new+=3500;
-				} else{
-					$docomo_new+=2900;
-				}
 			
 			} elseif (16777216 <= $_SESSION["packet"] && $_SESSION["packet"]<25165824){
 				$docomo_ryoukin-=1000;
-				#2GBパックに1000円で1GBつけた方がまし、だけど10年以上docomo使ってると打ち消される
-				
-				if($_SESSION["years"]<10){
-					$docomo_new+=4500;#3GB使える
-				}elseif (10<=$_SESSION["years"] && $_SESSION["years"]<15){
-					$docomo_new+=4400;#5GB使える
-				}elseif (15 < $_SESSION["years"]){
-					$docomo_new+=4200;#5GB使える
-				}
-				
-			} elseif (25165824<= $_SESSION["packet"] && $_SESSION["packet"] < 41943040){
-				$docomo_new += 5000;
-				if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
-					$docomo_new-=600;#5GB使える
-				}elseif (15 <= $_SESSION["years"]){
-					$docomo_new-=800;#5GB使える
-				}
-			
-			} else {
-				#通信料1GB増加につき1000円足してく
-				$docomo_new += 5000;
-				$packet_docomo = $_SESSION["packet"];
-				$packet_docomo -= 41943040;
-				for ( ; 0<$packet_docomo ; $packet_docomo -= 8388608){
-					$docomo_new+=1000;
-				}
-				
-				if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
-					$docomo_new-=600;#5GB使える
-				}elseif (15 <= $_SESSION["years"]){
-					$docomo_new-=800;#5GB使える
-				}
 			}
 		
 		} else{
@@ -341,7 +298,7 @@ class Welcome extends CI_Controller {
 				$docomo_ryoukin += 40*$_SESSION["tuuwazikan"]+743;
 				$au_ryoukin +=40*0.741*$_SESSION["tuuwazikan"]+934;
 				$softbank_ryoukin +=40*0.784*$_SESSION["tuuwazikan"]+934;
-				$d_plan="タイプシンプルバリュー";;
+				$d_plan="タイプシンプルバリュー";
 				$a_plan="プランEシンプル";
 				$s_plan="ホワイトプラン";
 				
@@ -577,7 +534,7 @@ class Welcome extends CI_Controller {
 		$docomo_packet = $_SESSION["packet"];
 		if($_SESSION["kisyu"] == "sumaho" || $_SESSION["kisyu"] == "iphone"){#基本料金+ボーナス
 		
-			$docomo_new += 2700 + 300;
+			$docomo_new = 2700 + 300;
 			#U25応援割。
 			if( $_SESSION["U25"] == "yes"){
 				$docomo_packet -= 1;
@@ -590,7 +547,7 @@ class Welcome extends CI_Controller {
 			
 		
 		} else{#ガラケ
-		$docomo_new += 2200 + 300;
+		$docomo_new = 2200+300;
 		}
 
 	#docomoデータパック(ガラスマ共通)
@@ -599,8 +556,10 @@ class Welcome extends CI_Controller {
 			$docomo_new+= 0.08*$docomo_packet;
 		
 		} elseif (0.005215 <= $docomo_packet && $docomo_packet < 2){
+			$dn_plan = "2GBプラン";
 			if($_SESSION["years"]<15){
 				$docomo_new+=3500;
+			
 			} else{
 				$docomo_new+=2900;
 			}
@@ -1148,6 +1107,7 @@ class Welcome extends CI_Controller {
 	
 	
 	#ここからauの新体系
+	#auのスマホ
 	if($_SESSION["kisyu"] == "sumaho" or $_SESSION["kisyu"] =="iphone"){
 		$au_new = 2700+300;
 		if($_SESSION["kaisen"] == "au_kaisen"){
@@ -1194,19 +1154,21 @@ class Welcome extends CI_Controller {
 			$au_new += 9800;
 		}
 	}else {
-		$au_new += 2200+300;
+	#auのガラケ
+		$au_new = 2200+300;
 		if ($_SESSION["packet"] == 0){
 			$au_new -= 300;
 			$aun_pakeho = なし;
+			
 		
-		}else if ($_SESSION["packet"] != 0 || $_SESSION["packet"] < 0.005215){
+		}else if ($_SESSION["packet"] != 0 && $_SESSION["packet"] < 0.005215){
 			$aun_pakeho = なし;
 		
-		}else {
+		}else{
 			$au_new += 3500;
 			$aun_pakeho = "データ料定額サービス";
 			
-			if($_SESSION["kaisen"]== au_kaisen){
+			if($_SESSION["kaisen"]== "au_kaisen"){
 				$au_new -= 934;
 				$au_service = "スマートバリュー";
 			}
@@ -1232,6 +1194,7 @@ class Welcome extends CI_Controller {
 		
 		if($au_ryoukin >= $au_new){
 			$au_ryoukin = $au_new;
+			echo"こっちか？";
 			$au_plan = $aun_plan;
 		}
 	
@@ -1246,7 +1209,7 @@ class Welcome extends CI_Controller {
 		$_SESSION["s_plan"]=$s_plan;
 		$_SESSION["s_pakeho"]=$s_pakeho;
 		
-		
+		/*最後に外そう
 		switch($_SESSION["kyaria"]){
 			case "docomo":
 				$_SESSION["kyaria"]="docomo";
@@ -1285,6 +1248,7 @@ class Welcome extends CI_Controller {
 				$_SESSION["kaisen"]="なし";
 				break;
 		}
+		*/
 		
 		$this->load->view("header",$data);
 		if($_SESSION["U25"]==FALSE or $_SESSION["familyotoku"]==FALSE){

@@ -10,9 +10,10 @@
 		<br><br>
 		Q.料金形態を解説してほしい<br>
 		・<a href="plan" >3社の共通事項</a><br>
-		・<a href="docomo" >docomo</a><br>
-		・<a href="au" >au</a><br>
-		・<a href="softbank" >softbank</a><br>
+		
+		・<!--<a href="docomo" >-->docomo<!--</a>--><br>
+		・<!--<a href="au" >-->au<!--</a>--><br>
+		・<!--<a ="softbank" >-->softbank<!--</a>--><br>
 		<br><br>
 		
 		<a href="../../index.php">トップへ戻る</a>
