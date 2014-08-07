@@ -24,7 +24,7 @@ spモード：300円</br>
 </div>
 <div id="content_right">
 入力内容<Br>
-	<?php 	switch($_SESSION["kyaria"]){
+	<?php	switch($_SESSION["kyaria"]){
 			case "docomo":
 				$_SESSION["kyaria"]="docomo";
 				break;
@@ -36,7 +36,37 @@ spモード：300円</br>
 			case "softbank":
 				$_SESSION["kyaria"]="softbank";
 				break;
+	
+			switch($_SESSION["kisyu"]){
+			case "sumaho":
+				$_SESSION["kisyu"]="スマホ";
+				break;
+			
+			case "iphone":
+				$_SESSION["kyaria"]="iPhone";
+				break;
+			
+			case "doredemo":
+				$_SESSION["kyaria"]="iPhone";
+				break;
+			default:
+				$_SESSION["kyaria"]="ガラケー";
+				break;
+			}
+			switch($_SESSION["kaisen"]){
+			case "au_kaisen":
+				$_SESSION["kaisen"]="auの提携回線";
+				break;
+			
+			case "softbank_kaisen":
+				$_SESSION["kaisen"]="softbankの提携回線";
+				break;
+		
+			}
+
+
 	}
+	
 	?>
 使用中のキャリア：<?php echo $_SESSION['kyaria']?><Br>
 入力した機種：<?php echo $_SESSION['kisyu']; ?><Br>
