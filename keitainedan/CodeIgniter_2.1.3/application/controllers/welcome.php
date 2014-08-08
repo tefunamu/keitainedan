@@ -174,6 +174,10 @@ class Welcome extends CI_Controller {
 		$this->load->helper("url"); 
 		$data["page_title"] = "モバイル料金ラボ";
 		
+		#サービスがなかった場合に対応するためにNULLいれとく。
+		$d_service = NULL;
+		$a_service = NULL;
+		$s_service = NULL;
 		
 		session_start();
 		$_SESSION["U25"]=$_REQUEST["U25"];
@@ -188,6 +192,9 @@ class Welcome extends CI_Controller {
 				$docomo_ryoukin=743+5700+300;
 				$au_ryoukin=934+5700+300;
 				$softbank_ryoukin=934+5700+300;
+				$d_plan="Xiパケ・ホーダイ フラット";
+				$a_plan="LTEフラット";
+				$s_plan="パケットし放題フラット for 4G";
 				
 				#iPhoneのパケホプランは500円安い
 				$docomo_ryoukin-=500;
@@ -201,6 +208,9 @@ class Welcome extends CI_Controller {
 				$docomo_ryoukin=743+5700+300;
 				$au_ryoukin=934+5700+300;
 				$softbank_ryoukin=934+5700+300;
+				$d_plan="Xiパケ・ホーダイ フラット";
+				$a_plan="LTEフラット";
+				$s_plan="パケットし放題フラット for 4G";
 				break;
 				
 			default:#ガラケとdoredemo
@@ -268,29 +278,40 @@ class Welcome extends CI_Controller {
 			$docomo_ryoukin += $tuuwaryoukin;
 			$au_ryoukin += $tuuwaryoukin;
 			$softbank_ryoukin += $tuuwaryoukin;
-			$sd_plan = "タイプXiにねん";
+			$d_plan = "タイプXiにねん";
 			$a_plan = "LTEプラン";
-			$_SESSION["s_plan"]="ホワイトプラン";
+			$s_plan="ホワイトプラン";
 			
 			#スマホの通信料
 			#パケット数により、docomoの安いプランがある。ソフバンもほんとに少なければ(15Mbyteレベル)安いやつがある
 			if ($_SESSION["packet"] < 114000){
 				$docomo_ryoukin-=1000;
-				$softbank_ryoukin+=0.05*$_SESSION["packet"]-5700;
+				$softbank_ryoukin+=0.05*$_SESSION["packet"];
 				$docomo_new+=3500;
 				
 				$d_pakeho = "Xiパケ・ホーダイ ライト";
 				$a_pakeho = "LTE フラット";
-				$s_pakeho = "パケット定額サービス無し";
+				$s_pakeho = "パケットし放題 for 4G";
 			
 			
 			} elseif (114000<= $_SESSION["packet"] && $_SESSION["packet"] < 16777216){
 				$docomo_ryoukin-=1000;
 			
+				$d_pakeho = "Xiパケ・ホーダイ ライト";
+				$a_pakeho = "LTE フラット";
+				$s_pakeho = "パケットし放題フラット for 4G";
+			
 			} elseif (16777216 <= $_SESSION["packet"] && $_SESSION["packet"]<25165824){
 				$docomo_ryoukin-=1000;
+				$d_pakeho = "Xiパケ・ホーダイ ライト";
+				$a_pakeho = "LTE フラット";
+				$s_pakeho = "パケットし放題フラット for 4G";
+			} else{
+				$d_pakeho = "Xiパケ・ホーダイ フラット";
+				$a_pakeho = "LTE フラット";
+				$s_pakeho = "パケットし放題フラット for 4G";
 			}
-		
+			
 		} else{
 			#具体的なガラケの通話量と通信料へ
 			#ガラケの通話時間へ
@@ -526,12 +547,13 @@ class Welcome extends CI_Controller {
 
 
 #ここから新体系
-#めんどいからギガに戻す。2gbまでは3500円だけど2.0001gbからは4500円だよって計算してる。ceil関数さま様
+#めんどいからパケットからギガに戻す。2gbまでは3500円だけど2.0001gbからは4500円だよって計算してる。ceil関数さま様
 	$_SESSION["packet"] = $_SESSION["packet"] / 8388608;
 
 	#ここからdocomo新体系
 	#docomo専用のパケット計算式dokomopacketを作成
 		$docomo_packet = $_SESSION["packet"];
+		$dn_plan = "カケホーダイ&パケあえる";
 		if($_SESSION["kisyu"] == "sumaho" || $_SESSION["kisyu"] == "iphone"){#基本料金+ボーナス
 		
 			$docomo_new = 2700 + 300;
@@ -545,7 +567,6 @@ class Welcome extends CI_Controller {
 				$docomo_packet -= 1;
 			}
 			
-		
 		} else{#ガラケ
 		$docomo_new = 2200+300;
 		}
@@ -553,46 +574,55 @@ class Welcome extends CI_Controller {
 	#docomoデータパック(ガラスマ共通)
 
 		if($docomo_packet < 0.005215){		#5.3MBです
-			$docomo_new+= 0.08*$docomo_packet;
+			$dn_pakeho = "データパックなし";
+			$docomo_new+= $_SESSION["packet"]*8388608*0.08;#GB→パケット→円
 		
 		} elseif (0.005215 <= $docomo_packet && $docomo_packet < 2){
-			$dn_plan = "2GBプラン";
-			if($_SESSION["years"]<15){
-				$docomo_new+=3500;
-			
-			} else{
+			$dn_pakeho = "2GBプラン";
+			if(15 < $_SESSION["years"]){
 				$docomo_new+=2900;
+				$dn_service = "ずっとドコモ割";
+				
+			} else{
+				$docomo_new+=3500;
 			}
 		
 		} elseif (2<= $docomo_packet && $docomo_packet < 3){
 			#2GBパックに1000円で1GBつけた方がまし、だけど10年以上docomo使ってると打ち消される
 			if($_SESSION["years"]<10){
-			$docomo_new+=4500;#3GB使える
-			$dn_plan = "2GBパック";
+				$docomo_new+=4500;#3GB使える
+				$dn_pakeho = "2GBパック";
 			
-		}elseif (10<=$_SESSION["years"] && $_SESSION["years"]<15){
-			$docomo_new+=4400;#5GB使える
-			$dn_plan = "5GBパック";
-			
+			}elseif (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+				$docomo_new+=4400;#5GB使える
+				$dn_pakeho = "5GBパック";
+				$dn_service = "ずっとドコモ割";
+				
 			}elseif (15 < $_SESSION["years"]){
 				$docomo_new+=4200;#5GB使える
-				$dn_plan = "5GBパック";
+				$dn_pakeho = "5GBパック";
+				$dn_service = "ずっとドコモ割";
+				
 			}
 				
-			} elseif (3<= $docomo_packet && $docomo_packet < 5){
+		} elseif (3<= $docomo_packet && $docomo_packet < 5){
 				$docomo_new += 5000;
-				$dn_plan = "5GBパック";
+				$dn_pakeho = "5GBパック";
 				if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
 					$docomo_new-=600;#5GB使える
+					$dn_service = "ずっとドコモ割";
+				
 				}elseif (15 <= $_SESSION["years"]){
 					$docomo_new-=800;#5GB使える
+					$dn_service = "ずっとドコモ割";
+				
 				}
 			
 			} else {
+				$dn_pakeho = "5GBパック";
 				#通信料1GB増加につき1000円足してく
 				$docomo_new += 5000;
 				$docomo_packet -= 5;
-				$dn_plan = "5GBパック";
 				for ( ; 0<$docomo_packet ; $docomo_packet -= 1){
 					$docomo_new+=1000;
 				}
@@ -608,6 +638,7 @@ class Welcome extends CI_Controller {
 	#ソフバンのスマホ
 
 	if($_SESSION["kisyu"] == "sumaho" or $_SESSION["kisyu"] == "iphone"){
+		$sn_plan = "基本使用料";
 		$softbank_new = 2700+300;
 		if ($_SESSION["U25"] == "yes"){
 			if ($_SESSION["familyotoku"] == "yes"){
@@ -1093,6 +1124,7 @@ class Welcome extends CI_Controller {
 		}
 	} else{
 	#ソフバンのガラケ
+		$sn_plan = "基本使用料";
 		$softbank_new = 2200 + 300;
 		if ($_SESSION["packet"] < 0.005215){		#5.3MBです
 			$softbank_new+= 0.08*$_SESSION["packet"];
@@ -1179,35 +1211,49 @@ class Welcome extends CI_Controller {
 	#パケットを元に戻す。
 	$_SESSION["packet"] = $_SESSION["packet"]*8388608;
 	
-	
-	
 		if($docomo_ryoukin >= $docomo_new){
 			$docomo_ryoukin = $docomo_new;
 			$d_plan = $dn_plan;
-		}
+			$d_service = $dn_service;
+			}
 		
 		if($softbank_ryoukin >= $softbank_new){
 			$softbank_ryoukin = $softbank_new;
-			$s_plan = $sn_pakeho;
-			$s_pakeho= $sn_service;
-		}
+			$s_plan = $sn_plan;
+			$s_pakeho = $sn_pakeho;
+			$s_service= $sn_service;
+			}
 		
 		if($au_ryoukin >= $au_new){
 			$au_ryoukin = $au_new;
-			echo"こっちか？";
-			$au_plan = $aun_plan;
+			$au_plan = 電話カケ放題プラン;#これしかないからOK
 		}
 	
 		
-		$_SESSION["docomo_ryoukin"]=$docomo_ryoukin;
-		$_SESSION["au_ryoukin"]=$au_ryoukin;
-		$_SESSION["softbank_ryoukin"]=$softbank_ryoukin;
+		$_SESSION["docomo_ryoukin"]=ceil($docomo_ryoukin);
+		$_SESSION["au_ryoukin"]=ceil($au_ryoukin);
+		$_SESSION["softbank_ryoukin"]=ceil($softbank_ryoukin);
 		$_SESSION["d_plan"]=$d_plan;
 		$_SESSION["d_pakeho"]=$d_pakeho;
 		$_SESSION["a_plan"]=$a_plan;
 		$_SESSION["a_pakeho"]=$a_pakeho;
 		$_SESSION["s_plan"]=$s_plan;
 		$_SESSION["s_pakeho"]=$s_pakeho;
+		
+		
+		if( $d_service == FALSE ){
+			$d_service = "なし";
+		}
+		if($a_service == FALSE ){
+			$a_service = "なし";
+		}
+		if($s_service == FALSE ){
+			$s_service = "なし";
+		}
+		
+		$_SESSION["d_service"]=$d_service;
+		$_SESSION["a_service"]=$a_service;
+		$_SESSION["s_service"]=$s_service;
 		
 		/*最後に外そう
 		switch($_SESSION["kyaria"]){

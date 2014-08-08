@@ -9,7 +9,10 @@
 	<div id="whatsnew">
 	<img src="images/whatsnew.gif" alt="">
 		<div id="whatsnew_text">
-			デモ
+			</Br>
+			2014/8/8：各社の新料金体型に対応！結果では安くなるプランを提示します。</Br>
+			2014/8/8：ついにβ版オープン！試験運用段階なので不備がありましたらご報告ください！</Br>
+			
 		</div>
 	</div>
 </div>
