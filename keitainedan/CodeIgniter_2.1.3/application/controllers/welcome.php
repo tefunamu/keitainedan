@@ -1255,7 +1255,8 @@ class Welcome extends CI_Controller {
 		$_SESSION["a_service"]=$a_service;
 		$_SESSION["s_service"]=$s_service;
 		
-		/*最後に外そう
+		#エラーチェックの際は囲むこと。最後に外そう。
+		########ここから#########
 		switch($_SESSION["kyaria"]){
 			case "docomo":
 				$_SESSION["kyaria"]="docomo";
@@ -1294,7 +1295,9 @@ class Welcome extends CI_Controller {
 				$_SESSION["kaisen"]="なし";
 				break;
 		}
-		*/
+		########ここまで#########
+		
+		
 		
 		$this->load->view("header",$data);
 		if($_SESSION["U25"]==FALSE or $_SESSION["familyotoku"]==FALSE){
