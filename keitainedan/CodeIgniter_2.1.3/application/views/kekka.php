@@ -7,17 +7,17 @@
 	docomo <?php echo $_SESSION["docomo_ryoukin"]; ?>円</br>
 	料金プラン：<?php echo $_SESSION["d_plan"]; ?></br>
 	パケホーダイ：<?php echo $_SESSION["d_pakeho"]; ?></br>
-	サービス：<?php echo $_SESSION["d_service"]; ?></br>
+	割引サービス：<?php echo $_SESSION["d_service"]; ?></br>
 	</Br>
 	au<?php echo $_SESSION["au_ryoukin"]; ?>円</br>
 	料金プラン：<?php echo $_SESSION["a_plan"]; ?></br>
 	パケホーダイ：<?php echo $_SESSION["a_pakeho"]; ?></br>
-	サービス：<?php echo $_SESSION["a_service"]; ?></br>
+	割引サービス：<?php echo $_SESSION["a_service"]; ?></br>
 	</Br>
 	softbank<?php echo $_SESSION["softbank_ryoukin"]; ?>円</br>
 	料金プラン：<?php echo $_SESSION["s_plan"]; ?></br>
 	パケホーダイ：<?php echo $_SESSION["s_pakeho"]; ?></br>
-	サービス：<?php echo $_SESSION["s_service"]; ?></br>
+	割引サービス：<?php echo $_SESSION["s_service"]; ?></br>
 	</Br>
 	<!--
 	共通</br>

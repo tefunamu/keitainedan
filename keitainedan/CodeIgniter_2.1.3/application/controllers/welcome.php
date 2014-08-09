@@ -28,15 +28,6 @@ class Welcome extends CI_Controller {
         
 	}
 
-####################################
-##
-##質問事項にU25以下orNOT
-##家族でソフバンにでき合計が10GB以上
-##を追加しなきやいけない
-##U25= yes or no
-##familyotoku = yes or no
-####################################
-
 
 	public function kyaria()
 	{
@@ -168,6 +159,14 @@ class Welcome extends CI_Controller {
        // $this->load->view("footer",$data);
 
 	}
+
+#################
+################
+#auに換えるわりとスマバリュって共存できんの？
+#できない体で計算しとくわ一応
+##################
+#############
+
 	
 	public function kekka()
 	{
@@ -178,6 +177,9 @@ class Welcome extends CI_Controller {
 		$d_service = NULL;
 		$a_service = NULL;
 		$s_service = NULL;
+		$dn_service = NULL;
+		$an_service = NULL;
+		$sn_service = NULL;
 		
 		session_start();
 		$_SESSION["U25"]=$_REQUEST["U25"];
@@ -225,20 +227,26 @@ class Welcome extends CI_Controller {
 		
 		#学割及び乗り換えわりの選択。学割は星になった。
 		
-		if ($_SESSION["kisyu"] == "sumaho" || $_SESSION["kisyu"] =="iphone"){
 		#このif内は乗り換え割り。乗り換えはスマホのみ対象
+		if ($_SESSION["kisyu"] == "sumaho" || $_SESSION["kisyu"] =="iphone"){
 			switch($_SESSION["kyaria"]){
 				case "docomo":
 					$au_ryoukin-=934;#8/31マデ
 					$softbank_ryoukin-=934;
+					$a_service = "auにかえる割";
+					$s_service = "バンバンのりかえ割";
+					
 					break;
 					
 				case "au":
 					$softbank_ryoukin-=934;
+					$s_service = "バンバンのりかえ割";
 					break;
-				
+					
 				case "softbank":
 					$au_ryoukin-=934;
+					$a_service = "auにかえる割";
+					
 					break;
 			}
 		}
@@ -248,6 +256,8 @@ class Welcome extends CI_Controller {
 			case "au_kaisen":
 				if($_SESSION["kisyu"]=="iphone"){
 					$au_ryoukin-=910;
+					$a_service = "スマートバリュー";
+					
 				} else{
 					$au_ryoukin-=1410;
 				}
@@ -650,7 +660,7 @@ class Welcome extends CI_Controller {
 					case "sumaho":#yys
 						if ($_SESSION["packet"] <= 3){
 							$sn_pakeho = "定額2GB";
-							$sn_service="家族でお得+スマホ2GB";
+							$sn_service="家族でお得割+スマホデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 2){
 								$softbank_new += 3500;
 							} else{
@@ -659,7 +669,7 @@ class Welcome extends CI_Controller {
 						
 						} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
 							$sn_pakeho = "定額5GB";
-							$sn_service="家族でお得+スマホ2GB";
+							$sn_service="家族でお得割+スマホデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 7){
 								$softbank_new += 4700;
 							} else{
@@ -669,7 +679,7 @@ class Welcome extends CI_Controller {
 						
 						} elseif(10 < $_SESSION["packet"] && $_SESSION["packet"] <= 15){
 							$sn_pakeho = "定額10GB";
-							$sn_service="10GBお得";
+							$sn_service="10GBお得割";
 							if ($_SESSION["packet"] <= 12){
 								$softbank_new += 8000;
 							} else{
@@ -678,7 +688,7 @@ class Welcome extends CI_Controller {
 							
 						} elseif(15 < $_SESSION["packet"] && $_SESSION["packet"] <= 20){
 							$sn_pakeho = "定額15GB";
-							$sn_service="10GBお得+スマホ2GB";
+							$sn_service="10GBお得割+スマホデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 17){
 								$softbank_new += 11000;
 							} else{
@@ -687,7 +697,7 @@ class Welcome extends CI_Controller {
 							
 						} elseif(20 < $_SESSION["packet"] && $_SESSION["packet"] <= 27){
 							$sn_pakeho = "定額20GB";
-							$sn_service="家族でお得+スマホ2GB";
+							$sn_service="家族でお得割+スマホデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 22){
 								$softbank_new += 14000;
 							} else{
@@ -696,7 +706,7 @@ class Welcome extends CI_Controller {
 							
 						} else {
 							$sn_pakeho = "定額30GB";
-							$sn_service = "家族でお得+スマホ2GB";
+							$sn_service = "家族でお得割+スマホデータ増量キャンペーン";
 							if ($_SESSION["packet"]<= 32){
 								$softbank_new += 19500;
 							} else{
@@ -708,7 +718,7 @@ class Welcome extends CI_Controller {
 					case "iphone":#yyi
 						if ($_SESSION["packet"] <= 5){
 							$sn_pakeho = "定額2GB";
-							$sn_service="U25+iphoneお得";
+							$sn_service="U25+iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 4){
 								$softbank_new += 3000;
 							} else{
@@ -717,7 +727,7 @@ class Welcome extends CI_Controller {
 						
 						} elseif(5 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
 							$sn_pakeho = "定額5GB";
-							$sn_service="U25+iphoneお得";
+							$sn_service="U25+iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 7){
 								$softbank_new += 4500;
 							} else{
@@ -726,17 +736,17 @@ class Welcome extends CI_Controller {
 							
 						} elseif($_SESSION["packet"] == 11){
 							$sn_pakeho = "定額10GB";
-							$sn_service="iphoneボナス1GB+10GBお得";
+							$sn_service="iPhoneデータ増量キャンペーン+10GBお得割";
 							$softbank_new += 8000;
 						
 						} elseif(11 < $_SESSION["packet"] && $_SESSION["packet"] <= 14){
 							$sn_pakeho = "定額10GB";
-							$sn_service="U25+iphoneボナス";
+							$sn_service="U25+iPhoneデータ増量キャンペーン";
 							$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-11);
 							
 						} elseif(14 < $_SESSION["packet"] && $_SESSION["packet"] <= 19){
 							$sn_pakeho = "定額15GB";
-							$sn_service="家族でお得+iphoneボナス";
+							$sn_service="家族でお得割+iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 17){
 								$softbank_new += 11000;
 							} else{
@@ -745,7 +755,7 @@ class Welcome extends CI_Controller {
 							
 						} elseif(19 < $_SESSION["packet"] && $_SESSION["packet"] <= 26){
 							$sn_pakeho = "定額20GB";
-							$sn_service="家族でお得+iphoneボナス";
+							$sn_service="家族でお得割+iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 21){
 								$softbank_new += 14000;
 							} else{
@@ -754,7 +764,7 @@ class Welcome extends CI_Controller {
 							
 						} else {
 							$sn_pakeho = "定額30GB";
-							$sn_service="家族でお得+iphoneボナス";
+							$sn_service="家族でお得割+iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"]<= 31){
 								$softbank_new += 19500;
 							} else{
@@ -772,7 +782,7 @@ class Welcome extends CI_Controller {
 					case "sumaho":#yns
 						if ($_SESSION["packet"] <= 3){
 							$sn_pakeho = "定額2GB";
-							$sn_service="家族でお得+スマホ2GB";
+							$sn_service="家族でお得割+スマホデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 2){
 								$softbank_new += 3500;
 							} else{
@@ -786,7 +796,7 @@ class Welcome extends CI_Controller {
 						
 						} elseif(5 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
 							$sn_pakeho = "定額5GB";
-							$sn_service="ボナス2GB";
+							$sn_service="スマホデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 7){
 								$softbank_new += 5000;
 							} else{
@@ -795,7 +805,7 @@ class Welcome extends CI_Controller {
 							
 						} elseif(10 < $_SESSION["packet"] && $_SESSION["packet"] <= 16){
 							$sn_pakeho = "定額10GB";
-							$sn_service="ボナス2GB+10GBおトク割";
+							$sn_service="スマホデータ増量キャンペーン+10GBおトク割";
 							if ($_SESSION["packet"] <= 12){
 								$softbank_new += 8000;
 							} else{
@@ -804,7 +814,7 @@ class Welcome extends CI_Controller {
 							
 						} elseif(16 < $_SESSION["packet"] && $_SESSION["packet"] <= 18){
 							$sn_pakeho = "定額15GB";
-							$sn_service="ボナス2GB";
+							$sn_service="スマホデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 17){
 								$softbank_new += 12500;
 							} else{
@@ -834,7 +844,7 @@ class Welcome extends CI_Controller {
 					case "iphone":#yni
 						if ($_SESSION["packet"] <= 5){
 							$sn_pakeho = "定額2GB";
-							$sn_service="U25+iphoneお得";
+							$sn_service="U25+iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 4){
 								$softbank_new += 3000;
 							} else{
@@ -843,7 +853,7 @@ class Welcome extends CI_Controller {
 						
 						} elseif(5 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
 							$sn_pakeho = "定額5GB";
-							$sn_service="U25+iphoneお得";
+							$sn_service="U25+iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 7){
 								$softbank_new += 4500;
 							} else{
@@ -852,17 +862,17 @@ class Welcome extends CI_Controller {
 							
 						} elseif($_SESSION["packet"] == 11){
 							$sn_pakeho = "定額10GB";
-							$sn_service="iphoneボナス1GB+10GBお得";
+							$sn_service="iPhoneデータ増量キャンペーン1GB+10GBお得割";
 							$softbank_new += 8000;
 						
 						} elseif(11 < $_SESSION["packet"] && $_SESSION["packet"] <= 15){
 							$sn_pakeho = "定額10GB";
-							$sn_service="U25+iphoneボナス";
+							$sn_service="U25+iPhoneデータ増量キャンペーン";
 							$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-11);
 							
 						} elseif(15 < $_SESSION["packet"] && $_SESSION["packet"] <= 20){
 							$sn_pakeho = "定額15GB";
-							$sn_service="U25+iphoneボナス";
+							$sn_service="U25+iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 17){
 								$softbank_new += 11000;
 							} else{
@@ -871,7 +881,7 @@ class Welcome extends CI_Controller {
 							
 						} elseif(20 < $_SESSION["packet"] && $_SESSION["packet"] <= 28){
 							$sn_pakeho = "定額20GB";
-							$sn_service="U25+iphoneボナス";
+							$sn_service="U25+iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 22){
 								$softbank_new += 15500;
 							} else{
@@ -880,7 +890,7 @@ class Welcome extends CI_Controller {
 							
 						} else {
 							$sn_pakeho = "定額30GB";
-							$sn_service="U25+iphoneボナス";
+							$sn_service="U25+iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"]<= 32){
 								$softbank_new += 22000;
 							} else{
@@ -900,7 +910,7 @@ class Welcome extends CI_Controller {
 					case "sumaho":#nys
 						if ($_SESSION["packet"] <= 3){
 							$sn_pakeho = "定額2GB";
-							$sn_service="家族でお得+スマホ2GB";
+							$sn_service="家族でお得割+スマホデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 2){
 								$softbank_new += 3500;
 							} else{
@@ -909,7 +919,7 @@ class Welcome extends CI_Controller {
 						
 						} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
 							$sn_pakeho = "定額5GB";
-							$sn_service="家族でお得+スマホ2GB";
+							$sn_service="家族でお得割+スマホデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 7){
 								$softbank_new += 4700;
 							} else{
@@ -919,7 +929,7 @@ class Welcome extends CI_Controller {
 						
 						} elseif(10 < $_SESSION["packet"] && $_SESSION["packet"] <= 15){
 							$sn_pakeho = "定額10GB";
-							$sn_service="10GBお得";
+							$sn_service="10GBお得割";
 							if ($_SESSION["packet"] <= 12){
 								$softbank_new += 8000;
 							} else{
@@ -928,7 +938,7 @@ class Welcome extends CI_Controller {
 							
 						} elseif(15 < $_SESSION["packet"] && $_SESSION["packet"] <= 20){
 							$sn_pakeho = "定額15GB";
-							$sn_service="10GBお得+スマホ2GB";
+							$sn_service="10GBお得割+スマホデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 17){
 								$softbank_new += 11000;
 							} else{
@@ -937,7 +947,7 @@ class Welcome extends CI_Controller {
 							
 						} elseif(20 < $_SESSION["packet"] && $_SESSION["packet"] <= 27){
 							$sn_pakeho = "定額20GB";
-							$sn_service="家族でお得+スマホ2GB";
+							$sn_service="家族でお得割+スマホデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 22){
 								$softbank_new += 14000;
 							} else{
@@ -946,7 +956,7 @@ class Welcome extends CI_Controller {
 							
 						} else {
 							$sn_pakeho = "定額30GB";
-							$sn_service = "家族でお得+スマホ2GB";
+							$sn_service = "家族でお得割+スマホデータ増量キャンペーン";
 							if ($_SESSION["packet"]<= 32){
 								$softbank_new += 19500;
 							} else{
@@ -958,7 +968,7 @@ class Welcome extends CI_Controller {
 					case "iphone":#nyi
 						if ($_SESSION["packet"] <= 4){
 							$sn_pakeho = "定額2GB";
-							$sn_service="iphoneお得";
+							$sn_service="iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 3){
 								$softbank_new += 3500;
 							} else{
@@ -967,7 +977,7 @@ class Welcome extends CI_Controller {
 						
 						} elseif(4 < $_SESSION["packet"] && $_SESSION["packet"] <= 9){
 							$sn_pakeho = "定額5GB";
-							$sn_service="家族でお得+iphoneお得";
+							$sn_service="家族でお得割+iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 6){
 								$softbank_new += 4500;
 							} else{
@@ -976,12 +986,12 @@ class Welcome extends CI_Controller {
 							
 						} elseif(9 < $_SESSION["packet"] && $_SESSION["packet"] <= 13){
 							$sn_pakeho = "定額10GB";
-							$sn_service="iphoneボナス";
+							$sn_service="iPhoneデータ増量キャンペーン";
 							$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-11);
 							
 						} elseif(14 < $_SESSION["packet"] && $_SESSION["packet"] <= 19){
 							$sn_pakeho = "定額15GB";
-							$sn_service="家族でお得+iphoneボナス";
+							$sn_service="家族でお得割+iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 16){
 								$softbank_new += 11000;
 							} else{
@@ -990,7 +1000,7 @@ class Welcome extends CI_Controller {
 							
 						} elseif(19 < $_SESSION["packet"] && $_SESSION["packet"] <= 26){
 							$sn_pakeho = "定額20GB";
-							$sn_service="家族でお得+iphoneボナス";
+							$sn_service="家族でお得割+iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 21){
 								$softbank_new += 14000;
 							} else{
@@ -999,7 +1009,7 @@ class Welcome extends CI_Controller {
 							
 						} else {
 							$sn_pakeho = "定額30GB";
-							$sn_service="家族でお得+iphoneボナス";
+							$sn_service="家族でお得割+iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"]<= "31"){
 								$softbank_new += 19500;
 							} else{
@@ -1017,7 +1027,7 @@ class Welcome extends CI_Controller {
 					case "sumaho":#nns
 						if ($_SESSION["packet"] <= 3){
 							$sn_pakeho = "定額2GB";
-							$sn_service="スマホ2GB";
+							$sn_service="スマホデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 2){
 								$softbank_new += 3500;
 							} else{
@@ -1026,7 +1036,7 @@ class Welcome extends CI_Controller {
 					
 						} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
 							$sn_pakeho = "定額5GB";
-							$sn_service="スマホ2GB";
+							$sn_service="スマホデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 7){
 								$softbank_new += 5000;
 							} else{
@@ -1035,7 +1045,7 @@ class Welcome extends CI_Controller {
 							
 						} elseif(10 < $_SESSION["packet"] && $_SESSION["packet"] <= 16){
 							$sn_pakeho = "定額10GB";
-							$sn_service="ボナス2GB+10GBお得";
+							$sn_service="スマホデータ増量キャンペーン+10GBお得割";
 							if ($_SESSION["packet"] <= 12){
 								$softbank_new += 8000;
 							} else{
@@ -1044,12 +1054,12 @@ class Welcome extends CI_Controller {
 							
 						} elseif(16 < $_SESSION["packet"] && $_SESSION["packet"] <= 20){
 							$sn_pakeho = "定額15GB";
-							$sn_service="スマホ2GB";
+							$sn_service="スマホデータ増量キャンペーン";
 							$softbank_new += 12500+1000*(ceil($_SESSION["packet"])-17);
 							
 						} elseif(20 < $_SESSION["packet"] && $_SESSION["packet"] <= 28){
 							$sn_pakeho = "定額20GB";
-							$sn_service="スマホ2GB";
+							$sn_service="スマホデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 22){
 								$softbank_new += 16000;
 							} else{
@@ -1058,7 +1068,7 @@ class Welcome extends CI_Controller {
 							
 						} else {
 							$sn_pakeho = "定額30GB";
-							$sn_service = "家族でお得+スマホ2GB";
+							$sn_service = "スマホデータ増量キャンペーン";
 							if ($_SESSION["packet"]<= 32){
 								$softbank_new += 22500;
 							} else{
@@ -1070,7 +1080,7 @@ class Welcome extends CI_Controller {
 					case "iphone":#nni
 						if ($_SESSION["packet"] <= 4){
 							$sn_pakeho = "定額2GB";
-							$sn_service="iphoneボナス";
+							$sn_service="iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 3){
 								$softbank_new += 3500;
 							} else{
@@ -1079,7 +1089,7 @@ class Welcome extends CI_Controller {
 					
 						} elseif(4 < $_SESSION["packet"] && $_SESSION["packet"] <= 9){
 							$sn_pakeho = "定額5GB";
-							$sn_service="iphoneボナス";
+							$sn_service="iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 6){
 								$softbank_new += 4500;
 							} else{
@@ -1088,12 +1098,12 @@ class Welcome extends CI_Controller {
 							
 						} elseif(9 < $_SESSION["packet"] && $_SESSION["packet"] <= 15){
 							$sn_pakeho = "定額10GB";
-							$sn_service="iphoneボナス+10GBお得";
+							$sn_service="iPhoneデータ増量キャンペーン+10GBお得割";
 							$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-11);
 							
 						} elseif(16 < $_SESSION["packet"] && $_SESSION["packet"] <= 19){
 							$sn_pakeho = "定額15GB";
-							$sn_service="家族でお得+iphoneボナス";
+							$sn_service="iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 16){
 								$softbank_new += 12500;
 							} else{
@@ -1102,7 +1112,7 @@ class Welcome extends CI_Controller {
 						
 						} elseif(19 < $_SESSION["packet"] && $_SESSION["packet"] <= 27){
 							$sn_pakeho = "定額20GB";
-							$sn_service="家族でお得+iphoneボナス";
+							$sn_service="iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"] <= 21){
 								$softbank_new += 16000;
 							} else{
@@ -1111,7 +1121,7 @@ class Welcome extends CI_Controller {
 							
 						} else {
 							$sn_pakeho = "定額30GB";
-							$sn_service="家族でお得+iphoneボナス";
+							$sn_service="iPhoneデータ増量キャンペーン";
 							if ($_SESSION["packet"]<= "31"){
 								$softbank_new += 22500;
 							} else{
