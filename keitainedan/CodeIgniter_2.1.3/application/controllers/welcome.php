@@ -165,7 +165,7 @@ class Welcome extends CI_Controller {
 #auに換えるわりとスマバリュって共存できんの？
 #できない体で計算しとくわ一応
 ##################
-#############
+#################
 
 	
 	public function kekka()
@@ -1481,10 +1481,11 @@ class Welcome extends CI_Controller {
 	
 	#パケットを元に戻す。
 	$_SESSION["packet"] = $_SESSION["packet"]*8388608;
-	
+		
 		if($docomo_ryoukin >= $docomo_new){
 			$docomo_ryoukin = $docomo_new;
 			$d_plan = $dn_plan;
+			$d_pakeho = $dn_pakeho;
 			$d_service = $dn_service;
 			}
 		
@@ -1498,6 +1499,7 @@ class Welcome extends CI_Controller {
 		if($au_ryoukin >= $au_new){
 			$au_ryoukin = $au_new;
 			$au_plan = "電話カケ放題プラン";#これしかないからOK
+			$au_service = $aun_service;
 		}
 	
 		
@@ -1511,7 +1513,6 @@ class Welcome extends CI_Controller {
 		$_SESSION["s_plan"]=$s_plan;
 		$_SESSION["s_pakeho"]=$s_pakeho;
 		
-		
 		if( $d_service == FALSE ){
 			$d_service = "なし";
 		}
@@ -1520,8 +1521,7 @@ class Welcome extends CI_Controller {
 		}
 		if($s_service == FALSE ){
 			$s_service = "なし";
-		}
-		
+		}		
 		$_SESSION["d_service"]=$d_service;
 		$_SESSION["a_service"]=$a_service;
 		$_SESSION["s_service"]=$s_service;
