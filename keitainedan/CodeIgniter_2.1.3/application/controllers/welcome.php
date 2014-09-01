@@ -186,8 +186,11 @@ class Welcome extends CI_Controller {
 		$sn_service = NULL;
 		
 		
-		#機種の選択
-		#newプランは書いてないっす
+		
+	#ここから旧体系
+	#機種の選択
+	#docomoは旧体系を選べない
+	
 		switch($_SESSION["kisyu"]){
 			case "iphone":
 				#変数=基本料金+パケホプラン+ネット通信料(spモード)
@@ -228,32 +231,8 @@ class Welcome extends CI_Controller {
 		}
 		
 		
-		#学割及び乗り換えわりの選択。学割は星になった。
+		#学割及び乗り換えわりは終了
 		
-		#このif内は乗り換え割り。乗り換えはスマホのみ対象
-		if ($_SESSION["kisyu"] == "sumaho" || $_SESSION["kisyu"] =="iphone"){
-			switch($_SESSION["kyaria"]){
-				case "docomo":
-					$au_ryoukin-=934;#8/31マデ
-					$softbank_ryoukin-=934;
-					$a_service = "auにかえる割";
-					$s_service = "バンバンのりかえ割";
-					
-					break;
-					
-				case "au":
-					$softbank_ryoukin-=934;
-					$s_service = "バンバンのりかえ割";
-					break;
-					
-				case "softbank":
-					$au_ryoukin-=934;
-					$a_service = "auにかえる割";
-					
-					break;
-			}
-		}
-	
 		#ここから回線割引き
 		switch($_SESSION["kaisen"]){
 			case "au_kaisen":
@@ -1482,12 +1461,11 @@ class Welcome extends CI_Controller {
 	#パケットを元に戻す。
 	$_SESSION["packet"] = $_SESSION["packet"]*8388608;
 		
-		if($docomo_ryoukin >= $docomo_new){
-			$docomo_ryoukin = $docomo_new;
-			$d_plan = $dn_plan;
-			$d_pakeho = $dn_pakeho;
-			$d_service = $dn_service;
-			}
+		#docomoの旧体系は消えたので、代入のみされる。
+		$docomo_ryoukin = $docomo_new;
+		$d_plan = $dn_plan;
+		$d_pakeho = $dn_pakeho;
+		$d_service = $dn_service;
 		
 		if($softbank_ryoukin >= $softbank_new){
 			$softbank_ryoukin = $softbank_new;
