@@ -50,7 +50,7 @@ class Welcome extends CI_Controller {
 		$_SESSION["kyaria"]=$_REQUEST["kyaria"];
 		
         $this->load->view("header",$data);
-        if($_SESSION["kyaria"]==FALSE){
+        if($_SESSION["kyaria"]===FALSE){
 			$this->load->view("cyaria",$data);
 		}else{
 			$this->load->view("kisyu",$data);
@@ -70,7 +70,7 @@ class Welcome extends CI_Controller {
 		$_SESSION["years"]=$_REQUEST["years"];
 		
         $this->load->view("header",$data);
-        if($_SESSION["kisyu"]==FALSE){
+        if($_SESSION["kisyu"]===FALSE){
 			$this->load->view("kisyu",$data);
 		}else{
 			$this->load->view("kaisen",$data);
@@ -89,10 +89,10 @@ class Welcome extends CI_Controller {
 		$_SESSION["kaisen"]=$_REQUEST["kaisen"];
 		
 		$this->load->view("header",$data);
-		if($_SESSION["kaisen"]==FALSE){
+		if($_SESSION["kaisen"]===FALSE){
 			$this->load->view("kaisen",$data);
 		}else{
-			if($_SESSION["kaisen"]=="nashi"){
+			if($_SESSION["kaisen"]==="nashi"){
 				$this->load->view("ruta",$data);
 			}else{
 				$this->load->view("packet",$data);
@@ -112,7 +112,7 @@ class Welcome extends CI_Controller {
 		$_SESSION["kaisen"]=$_REQUEST["kaisen"];
 		
         $this->load->view("header",$data);
-        if($_SESSION["kaisen"]==FALSE){
+        if($_SESSION["kaisen"]===FALSE){
 			$this->load->view("ruta",$data);
 		}else{
 			$this->load->view("packet",$data);
@@ -132,7 +132,7 @@ class Welcome extends CI_Controller {
 		$_SESSION["packet"] = $_SESSION["packet"]*1024*1024/128;#MB→パケットへの換算
 
 		$this->load->view("header",$data);
-		if($_SESSION["packet"]==FALSE){
+		if($_SESSION["packet"]===FALSE){
 			$this->load->view("packet",$data);
 		}else{
 			$this->load->view("suuti",$data);
@@ -151,7 +151,7 @@ class Welcome extends CI_Controller {
 		$_SESSION["tuuwazikan"] = mb_convert_kana($_SESSION["tuuwazikan"], "a", "UTF-8");#全角数字を半角に変換してます
 
 		$this->load->view("header",$data);
-		if($_SESSION["packet"]==FALSE){
+		if($_SESSION["packet"]===FALSE){
 			$this->load->view("suuti",$data);
 		}else{
 			$this->load->view("extra",$data);
@@ -236,7 +236,7 @@ class Welcome extends CI_Controller {
 		#ここから回線割引き
 		switch($_SESSION["kaisen"]){
 			case "au_kaisen":
-				if($_SESSION["kisyu"]=="iphone"){
+				if($_SESSION["kisyu"]==="iphone"){
 					$au_ryoukin-=910;
 					$a_service = "スマートバリュー";
 					
@@ -246,7 +246,7 @@ class Welcome extends CI_Controller {
 				break;
 				
 			case "softbank_kaisen":
-				if($_SESSION["kisyu"] =="iphone"){
+				if($_SESSION["kisyu"] ==="iphone"){
 					$softbank_ryoukin-=910;
 				} else{
 					$softbank_ryoukin-=1410;
@@ -263,7 +263,7 @@ class Welcome extends CI_Controller {
 		}
 		
 		#具体的なスマホの通話量と通信料へ
-		if ($_SESSION["kisyu"] == "iphone" or $_SESSION["kisyu"] =="sumaho"){
+		if ($_SESSION["kisyu"] === "iphone" or $_SESSION["kisyu"] ==="sumaho"){
 			
 			#スマホの通話量
 			$tuuwaryoukin = $_SESSION["tuuwazikan"]*40;
@@ -538,287 +538,281 @@ class Welcome extends CI_Controller {
 	$_SESSION["packet"] = $_SESSION["packet"] / 8388608;
 
 	#ここからdocomo新体系
-	#docomo専用のパケット計算式dokomopacketを作成
+	#docomo専用のパケット計算式dokomo_packetを作成
 		$docomo_packet = $_SESSION["packet"];
 		$dn_plan = "カケホーダイ&パケあえる";
-		if($_SESSION["kisyu"] == "sumaho" || $_SESSION["kisyu"] == "iphone"){#基本料金+ボーナス
 		
+		#ここからスマホの料金
+		if($_SESSION["kisyu"] === "sumaho" || $_SESSION["kisyu"] === "iphone"){
+			#基本料金+接続費
 			$docomo_new = 2700 + 300;
-			#U25応援割。
-			if( $_SESSION["U25"] == "yes" && $_SESSION["kisyu"] ==  "iphone"){
-				$docomo_packet -= 2;
-				$docomo_new -= 500;
-				
-				if($docomo_packet < 0.005215){		#5.3MBです
+			
+			#データ使わん人
+			if($docomo_packet < 0.005215){		#5.3MBです
 				$dn_pakeho = "データパックなし";
 				$docomo_new += $_SESSION["packet"]*8388608*0.08;#GB→パケット→円
-				$dn_service = "U25応援割,iPhoneボーナスパケット";
-				
-				} elseif (0.005215 <= $docomo_packet && $docomo_packet < 2){
-					$dn_pakeho = "2GBプラン";
-					if(15 < $_SESSION["years"]){
-						$docomo_new+=2900;
-						$dn_service = "U25応援割,iPhoneボーナスパケット,ずっとドコモ割";
-				
-					} else{
-						$docomo_new+=3500;
-						$dn_service = "U25応援割,iPhoneボーナスパケット";
-					}
-		
-				} elseif (2<= $docomo_packet && $docomo_packet < 3){
-					#2GBパックに1000円で1GBつけた方がまし、だけど10年以上docomo使ってると打ち消される
-					if($_SESSION["years"]<10){
-						$docomo_new+=4500;#3GB使える
-						$dn_pakeho = "2GBパック";
-						$dn_service = "U25応援割,iPhoneボーナスパケット";
+				$dn_service = "なし";
 			
-				}elseif (10<=$_SESSION["years"] && $_SESSION["years"]<15){
-					$docomo_new+=4400;#5GB使える
-					$dn_pakeho = "5GBパック";
-					$dn_service = "ずっとドコモ割";
-					$dn_service = "U25応援割,iPhoneボーナスパケット,ずっとドコモ割";
-				
-				}elseif (15 < $_SESSION["years"]){
-					$docomo_new+=4200;#5GB使える
-					$dn_pakeho = "5GBパック";
-					$dn_service = "U25応援割,iPhoneボーナスパケット,ずっとドコモ割";
-				}
-					
-				} elseif (3<= $docomo_packet && $docomo_packet < 5){
-					$docomo_new += 5000;
-					$dn_pakeho = "5GBパック";
-					$dn_service = "U25応援割,iPhoneボーナスパケット";
-					if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
-						$docomo_new-=600;#5GB使える
-						$dn_service = "U25応援割,iPhoneボーナスパケット,ずっとドコモ割";
-					
-					}elseif (15 <= $_SESSION["years"]){
-						$docomo_new-=800;#5GB使える
-						$dn_service = "U25応援割,iPhoneボーナスパケット,ずっとドコモ割";
-					}
-				
-				} else {
-					$dn_pakeho = "5GBパック";
-					#通信料1GB増加につき1000円足してく
-					$docomo_new += 5000;
-					$docomo_packet -= 5;
-					$dn_service = "U25応援割,iPhoneボーナスパケット";
-					for ( ; 0<$docomo_packet ; $docomo_packet -= 1){
-						$docomo_new+=1000;
-					}
-					
-					if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
-						$docomo_new-=600;#5GB使える
-						$dn_service = "U25応援割,iPhoneボーナスパケット,ずっとドコモ割";
-					}elseif (15 <= $_SESSION["years"]){
-						$docomo_new-=800;#5GB使える
-						$dn_service = "U25応援割,iPhoneボーナスパケット,ずっとドコモ割";
-					}
-				}
-				
-			} else if( $_SESSION["U25"] == "yes" ){
-				$docomo_packet -= 1;
-				$docomo_new -= 500;
-				
-				if($docomo_packet < 0.005215){		#5.3MBです
-				$dn_pakeho = "データパックなし";
-				$docomo_new += $_SESSION["packet"]*8388608*0.08;#GB→パケット→円
-				$dn_service = "U25応援割";
-				
-				} elseif (0.005215 <= $docomo_packet && $docomo_packet < 2){
-					$dn_pakeho = "2GBプラン";
-					if(15 < $_SESSION["years"]){
-						$docomo_new+=2900;
-						$dn_service = "U25応援割,ずっとドコモ割";
-				
-					} else{
-						$docomo_new+=3500;
-						$dn_service = "U25応援割";
-					}
-		
-				} elseif (2<= $docomo_packet && $docomo_packet < 3){
-					#2GBパックに1000円で1GBつけた方がまし、だけど10年以上docomo使ってると打ち消される
-					if($_SESSION["years"]<10){
-						$docomo_new+=4500;#3GB使える
-						$dn_pakeho = "2GBパック";
-						$dn_service = "U25応援割";
+			} else {
+			#データ使う人
 			
-				}elseif (10<=$_SESSION["years"] && $_SESSION["years"]<15){
-					$docomo_new+=4400;#5GB使える
-					$dn_pakeho = "5GBパック";
-					$dn_service = "ずっとドコモ割";
-					$dn_service = "U25応援割,ずっとドコモ割";
-				
-				}elseif (15 < $_SESSION["years"]){
-					$docomo_new+=4200;#5GB使える
-					$dn_pakeho = "5GBパック";
-					$dn_service = "U25応援割,ずっとドコモ割";
-				}
+				#U25でiphoneの人
+				if( $_SESSION["U25"] === "yes" && $_SESSION["kisyu"] ===  "iphone"){
+					$docomo_packet -= 2;
+					$docomo_new -= 500;
 					
-				} elseif (3<= $docomo_packet && $docomo_packet < 5){
-					$docomo_new += 5000;
-					$dn_pakeho = "5GBパック";
-					$dn_service = "U25応援割";
-					if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
-						$docomo_new-=600;#5GB使える
-						$dn_service = "U25応援割,ずっとドコモ割";
+					if ($docomo_packet < 2){
+						$dn_pakeho = "2GBプラン";
+						if(15 < $_SESSION["years"]){
+							$docomo_new+=2900;
+							$dn_service = "U25応援割,iPhoneボーナスパケット,ずっとドコモ割";
 					
-					}elseif (15 <= $_SESSION["years"]){
-						$docomo_new-=800;#5GB使える
-						$dn_service = "U25応援割,ずっとドコモ割";
-					}
-				
-				} else {
-					$dn_pakeho = "5GBパック";
-					#通信料1GB増加につき1000円足してく
-					$docomo_new += 5000;
-					$docomo_packet -= 5;
-					$dn_service = "U25応援割";
-					for ( ; 0<$docomo_packet ; $docomo_packet -= 1){
-						$docomo_new+=1000;
-					}
+						} else{
+							$docomo_new+=3500;
+							$dn_service = "U25応援割,iPhoneボーナスパケット";
+						}
 					
-					if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
-						$docomo_new-=600;#5GB使える
-						$dn_service = "U25応援割,ずっとドコモ割";
-					}elseif (15 <= $_SESSION["years"]){
-						$docomo_new-=800;#5GB使える
-						$dn_service = "U25応援割,ずっとドコモ割";
-					}
-				}
-			
-			#13ヶ月1GBゲット
-			}else if( $_SESSION["kisyu"] ==  "iphone"){
-				$docomo_packet -= 1;
-				if($docomo_packet < 0.005215){		#5.3MBです
-				$dn_pakeho = "データパックなし";
-				$docomo_new += $_SESSION["packet"]*8388608*0.08;#GB→パケット→円
-				$dn_service = "iPhoneボーナスパケット";
-				
-				} elseif (0.005215 <= $docomo_packet && $docomo_packet < 2){
-					$dn_pakeho = "2GBプラン";
-					if(15 < $_SESSION["years"]){
-						$docomo_new+=2900;
-						$dn_service = "iPhoneボーナスパケット,ずっとドコモ割";
-				
-					} else{
-						$docomo_new+=3500;
-						$dn_service = "iPhoneボーナスパケット";
-					}
-		
-				} elseif (2<= $docomo_packet && $docomo_packet < 3){
-					#2GBパックに1000円で1GBつけた方がまし、だけど10年以上docomo使ってると打ち消される
-					if($_SESSION["years"]<10){
-						$docomo_new+=4500;#3GB使える
-						$dn_pakeho = "2GBパック";
-						$dn_service = "iPhoneボーナスパケット";
-			
-				}elseif (10<=$_SESSION["years"] && $_SESSION["years"]<15){
-					$docomo_new+=4400;#5GB使える
-					$dn_pakeho = "5GBパック";
-					$dn_service = "ずっとドコモ割";
-					$dn_service = "iPhoneボーナスパケット,ずっとドコモ割";
-				
-				}elseif (15 < $_SESSION["years"]){
-					$docomo_new+=4200;#5GB使える
-					$dn_pakeho = "5GBパック";
-					$dn_service = "iPhoneボーナスパケット,ずっとドコモ割";
-				}
+					} elseif (2 <= $docomo_packet && $docomo_packet < 3){
+						#2GBパックに1000円で1GBつけた方がまし、だけど10年以上docomo使ってると打ち消される
+						if($_SESSION["years"]<10){
+							$docomo_new+=4500;#3GB使える
+							$dn_pakeho = "2GBパック";
+							$dn_service = "U25応援割,iPhoneボーナスパケット";
 					
-				} elseif (3<= $docomo_packet && $docomo_packet < 5){
-					$docomo_new += 5000;
-					$dn_pakeho = "5GBパック";
-					$dn_service = "iPhoneボーナスパケット";
-					if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
-						$docomo_new-=600;#5GB使える
-						$dn_service = "iPhoneボーナスパケット,ずっとドコモ割";
+						}elseif (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+							$docomo_new+=4400;#5GB使える
+							$dn_pakeho = "5GBパック";
+							$dn_service = "U25応援割,iPhoneボーナスパケット,ずっとドコモ割";
 					
-					}elseif (15 <= $_SESSION["years"]){
-						$docomo_new-=800;#5GB使える
-						$dn_service = "iPhoneボーナスパケット,ずっとドコモ割";
-					}
-				
-				} else {
-					$dn_pakeho = "5GBパック";
-					#通信料1GB増加につき1000円足してく
-					$docomo_new += 5000;
-					$docomo_packet -= 5;
-					$dn_service = "iPhoneボーナスパケット";
-					for ( ; 0<$docomo_packet ; $docomo_packet -= 1){
-						$docomo_new+=1000;
-					}
-					
-					if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
-						$docomo_new-=600;#5GB使える
-						$dn_service = "iPhoneボーナスパケット,ずっとドコモ割";
-					}elseif (15 <= $_SESSION["years"]){
-						$docomo_new-=800;#5GB使える
-						$dn_service = "iPhoneボーナスパケット,ずっとドコモ割";
-					}
-				}
-			
-			} else{#iphoneでもない、U25でもない
-				if($docomo_packet < 0.005215){		#5.3MBです
-					$dn_pakeho = "データパックなし";
-					$docomo_new += $_SESSION["packet"]*8388608*0.08;#GB→パケット→円
-		
-				} elseif (0.005215 <= $docomo_packet && $docomo_packet < 2){
-					$dn_pakeho = "2GBプラン";
-					if(15 < $_SESSION["years"]){
-						$docomo_new+=2900;
-						$dn_service = "ずっとドコモ割";
+						}elseif (15 < $_SESSION["years"]){
+							$docomo_new+=4200;#5GB使える
+							$dn_pakeho = "5GBパック";
+							$dn_service = "U25応援割,iPhoneボーナスパケット,ずっとドコモ割";
+						}
 						
-					} else{
-						$docomo_new+=3500;
-					}
-		
-				} elseif (2<= $docomo_packet && $docomo_packet < 3){
-					#2GBパックに1000円で1GBつけた方がまし、だけど10年以上docomo使ってると打ち消される
-					if($_SESSION["years"]<10){
-						$docomo_new+=4500;#3GB使える
-						$dn_pakeho = "2GBパック";
+					} elseif (3 <= $docomo_packet && $docomo_packet < 5){
+						$docomo_new += 5000;
+						$dn_pakeho = "5GBパック";
+						$dn_service = "U25応援割,iPhoneボーナスパケット";
+						if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+							$docomo_new-=600;#5GB使える
+							$dn_service = "U25応援割,iPhoneボーナスパケット,ずっとドコモ割";
+						
+						}elseif (15 <= $_SESSION["years"]){
+							$docomo_new-=800;#5GB使える
+							$dn_service = "U25応援割,iPhoneボーナスパケット,ずっとドコモ割";
+						}
 					
+					} else {
+						$dn_pakeho = "5GBパック";
+						#通信料1GB増加につき1000円足してく
+						$docomo_new += 5000;
+						$docomo_packet -= 5;
+						$dn_service = "U25応援割,iPhoneボーナスパケット";
+						for ( ; 0<$docomo_packet ; $docomo_packet -= 1){
+							$docomo_new+=1000;
+						}
+						
+						if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+							$docomo_new-=600;#5GB使える
+							$dn_service = "U25応援割,iPhoneボーナスパケット,ずっとドコモ割";
+						}elseif (15 <= $_SESSION["years"]){
+							$docomo_new-=800;#5GB使える
+							$dn_service = "U25応援割,iPhoneボーナスパケット,ずっとドコモ割";
+						}
+					}
+					
+				#U25だけどiphoneはいらない人
+				} else if( $_SESSION["U25"] === "yes" ){
+					$docomo_packet -= 1;
+					$docomo_new -= 500;
+				
+					if ($docomo_packet < 2){
+						$dn_pakeho = "2GBプラン";
+						if(15 < $_SESSION["years"]){
+							$docomo_new+=2900;
+							$dn_service = "U25応援割,ずっとドコモ割";
+					
+						} else{
+							$docomo_new+=3500;
+							$dn_service = "U25応援割";
+						}
+		
+					} elseif (2<= $docomo_packet && $docomo_packet < 3){
+						#2GBパックに1000円で1GBつけた方がまし、だけど10年以上docomo使ってると打ち消される
+						if($_SESSION["years"]<10){
+							$docomo_new+=4500;#3GB使える
+							$dn_pakeho = "2GBパック";
+							$dn_service = "U25応援割";
+			
 					}elseif (10<=$_SESSION["years"] && $_SESSION["years"]<15){
 						$docomo_new+=4400;#5GB使える
 						$dn_pakeho = "5GBパック";
 						$dn_service = "ずっとドコモ割";
-						
+						$dn_service = "U25応援割,ずっとドコモ割";
+					
 					}elseif (15 < $_SESSION["years"]){
 						$docomo_new+=4200;#5GB使える
 						$dn_pakeho = "5GBパック";
-						$dn_service = "ずっとドコモ割";
+						$dn_service = "U25応援割,ずっとドコモ割";
+					}
 						
+					} elseif (3<= $docomo_packet && $docomo_packet < 5){
+						$docomo_new += 5000;
+						$dn_pakeho = "5GBパック";
+						$dn_service = "U25応援割";
+						if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+							$docomo_new-=600;#5GB使える
+							$dn_service = "U25応援割,ずっとドコモ割";
+						
+						}elseif (15 <= $_SESSION["years"]){
+							$docomo_new-=800;#5GB使える
+							$dn_service = "U25応援割,ずっとドコモ割";
+						}
+					
+					} else {
+						$dn_pakeho = "5GBパック";
+						#通信料1GB増加につき1000円足してく
+						$docomo_new += 5000;
+						$docomo_packet -= 5;
+						$dn_service = "U25応援割";
+						for ( ; 0<$docomo_packet ; $docomo_packet -= 1){
+							$docomo_new+=1000;
+						}
+						
+						if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+							$docomo_new -= 600;#5GB使える
+							$dn_service = "U25応援割,ずっとドコモ割";
+						}elseif (15 <= $_SESSION["years"]){
+							$docomo_new -= 800;#5GB使える
+							$dn_service = "U25応援割,ずっとドコモ割";
+						}
 					}
-				
-				} elseif (3<= $docomo_packet && $docomo_packet < 5){
-					$docomo_new += 5000;
-					$dn_pakeho = "5GBパック";
-					if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
-						$docomo_new-=600;#5GB使える
+			
+				#iphoneがほしいけどU25じゃない人
+				#13ヶ月1GBゲット
+				}else if( $_SESSION["kisyu"] ===  "iphone"){
+					$docomo_packet -= 1;
+					if ($docomo_packet < 2){
+						$dn_pakeho = "2GBプラン";
+						if(15 < $_SESSION["years"]){
+							$docomo_new+=2900;
+							$dn_service = "iPhoneボーナスパケット,ずっとドコモ割";
+					
+						} else{
+							$docomo_new+=3500;
+							$dn_service = "iPhoneボーナスパケット";
+						}
+		
+					} elseif (2<= $docomo_packet && $docomo_packet < 3){
+						#2GBパックに1000円で1GBつけた方がまし、だけど10年以上docomo使ってると打ち消される
+						if($_SESSION["years"]<10){
+							$docomo_new+=4500;#3GB使える
+							$dn_pakeho = "2GBパック";
+							$dn_service = "iPhoneボーナスパケット";
+			
+					}elseif (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+						$docomo_new+=4400;#5GB使える
+						$dn_pakeho = "5GBパック";
 						$dn_service = "ずっとドコモ割";
+						$dn_service = "iPhoneボーナスパケット,ずっとドコモ割";
 					
-					}elseif (15 <= $_SESSION["years"]){
-						$docomo_new-=800;#5GB使える
-						$dn_service = "ずっとドコモ割";
+					}elseif (15 < $_SESSION["years"]){
+						$docomo_new+=4200;#5GB使える
+						$dn_pakeho = "5GBパック";
+						$dn_service = "iPhoneボーナスパケット,ずっとドコモ割";
 					}
+						
+					} elseif (3<= $docomo_packet && $docomo_packet < 5){
+						$docomo_new += 5000;
+						$dn_pakeho = "5GBパック";
+						$dn_service = "iPhoneボーナスパケット";
+						if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+							$docomo_new-=600;#5GB使える
+							$dn_service = "iPhoneボーナスパケット,ずっとドコモ割";
+						
+						}elseif (15 <= $_SESSION["years"]){
+							$docomo_new-=800;#5GB使える
+							$dn_service = "iPhoneボーナスパケット,ずっとドコモ割";
+						}
 					
-				} else {
-					$dn_pakeho = "5GBパック";
-					#通信料1GB増加につき1000円足してく
-					$docomo_new += 5000;
-					$docomo_packet -= 5;
-					for ( ; 0<$docomo_packet ; $docomo_packet -= 1){
-						$docomo_new+=1000;
+					} else {
+						$dn_pakeho = "5GBパック";
+						#通信料1GB増加につき1000円足してく
+						$docomo_new += 5000;
+						$docomo_packet -= 5;
+						$dn_service = "iPhoneボーナスパケット";
+						for ( ; 0<$docomo_packet ; $docomo_packet -= 1){
+							$docomo_new+=1000;
+						}
+						
+						if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+							$docomo_new-=600;#5GB使える
+							$dn_service = "iPhoneボーナスパケット,ずっとドコモ割";
+						}elseif (15 <= $_SESSION["years"]){
+							$docomo_new-=800;#5GB使える
+							$dn_service = "iPhoneボーナスパケット,ずっとドコモ割";
+						}
 					}
+			
+				} else{#iphoneでもない、U25でもない
+					if ($docomo_packet < 2){
+						$dn_pakeho = "2GBプラン";
+						if(15 < $_SESSION["years"]){
+							$docomo_new+=2900;
+							$dn_service = "ずっとドコモ割";
+							
+						} else{
+							$docomo_new+=3500;
+						}
+		
+					} elseif (2<= $docomo_packet && $docomo_packet < 3){
+						#2GBパックに1000円で1GBつけた方がまし、だけど10年以上docomo使ってると打ち消される
+						if($_SESSION["years"]<10){
+							$docomo_new+=4500;#3GB使える
+							$dn_pakeho = "2GBパック";
+						
+						}elseif (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+							$docomo_new+=4400;#5GB使える
+							$dn_pakeho = "5GBパック";
+							$dn_service = "ずっとドコモ割";
+							
+						}elseif (15 < $_SESSION["years"]){
+							$docomo_new+=4200;#5GB使える
+							$dn_pakeho = "5GBパック";
+							$dn_service = "ずっとドコモ割";
+							
+						}
 					
-					if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
-						$docomo_new-=600;#5GB使える
-					}elseif (15 <= $_SESSION["years"]){
-						$docomo_new-=800;#5GB使える
+					} elseif (3<= $docomo_packet && $docomo_packet < 5){
+						$docomo_new += 5000;
+						$dn_pakeho = "5GBパック";
+						if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+							$docomo_new-=600;#5GB使える
+							$dn_service = "ずっとドコモ割";
+						
+						}elseif (15 <= $_SESSION["years"]){
+							$docomo_new-=800;#5GB使える
+							$dn_service = "ずっとドコモ割";
+						}
+						
+					} else {
+						$dn_pakeho = "5GBパック";
+						#通信料1GB増加につき1000円足してく
+						$docomo_new += 5000;
+						$docomo_packet -= 5;
+						for ( ; 0<$docomo_packet ; $docomo_packet -= 1){
+							$docomo_new+=1000;
+						}
+						
+						if (10<=$_SESSION["years"] && $_SESSION["years"]<15){
+							$docomo_new-=600;#5GB使える
+						}elseif (15 <= $_SESSION["years"]){
+							$docomo_new-=800;#5GB使える
+						}
 					}
 				}
 			}
-			
 		} else{#ガラケ
 		$docomo_new = 2200+300;
 		
@@ -887,11 +881,11 @@ class Welcome extends CI_Controller {
 	#ここからソフバンの新体系
 	#ソフバンのスマホ
 
-	if($_SESSION["kisyu"] == "sumaho" or $_SESSION["kisyu"] == "iphone"){
+	if($_SESSION["kisyu"] === "sumaho" or $_SESSION["kisyu"] === "iphone"){
 		$sn_plan = "基本使用料";
 		$softbank_new = 2700+300;
-		if ($_SESSION["U25"] == "yes"){
-			if ($_SESSION["familyotoku"] == "yes"){
+		if ($_SESSION["U25"] === "yes"){
+			if ($_SESSION["familyotoku"] === "yes"){
 				switch ($_SESSION["kisyu"]){
 					case "doredemo":
 					#not excist
@@ -974,7 +968,7 @@ class Welcome extends CI_Controller {
 								$softbank_new += 4500+1000*(ceil($_SESSION["packet"])-7);
 							}
 							
-						} elseif($_SESSION["packet"] == 11){
+						} elseif($_SESSION["packet"] === 11){
 							$sn_pakeho = "定額10GB";
 							$sn_service="iPhoneデータ増量キャンペーン+10GBお得割";
 							$softbank_new += 8000;
@@ -1100,7 +1094,7 @@ class Welcome extends CI_Controller {
 								$softbank_new += 4500+1000*(ceil($_SESSION["packet"])-7);
 							}
 							
-						} elseif($_SESSION["packet"] == 11){
+						} elseif($_SESSION["packet"] === 11){
 							$sn_pakeho = "定額10GB";
 							$sn_service="iPhoneデータ増量キャンペーン1GB+10GBお得割";
 							$softbank_new += 8000;
@@ -1141,7 +1135,7 @@ class Welcome extends CI_Controller {
 				}
 			}
 		} else{
-			if ($_SESSION["familyotoku"] == "yes"){
+			if ($_SESSION["familyotoku"] === "yes"){
 				switch ($_SESSION["kisyu"]){
 					case "doredemo":
 						#not excist
@@ -1390,9 +1384,9 @@ class Welcome extends CI_Controller {
 	
 	#ここからauの新体系
 	#auのスマホ
-	if($_SESSION["kisyu"] == "sumaho" or $_SESSION["kisyu"] =="iphone"){
+	if($_SESSION["kisyu"] === "sumaho" or $_SESSION["kisyu"] ==="iphone"){
 		$au_new = 2700+300;
-		if($_SESSION["kaisen"] == "au_kaisen"){
+		if($_SESSION["kaisen"] === "au_kaisen"){
 			$au_service = "スマートバリュー";
 			if ($_SESSION["packet"] <= 3){
 				$au_new -= 934;
@@ -1411,7 +1405,7 @@ class Welcome extends CI_Controller {
 			
 		} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 6){
 			$aun_pakeho = "定額5GB";
-			if($_SESSION["packet"]==6){
+			if($_SESSION["packet"]===6){
 				$au_new += 6000;
 			} else{
 				$au_new += 5000;
@@ -1419,14 +1413,14 @@ class Welcome extends CI_Controller {
 			
 		} elseif(6 < $_SESSION["packet"] && $_SESSION["packet"] <= 9){
 			$aun_pakeho = "定額8GB";
-				if($_SESSION["packet"]==9){
+				if($_SESSION["packet"]===9){
 					$au_new += 7800;
 				} else{
 					$au_new += 6800;
 				}
 		} elseif(9 < $_SESSION["packet"] && $_SESSION["packet"] <= 11){
 			$aun_pakeho = "定額10GB";
-				if($_SESSION["packet"]==11){
+				if($_SESSION["packet"]===11){
 					$au_new += 9000;
 				} else{
 					$au_new += 8000;
@@ -1438,7 +1432,7 @@ class Welcome extends CI_Controller {
 	}else {
 	#auのガラケ
 		$au_new = 2200+300;
-		if ($_SESSION["packet"] == 0){
+		if ($_SESSION["packet"] === 0){
 			$au_new -= 300;
 			$aun_pakeho = なし;
 			
@@ -1450,7 +1444,7 @@ class Welcome extends CI_Controller {
 			$au_new += 3500;
 			$aun_pakeho = "データ料定額サービス";
 			
-			if($_SESSION["kaisen"]== "au_kaisen"){
+			if($_SESSION["kaisen"]=== "au_kaisen"){
 				$au_new -= 934;
 				$au_service = "スマートバリュー";
 			}
@@ -1477,7 +1471,7 @@ class Welcome extends CI_Controller {
 		if($au_ryoukin >= $au_new){
 			$au_ryoukin = $au_new;
 			$au_plan = "電話カケ放題プラン";#これしかないからOK
-			$au_service = $aun_service;
+			$au_service = $an_service;
 		}
 	
 		
@@ -1491,13 +1485,13 @@ class Welcome extends CI_Controller {
 		$_SESSION["s_plan"]=$s_plan;
 		$_SESSION["s_pakeho"]=$s_pakeho;
 		
-		if( $d_service == FALSE ){
+		if( $d_service === FALSE ){
 			$d_service = "なし";
 		}
-		if($a_service == FALSE ){
+		if($a_service === FALSE ){
 			$a_service = "なし";
 		}
-		if($s_service == FALSE ){
+		if($s_service === FALSE ){
 			$s_service = "なし";
 		}		
 		$_SESSION["d_service"]=$d_service;
@@ -1549,7 +1543,7 @@ class Welcome extends CI_Controller {
 		
 		
 		$this->load->view("header",$data);
-		if($_SESSION["U25"]==FALSE or $_SESSION["familyotoku"]==FALSE){
+		if($_SESSION["U25"]===FALSE or $_SESSION["familyotoku"]===FALSE){
 			$this->load->view("extra",$data);
 		}else{
 			$this->load->view("kekka",$data);
