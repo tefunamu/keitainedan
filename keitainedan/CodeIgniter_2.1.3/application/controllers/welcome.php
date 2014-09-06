@@ -882,7 +882,6 @@ class Welcome extends CI_Controller {
 	#ソフバンのスマホ
 
 	if($_SESSION["kisyu"] === "sumaho" or $_SESSION["kisyu"] === "iphone"){
-		$sn_plan = "基本使用料";
 		$softbank_new = 2700+300;
 		if ($_SESSION["U25"] === "yes"){
 			if ($_SESSION["familyotoku"] === "yes"){
@@ -1368,7 +1367,6 @@ class Welcome extends CI_Controller {
 		}
 	} else{
 	#ソフバンのガラケ
-		$sn_plan = "基本使用料";
 		$softbank_new = 2200 + 300;
 		if ($_SESSION["packet"] < 0.005215){		#5.3MBです
 			$softbank_new+= 0.08*$_SESSION["packet"];
@@ -1396,15 +1394,15 @@ class Welcome extends CI_Controller {
 		}
 		
 		if ($_SESSION["packet"] <= 2){
-			$aun_pakeho = "定額2GB";
+			$an_pakeho = "定額2GB";
 			$au_new += 3500;
 			
 		} elseif(2 < $_SESSION["packet"] && $_SESSION["packet"] <= 3){
-			$aun_pakeho = "定額3GB";
+			$an_pakeho = "定額3GB";
 				$au_new += 4200;
 			
 		} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 6){
-			$aun_pakeho = "定額5GB";
+			$an_pakeho = "定額5GB";
 			if($_SESSION["packet"]===6){
 				$au_new += 6000;
 			} else{
@@ -1412,21 +1410,21 @@ class Welcome extends CI_Controller {
 			}
 			
 		} elseif(6 < $_SESSION["packet"] && $_SESSION["packet"] <= 9){
-			$aun_pakeho = "定額8GB";
+			$an_pakeho = "定額8GB";
 				if($_SESSION["packet"]===9){
 					$au_new += 7800;
 				} else{
 					$au_new += 6800;
 				}
 		} elseif(9 < $_SESSION["packet"] && $_SESSION["packet"] <= 11){
-			$aun_pakeho = "定額10GB";
+			$an_pakeho = "定額10GB";
 				if($_SESSION["packet"]===11){
 					$au_new += 9000;
 				} else{
 					$au_new += 8000;
 				}
 		} else {
-			$aun_pakeho = "定額13GB";
+			$an_pakeho = "定額13GB";
 			$au_new += 9800;
 		}
 	}else {
@@ -1434,15 +1432,15 @@ class Welcome extends CI_Controller {
 		$au_new = 2200+300;
 		if ($_SESSION["packet"] === 0){
 			$au_new -= 300;
-			$aun_pakeho = なし;
+			$an_pakeho = なし;
 			
 		
 		}else if ($_SESSION["packet"] != 0 && $_SESSION["packet"] < 0.005215){
-			$aun_pakeho = なし;
+			$an_pakeho = なし;
 		
 		}else{
 			$au_new += 3500;
-			$aun_pakeho = "データ料定額サービス";
+			$an_pakeho = "データ料定額サービス";
 			
 			if($_SESSION["kaisen"]=== "au_kaisen"){
 				$au_new -= 934;
@@ -1463,14 +1461,15 @@ class Welcome extends CI_Controller {
 		
 		if($softbank_ryoukin >= $softbank_new){
 			$softbank_ryoukin = $softbank_new;
-			$s_plan = $sn_plan;
+			$s_plan = "スマ放題";#これしかない
 			$s_pakeho = $sn_pakeho;
 			$s_service= $sn_service;
 			}
 		
 		if($au_ryoukin >= $au_new){
 			$au_ryoukin = $au_new;
-			$au_plan = "電話カケ放題プラン";#これしかないからOK
+			$au_plan = "電話カケ放題プラン";#これしかない
+			$au_pakeho = $an_pakeho;
 			$au_service = $an_service;
 		}
 	
@@ -1485,15 +1484,16 @@ class Welcome extends CI_Controller {
 		$_SESSION["s_plan"]=$s_plan;
 		$_SESSION["s_pakeho"]=$s_pakeho;
 		
-		if( $d_service === FALSE ){
+		if( $d_service === NULL ){
 			$d_service = "なし";
 		}
-		if($a_service === FALSE ){
+		if($a_service === NULL ){
 			$a_service = "なし";
 		}
-		if($s_service === FALSE ){
+		if($s_service === NULL ){
 			$s_service = "なし";
-		}		
+		}
+		
 		$_SESSION["d_service"]=$d_service;
 		$_SESSION["a_service"]=$a_service;
 		$_SESSION["s_service"]=$s_service;
