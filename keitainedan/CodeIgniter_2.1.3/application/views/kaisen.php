@@ -7,7 +7,7 @@
 ご利用中のケーブルテレビがございましたら選択してください</br>
 <input type="radio" name="kaisen" value="au_kaisen">auの提携回線</br>
 <?php
-if ($_SESSION["kisyu"] == "iphone"){
+if ($_SESSION["kisyu"] == "iphone" OR $_SESSION["kisyu"] == "sumaho"){
 echo ('<input type="radio" name="kaisen" value="softbank_kaisen">softbankの提携回線(Yahoo!BB)</Br>');
 }
 ?>
@@ -31,7 +31,7 @@ J:COM、他多数</Br>
 
 </br>
 <?php
-if ($_SESSION["kisyu"] == "iphone"){
+if ($_SESSION["kisyu"] == "iphone" OR $_SESSION["kisyu"] == "sumaho"){
 echo ('
 ・softbankの提携回線</br>
 ホワイトBB</br>
