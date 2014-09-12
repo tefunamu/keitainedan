@@ -260,7 +260,7 @@ class Welcome extends CI_Controller {
 			
 			#スマホの通信料
 			#ソフバンはほんとに少なければ(15Mbyteレベル)安いやつがある。docomoのプラン消えたから消した
-			if ($_SESSION["packet"] < 114000){
+			if ($_SESSION["packet"] < 114000/838608){
 				$softbank_ryoukin+=0.05*$_SESSION["packet"];
 				$a_pakeho = "LTE フラット";
 				$s_pakeho = "パケットし放題 for 4G";
@@ -282,7 +282,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランEシンプル";
 				$s_plan="ホワイトプラン";
 				
-			} elseif (5 <= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] < 25){
+			} elseif (5 <= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] < 25){
 				$docomo_ryoukin += 934;
 				$au_ryoukin += 934;
 				$softbank_ryoukin += 40*0.784*$_SESSION["tuuwazikan"]+934;
@@ -290,7 +290,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランSSシンプル";
 				$s_plan="ホワイトプラン";
 			
-			} elseif (25<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <26){
+			} elseif (25<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <26){
 				$docomo_ryoukin += 934;
 				$au_ryoukin += 934;
 				$softbank_ryoukin += 40*($_SESSION["tuuwazikan"]-25)+1700;
@@ -298,7 +298,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランSSシンプル";
 				$s_plan="オレンジプラン・SSプラン";
 	
-			} elseif (26<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <40){
+			} elseif (26<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <40){
 				$docomo_ryoukin += 40*($_SESSION["tuuwazikan"]-26)+934;
 				$au_ryoukin += 40*($_SESSION["tuuwazikan"]-26)+934;
 				$softbank_ryoukin += 40*($_SESSION["tuuwazikan"]-25)+1700;
@@ -306,7 +306,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランSSシンプル";
 				$s_plan="オレンジプラン・SSプラン";
 			
-			} elseif (40<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <41){
+			} elseif (40<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <41){
 				$docomo_ryoukin += 1500;
 				$au_ryoukin += 40*($_SESSION["tuuwazikan"]-26)+934;
 				$softbank_ryoukin += 40*($_SESSION["tuuwazikan"]-25)+1700;
@@ -314,7 +314,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランSSシンプル";
 				$s_plan="オレンジプラン・SSプラン";
 			
-			} elseif (41<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <56){
+			} elseif (41<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <56){
 				$docomo_ryoukin += 1500;
 				$au_ryoukin += 1550;
 				$softbank_ryoukin += 2200;
@@ -322,7 +322,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランSシンプル";
 				$s_plan="ブループラン・Sプラン";
 			
-			} elseif (56<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <57){
+			} elseif (56<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <57){
 				$docomo_ryoukin += 18*($_SESSION["tuuwazikan"]-55)+1500;
 				$au_ryoukin += 1550;
 				$softbank_ryoukin += 2200;
@@ -330,7 +330,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランSシンプル";
 				$s_plan="ブループラン・Sプラン";
 			
-			} elseif (57<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <63){
+			} elseif (57<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <63){
 				$docomo_ryoukin += 18*($_SESSION["tuuwazikan"]-55)+1500;
 				$au_ryoukin += 1550;
 				$softbank_ryoukin += 2250;
@@ -338,7 +338,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランSシンプル";
 				$s_plan="オレンジプラン・Sプラン";
 			
-			} elseif (63<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <83){
+			} elseif (63<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <83){
 				$docomo_ryoukin += 18*($_SESSION["tuuwazikan"]-55)+1500;
 				$au_ryoukin += 32*($_SESSION["tuuwazikan"]-62)+1550;
 				$softbank_ryoukin += 32*($_SESSION["tuuwazikan"]-62)+2250;
@@ -346,7 +346,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランSシンプル";
 				$s_plan="オレンジプラン・Sプラン";
 			
-			} elseif (83<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <92){
+			} elseif (83<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <92){
 				$docomo_ryoukin += 2500;
 				$au_ryoukin += 32*($_SESSION["tuuwazikan"]-62)+1550;
 				$softbank_ryoukin += 32*($_SESSION["tuuwazikan"]-62)+2250;
@@ -354,7 +354,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランSシンプル";
 				$s_plan="オレンジプラン・Sプラン";
 			
-			} elseif (92<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <143){
+			} elseif (92<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <143){
 				$docomo_ryoukin += 2500;
 				$au_ryoukin += 2500;
 				$softbank_ryoukin += 3200;
@@ -362,7 +362,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランMシンプル";
 				$s_plan="オレンジプラン・Mプラン";
 			
-			} elseif (143<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <145){
+			} elseif (143<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <145){
 				$docomo_ryoukin += 28*($_SESSION["tuuwazikan"]-142)+2500;
 				$au_ryoukin += 2500;
 				$softbank_ryoukin += 3200;
@@ -370,7 +370,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランMシンプル";
 				$s_plan="オレンジプラン・Mプラン";
 			
-			} elseif (145<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <196){
+			} elseif (145<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <196){
 				$docomo_ryoukin += 28*($_SESSION["tuuwazikan"]-142)+2500;
 				$au_ryoukin += 28*($_SESSION["tuuwazikan"]-144)+2500;
 				$softbank_ryoukin += 28*($_SESSION["tuuwazikan"]-144)+3200;
@@ -378,7 +378,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランMシンプル";
 				$s_plan="オレンジプラン・Mプラン";
 			
-			} elseif (196<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <203){
+			} elseif (196<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <203){
 				$docomo_ryoukin += 4000;
 				$au_ryoukin += 3950;
 				$softbank_ryoukin += 28*($_SESSION["tuuwazikan"]-144)+3200;
@@ -386,7 +386,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランLシンプル";
 				$s_plan="オレンジプラン・Mプラン";
 			
-			} elseif (203<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <263){
+			} elseif (203<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <263){
 				$docomo_ryoukin += 4000;
 				$au_ryoukin += 3950;
 				$softbank_ryoukin += 4650;
@@ -394,7 +394,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランLシンプル";
 				$s_plan="オレンジプラン・Lプラン";
 			
-			} elseif (263<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <265){
+			} elseif (263<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <265){
 				$docomo_ryoukin += 4000;
 				$au_ryoukin += 24*($_SESSION["tuuwazikan"]-262)+3950;
 				$softbank_ryoukin += 4650;
@@ -402,7 +402,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランLシンプル";
 				$s_plan="オレンジプラン・Lプラン";
 			
-			} elseif (265<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <301){
+			} elseif (265<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <301){
 				$docomo_ryoukin += 4000;
 				$au_ryoukin += 24*($_SESSION["tuuwazikan"]-262)+3950;
 				$softbank_ryoukin += 4700;
@@ -410,7 +410,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランLシンプル";
 				$s_plan="ブループラン・Lプラン";
 			
-			} elseif (301<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <377){
+			} elseif (301<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <377){
 				$docomo_ryoukin += 20*($_SESSION["tuuwazikan"]-300)+4000;
 				$au_ryoukin += 24*($_SESSION["tuuwazikan"]-262)+3950;
 				$softbank_ryoukin += 20*($_SESSION["tuuwazikan"]-300)+4700;
@@ -418,7 +418,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランLシンプル";
 				$s_plan="ブループラン・Lプラン";
 			
-			} elseif (377<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <425){
+			} elseif (377<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <425){
 				$docomo_ryoukin += 20*(tuuwazikan-300)+4000;
 				$au_ryoukin += 6700;
 				$softbank_ryoukin += 20*($_SESSION["tuuwazikan"]-300)+4700;
@@ -426,7 +426,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランLLシンプル";
 				$s_plan="ブループラン・Lプラン";
 			
-			} elseif (425<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <426){
+			} elseif (425<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <426){
 				$docomo_ryoukin += 20*(tuuwazikan-300)+4000;
 				$au_ryoukin += 6700;
 				$softbank_ryoukin += 7200;
@@ -434,7 +434,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランLLシンプル";
 				$s_plan="ブループラン・LLプラン";
 			
-			} elseif (426<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <733){
+			} elseif (426<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <733){
 				$docomo_ryoukin += 6500;
 				$au_ryoukin += 6700;
 				$softbank_ryoukin += 7200;
@@ -442,7 +442,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランLLシンプル";
 				$s_plan="ブループラン・LLプラン";
 			
-			} elseif (733<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <786){
+			} elseif (733<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <786){
 				$docomo_ryoukin += 15*($_SESSION["tuuwazikan"]-732)+6500;
 				$au_ryoukin += 6700;
 				$softbank_ryoukin += 7200;
@@ -450,7 +450,7 @@ class Welcome extends CI_Controller {
 				$a_plan="プランLLシンプル";
 				$s_plan="ブループラン・LLプラン";
 			
-			} elseif (786<= $_SESSION["tuuwazikan"] || $_SESSION["tuuwazikan"] <801){
+			} elseif (786<= $_SESSION["tuuwazikan"] && $_SESSION["tuuwazikan"] <801){
 				$docomo_ryoukin += 15*($_SESSION["tuuwazikan"]-732)+6500;
 				$au_ryoukin += 6700;
 				$softbank_ryoukin += 14*($_SESSION["tuuwazikan"]-785)+7200;
@@ -469,7 +469,7 @@ class Welcome extends CI_Controller {
 			
 				
 		#以下通信料
-		
+		$_SESSION["packet"] = $_SESSION["packet"]*8388608;
 			if ($_SESSION["packet"] < 9800) {
 				$docomo_ryoukin += 0.08*$_SESSION["packet"];
 				$au_ryoukin +=0.1*$_SESSION["packet"];
@@ -503,6 +503,7 @@ class Welcome extends CI_Controller {
 				$s_pakeho="パケットし放題";
 				
 			}#packetから出た
+		$_SESSION["packet"] = $_SESSION["packet"]/8388608;
 		}
 
 
@@ -2140,9 +2141,9 @@ class Welcome extends CI_Controller {
 		}
 	
 		#消費税かけてる
-		$_SESSION["docomo_ryoukin"]=ceil($docomo_ryoukin*1.08);
-		$_SESSION["au_ryoukin"]=ceil($au_ryoukin*1.08);
-		$_SESSION["softbank_ryoukin"]=ceil($softbank_ryoukin*1.08);
+		$_SESSION["docomo_ryoukin"]=ceil($docomo_ryoukin*1.08/100)*100;
+		$_SESSION["au_ryoukin"]=ceil($au_ryoukin*1.08/100)*100;
+		$_SESSION["softbank_ryoukin"]=ceil($softbank_ryoukin*1.08/100)*100;
 		$_SESSION["d_plan"]=$d_plan;
 		$_SESSION["d_pakeho"]=$d_pakeho;
 		$_SESSION["a_plan"]=$a_plan;
@@ -2165,7 +2166,7 @@ class Welcome extends CI_Controller {
 		$_SESSION["s_service"]=$s_service;
 		
 		#エラーチェックの際は囲むこと。最後に外そう。
-		
+		/*
 		########ここから#########
 		
 		switch($_SESSION["kyaria"]){
@@ -2212,7 +2213,7 @@ class Welcome extends CI_Controller {
 		} else{
 			$_SESSION["U25"] = "いいえ";
 			}
-		
+		*/
 		########ここまで#########
 		
 		
