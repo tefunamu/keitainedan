@@ -92,8 +92,11 @@ class Welcome extends CI_Controller {
 		if($_SESSION["kaisen"]===FALSE){
 			$this->load->view("kaisen",$data);
 		}else{
-			$this->load->view("ruta",$data);
-			
+			if($_SESSION["kaisen"]==="nashi"){
+				$this->load->view("ruta",$data);
+			}else{
+				$this->load->view("packet",$data);
+			}
 		}
 		//$this->load->view("footer",$data);
 
@@ -106,10 +109,10 @@ class Welcome extends CI_Controller {
 		$data["page_title"] = "モバイル料金ラボ";
 		
 		session_start();
-		$_SESSION["ruta"]=$_REQUEST["ruta"];
+		$_SESSION["kaisen"]=$_REQUEST["kaisen"];
 		
         $this->load->view("header",$data);
-        if($_SESSION["ruta"]===FALSE){
+        if($_SESSION["kaisen"]===FALSE){
 			$this->load->view("ruta",$data);
 		}else{
 			$this->load->view("packet",$data);
@@ -126,7 +129,7 @@ class Welcome extends CI_Controller {
 		session_start();
 		$_SESSION["packet"]=$_REQUEST["packet"];
 		$_SESSION["packet"] = mb_convert_kana($_SESSION["packet"], "a", "UTF-8");#全角数字を半角に変換してます
-		$_SESSION["packet"] = $_SESSION["packet"];#GB
+		$_SESSION["packet"] = $_SESSION["packet"]*1024*1024*1024/128;#GB→パケットへの換算
 
 		$this->load->view("header",$data);
 		if($_SESSION["packet"]===FALSE){
@@ -185,9 +188,9 @@ class Welcome extends CI_Controller {
 		#switchないのdocomo消去
 		switch($_SESSION["kisyu"]){
 			case "iphone":
-				#変数=基本料金+パケホプラン
-				$au_ryoukin = 934+5700;
-				$softbank_ryoukin = 934+5700;
+				#変数=基本料金+パケホプラン+ネット通信料(spモード)
+				$au_ryoukin = 934+5700+300;
+				$softbank_ryoukin = 934+5700+300;
 				$a_plan = "LTEプラン";
 				$a_service = "LTEフラット";
 				$s_plan = "ホワイトプラン";
@@ -197,9 +200,10 @@ class Welcome extends CI_Controller {
 				break;
 			
 			case "sumaho":
-				#変数=基本料金+パケホプラン
-				$au_ryoukin = 934+5700;
-				$softbank_ryoukin = 934+5700;
+				#変数=基本料金+パケホプラン+ネット通信料(spモード)
+				#新体系=基本料金+(パケホプラン)+通信料
+				$au_ryoukin = 934+5700+300;
+				$softbank_ryoukin = 934+5700+300;
 				$a_plan = "LTEプラン";
 				$a_service = "LTEフラット";
 				$s_plan = "ホワイトプラン";
@@ -208,10 +212,10 @@ class Welcome extends CI_Controller {
 				
 				
 			default:#ガラケとdoredemo
-				#変数=(基本料金)+(パケホプラン)
-				#新体系=基本料金+(パケホプラン)
-				$au_ryoukin = NULL;
-				$softbank_ryoukin = NULL;
+				#変数=(基本料金)+(パケホプラン)+ネット通信料
+				#新体系=基本料金+(パケホプラン)+通信料
+				$au_ryoukin=300;
+				$softbank_ryoukin=300;
 				$a_plan="プランZシンプル";
 				$s_plan="ホワイトプラン";
 				break;
@@ -235,20 +239,12 @@ class Welcome extends CI_Controller {
 			case "softbank_kaisen":
 					$softbank_ryoukin-=1410;
 				break;
-		
-			default:
-				switch($_SESSION["ruta"]){
-					case "au_ruta":
-						$au_ryoukin-=934;
-						$au_service = "スマートバリューmine";
-						break;
-				
-					case "softbank_ruta":
-						$softbank_ryoukin-= 934;
-						$softbank_new -= 463;
-						$s_service = "Wi-Fiセット割";
-				}
+			
+			case "au_ruta":
+				$au_ryoukin-=934;
 				break;
+			
+			#softbankのルータは見つからないので消去
 		}
 		
 		#具体的なスマホの通話量と通信料へ
@@ -512,6 +508,8 @@ class Welcome extends CI_Controller {
 
 
 #ここから新体系
+#めんどいからパケットからギガに戻す。2GBまでは3500円だけど2.0001GBは3GBとして扱うから4500円だよって計算してる。ceil関数さま様
+	$_SESSION["packet"] = $_SESSION["packet"] / 8388608;
 
 	#ここからdocomo新体系
 	#docomo専用のパケット計算式dokomo_packetを作成
@@ -1093,53 +1091,56 @@ class Welcome extends CI_Controller {
 							case "sumaho":#yys
 							if ($_SESSION["packet"] <= 3){
 								$sn_pakeho = "定額2GB";
-								$sn_service="スマホBB割+スマホデータ増量キャンペーン";
+								$sn_service="スマホBB割";
 								if ($_SESSION["packet"] <= 2){
 									$softbank_new += 3500-934;
 								} else{
-									$softbank_new += 4500-934;
+									$sn_service="U25;
+									$softbank_new += 3000;
 								}
 							
-							} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 9){
+							} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 5){
 								$sn_pakeho = "定額5GB";
-								$sn_service="スマホBB割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 7){
-									$softbank_new += 5000-1410;
-								} else{
-									$softbank_new += 5000+1000*(ceil($_SESSION["packet"])-7)-1410;
-								}
+								$sn_service="スマホBB割";
+								$softbank_new += 5000-1410;
 								
-							} elseif(9 < $_SESSION["packet"] && $_SESSION["packet"] <= 17){
+								
+							} elseif(5 < $_SESSION["packet"] && $_SESSION["packet"] <= 8){
+								$sn_pakeho = "定額5GB";
+								$sn_service="U25";
+								$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-5)-1410;
+							
+							} elseif(8 < $_SESSION["packet"] && $_SESSION["packet"] <= 14){
 								$sn_pakeho = "定額10GB";
-								$sn_service="スマホBB割+10GBおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 12){
+								$sn_service="スマホBB割+10GBおトク割";
+								if ($_SESSION["packet"] <= 10){
 									$softbank_new += 8000-1410;
 								} else{
-									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-12)-1410;
+									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-10)-1410;
 								}
 							
-							} elseif(17 < $_SESSION["packet"] && $_SESSION["packet"] <= 19){
+							} elseif(14 < $_SESSION["packet"] && $_SESSION["packet"] <= 17){
 								$sn_pakeho = "定額15GB";
-								$sn_service = "家族でおトク割+スマホデータ増量キャンペーン";
-								$softbank_new += 11000+1000*(ceil($_SESSION["packet"])-17);
+								$sn_service = "家族でおトク割";
+								$softbank_new += 11000+1000*(ceil($_SESSION["packet"])-15);
 								
 								
-							} elseif(19 < $_SESSION["packet"] && $_SESSION["packet"] <= 27){
+							} elseif(17 < $_SESSION["packet"] && $_SESSION["packet"] <= 25){
 								$sn_pakeho = "定額20GB";
-								$sn_service="家族でおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 22){
+								$sn_service="家族でおトク割";
+								if ($_SESSION["packet"] <= 20){
 									$softbank_new += 11000;
 								} else{
-									$softbank_new += 11000+1000*(ceil($_SESSION["packet"])-22);
+									$softbank_new += 11000+1000*(ceil($_SESSION["packet"])-20);
 								}
 								
 							} else {
 								$sn_pakeho = "定額30GB";
-								$sn_service = "家族でおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"]<= 32){
+								$sn_service = "家族でおトク割";
+								if ($_SESSION["packet"]<= 30){
 									$softbank_new += 19500;
 								} else{
-									$softbank_new += 19500+1000*(ceil($_SESSION["packet"])-32);
+									$softbank_new += 19500+1000*(ceil($_SESSION["packet"])-30);
 								}
 							}
 							break;
@@ -1208,52 +1209,55 @@ class Welcome extends CI_Controller {
 						case "sumaho":#yns
 							if ($_SESSION["packet"] <= 3){
 								$sn_pakeho = "定額2GB";
-								$sn_service="スマホBB割+スマホデータ増量キャンペーン";
+								$sn_service="スマホBB割";
 								if ($_SESSION["packet"] <= 2){
-									$softbank_new += 2566;
+									$softbank_new += 3500-934;
 								} else{
-									$softbank_new += 3566;
+									$sn_service="U25;
+									$softbank_new += 3000;
 								}
 							
-							} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 9){
-									$sn_pakeho = "定額5GB";
-								$sn_service = "スマホBB割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 7){
-									$softbank_new += 5000 - 1410;
-								} else{
-									$softbank_new += 5000+1000*(ceil($_SESSION["packet"])-7)-1410;
-								}
+							} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 5){
+								$sn_pakeho = "定額5GB";
+								$sn_service="スマホBB割";
+								$softbank_new += 5000-1410;
+								
+								
+							} elseif(5 < $_SESSION["packet"] && $_SESSION["packet"] <= 8){
+								$sn_pakeho = "定額5GB";
+								$sn_service="U25";
+								$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-5)-1410;
 							
-							} elseif(9 < $_SESSION["packet"] && $_SESSION["packet"] <= 16){
+							} elseif(8 < $_SESSION["packet"] && $_SESSION["packet"] <= 14){
 								$sn_pakeho = "定額10GB";
-								$sn_service="スマホBB割+10GBおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 12){
+								$sn_service="スマホBB割+10GBおトク割";
+								if ($_SESSION["packet"] <= 10){
 									$softbank_new += 8000;
 								} else{
-									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-12);
+									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-10);
 								}
 								
-							} elseif(16 < $_SESSION["packet"] && $_SESSION["packet"] <= 20){
+							} elseif(14 < $_SESSION["packet"] && $_SESSION["packet"] <= 18){
 								$sn_pakeho = "定額15GB";
-								$sn_service="スマホBB割+スマホデータ増量キャンペーン";
-								$softbank_new += 11090+1000*(ceil($_SESSION["packet"])-16);
+								$sn_service="スマホBB割";
+								$softbank_new += 11090+1000*(ceil($_SESSION["packet"])-14);
 								
-							} elseif(20 < $_SESSION["packet"] && $_SESSION["packet"] <= 28){
+							} elseif(18 < $_SESSION["packet"] && $_SESSION["packet"] <= 26){
 								$sn_pakeho = "定額20GB";
-								$sn_service="スマホBB割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 22){
+								$sn_service="スマホBB割";
+								if ($_SESSION["packet"] <= 20){
 									$softbank_new += 14590;
 								} else{
-									$softbank_new += 14590+1000*(ceil($_SESSION["packet"])-22);
+									$softbank_new += 14590+1000*(ceil($_SESSION["packet"])-20);
 								}
 							
 							} else {
 								$sn_pakeho = "定額30GB";
-								$sn_service="スマホBB割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"]<= 32){
+								$sn_service="スマホBB割";
+								if ($_SESSION["packet"]<= 30){
 									$softbank_new += 21090;
 								} else{
-									$softbank_new += 21090+1000*(ceil($_SESSION["packet"])-32);
+									$softbank_new += 21090+1000*(ceil($_SESSION["packet"])-30);
 								}
 							}
 							break;
@@ -1318,56 +1322,57 @@ class Welcome extends CI_Controller {
 						case "sumaho":#nys
 							if ($_SESSION["packet"] <= 3){
 								$sn_pakeho = "定額2GB";
-								$sn_service="スマホBB割+スマホデータ増量キャンペーン";
+								$sn_service="スマホBB割";
 								if ($_SESSION["packet"] <= 2){
-									$softbank_new += 2566;
+									$softbank_new += 3500-934;
 								} else{
-									$softbank_new += 3566;
+									$sn_service="U25;
+									$softbank_new += 3000;
 								}
 							
-							} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
+							} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 7){
 								$sn_pakeho = "定額5GB";
-								$sn_service="スマホBB割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 7){
-									$softbank_new += 3590;
+								$sn_service="スマホBB割";
+								if ($_SESSION["packet"] <= 5){
+									$softbank_new += 8000-1410;
 								} else{
-									$softbank_new += 3590+1000*(ceil($_SESSION["packet"])-7);
+									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-5)-1410;
 								}
 								
-							} elseif(10 < $_SESSION["packet"] && $_SESSION["packet"] <= 16){
+							} elseif(7 < $_SESSION["packet"] && $_SESSION["packet"] <= 14){
 								$sn_pakeho = "定額10GB";
-								$sn_service="スマホBB割+10GBおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 12){
+								$sn_service="スマホBB割+10GBおトク割";
+								if ($_SESSION["packet"] <= 10){
 									$softbank_new += 6590;
 								} else{
-									$softbank_new += 6590+1000*(ceil($_SESSION["packet"])-12);
+									$softbank_new += 6590+1000*(ceil($_SESSION["packet"])-10);
 								}
 								
-							} elseif(16 < $_SESSION["packet"] && $_SESSION["packet"] <= 19){
+							} elseif(14 < $_SESSION["packet"] && $_SESSION["packet"] <= 17){
 								$sn_pakeho = "定額15GB";
-								$sn_service="家族でおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 17){
+								$sn_service="家族でおトク割";
+								if ($_SESSION["packet"] <= 15){
 									$softbank_new += 11000;
 								} else{
-									$softbank_new += 11000+1000*(ceil($_SESSION["packet"])-17);
+									$softbank_new += 11000+1000*(ceil($_SESSION["packet"])-15);
 								}
 								
-							} elseif(19 < $_SESSION["packet"] && $_SESSION["packet"] <= 27){
+							} elseif(17 < $_SESSION["packet"] && $_SESSION["packet"] <= 25){
 								$sn_pakeho = "定額20GB";
-								$sn_service="家族でおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 22){
+								$sn_service="家族でおトク割";
+								if ($_SESSION["packet"] <= 20){
 									$softbank_new += 14000;
 								} else{
-									$softbank_new += 14000+1000*(ceil($_SESSION["packet"])-22);
+									$softbank_new += 14000+1000*(ceil($_SESSION["packet"])-20);
 								}
 								
 							} else {
 								$sn_pakeho = "定額30GB";
-								$sn_service = "家族でおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"]<= 32){
+								$sn_service = "家族でおトク割";
+								if ($_SESSION["packet"]<= 30){
 									$softbank_new += 19500;
 								} else{
-									$softbank_new += 19500+1000*(ceil($_SESSION["packet"])-32);
+									$softbank_new += 19500+1000*(ceil($_SESSION["packet"])-30);
 								}
 							}
 							break;
@@ -1437,56 +1442,57 @@ class Welcome extends CI_Controller {
 						case "sumaho":#nns
 							if ($_SESSION["packet"] <= 3){
 								$sn_pakeho = "定額2GB";
-								$sn_service="スマホBB割+スマホデータ増量キャンペーン";
+								$sn_service="スマホBB割";
 								if ($_SESSION["packet"] <= 2){
 									$softbank_new += 3500-934;
 								} else{
-									$softbank_new += 4500-934;
+									$sn_service="U25;
+									$softbank_new += 3000;
 								}
-						
-							} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
+							
+							} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 7){
 								$sn_pakeho = "定額5GB";
-								$sn_service="スマホBB割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 7){
-									$softbank_new += 5000-1410;
-								} else{
-									$softbank_new += 5000+1000*(ceil($_SESSION["packet"])-7)-1410;
-								}
-								
-							} elseif(10 < $_SESSION["packet"] && $_SESSION["packet"] <= 16){
-								$sn_pakeho = "定額10GB";
-								$sn_service="スマホBB割+10GBおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 12){
+								$sn_service="スマホBB割";
+								if ($_SESSION["packet"] <= 5){
 									$softbank_new += 8000-1410;
 								} else{
-									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-12)-1410;
+									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-5)-1410;
 								}
 								
-							} elseif(16 < $_SESSION["packet"] && $_SESSION["packet"] <= 20){
+							} elseif(7 < $_SESSION["packet"] && $_SESSION["packet"] <= 14){
+								$sn_pakeho = "定額10GB";
+								$sn_service="スマホBB割+10GBおトク割";
+								if ($_SESSION["packet"] <= 10){
+									$softbank_new += 8000-1410;
+								} else{
+									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-10)-1410;
+								}
+								
+							} elseif(14 < $_SESSION["packet"] && $_SESSION["packet"] <= 18){
 								$sn_pakeho = "定額15GB";
-								$sn_service="スマホBB割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 17){
+								$sn_service="スマホBB割";
+								if ($_SESSION["packet"] <= 15){
 									$softbank_new += 12500-1410;
 								} else{
-									$softbank_new += 12500+1000*(ceil($_SESSION["packet"])-17)-1410;
+									$softbank_new += 12500+1000*(ceil($_SESSION["packet"])-15)-1410;
 								}
 								
-							} elseif(20 < $_SESSION["packet"] && $_SESSION["packet"] <= 28){
+							} elseif(18 < $_SESSION["packet"] && $_SESSION["packet"] <= 26){
 								$sn_pakeho = "定額20GB";
-								$sn_service="スマホBB割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 22){
+								$sn_service="スマホBB割";
+								if ($_SESSION["packet"] <= 20){
 									$softbank_new += 16000-1410;
 								} else{
-									$softbank_new += 16000+1000*(ceil($_SESSION["packet"])-22)-1410;
+									$softbank_new += 16000+1000*(ceil($_SESSION["packet"])-20)-1410;
 								}
 								
 							} else {
 								$sn_pakeho = "定額30GB";
-								$sn_service = "スマホBB割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"]<= 32){
+								$sn_service = "スマホBB割";
+								if ($_SESSION["packet"]<= 30){
 									$softbank_new += 22500-1410;
 								} else{
-									$softbank_new += 22500+1000*(ceil($_SESSION["packet"])-32)-1410;
+									$softbank_new += 22500+1000*(ceil($_SESSION["packet"])-30)-1410;
 								}
 							}
 							break;
@@ -1560,57 +1566,62 @@ class Welcome extends CI_Controller {
 							case "sumaho":#yys
 							if ($_SESSION["packet"] <= 3){
 								$sn_pakeho = "定額2GB";
-								$sn_service="家族でおトク割+スマホデータ増量キャンペーン";
+								$sn_service="スマホBB割";
 								if ($_SESSION["packet"] <= 2){
-									$softbank_new += 3500;
+									$softbank_new += 3500-934;
 								} else{
-									$softbank_new += 4500;
+									$sn_service="U25;
+									$softbank_new += 3000;
 								}
 							
-							} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
+							} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 5){
 								$sn_pakeho = "定額5GB";
-								$sn_service="家族でおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 7){
-									$softbank_new += 4700;
+								$sn_service="スマホBB割";
+								$softbank_new += 5000-1410;
+								
+							} elseif(5 < $_SESSION["packet"] && $_SESSION["packet"] <= 8){
+								$sn_pakeho = "定額10GB";
+								$sn_service="U25+10GBおトク割";
+								if ($_SESSION["packet"] <= 11){
+									$softbank_new += 8000-1410;
 								} else{
-									$softbank_new += 4700+1000*(ceil($_SESSION["packet"])-7);
+									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-11)-1410;
 								}
 							
-						
-							} elseif(10 < $_SESSION["packet"] && $_SESSION["packet"] <= 15){
+							} elseif(8 < $_SESSION["packet"] && $_SESSION["packet"] <= 13){
 								$sn_pakeho = "定額10GB";
 								$sn_service="10GBおトク割";
-							if ($_SESSION["packet"] <= 12){
+							if ($_SESSION["packet"] <= 10){
 									$softbank_new += 8000;
 								} else{
-									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-12);
+									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-10);
 								}
 								
-							} elseif(15 < $_SESSION["packet"] && $_SESSION["packet"] <= 19){
+							} elseif(13 < $_SESSION["packet"] && $_SESSION["packet"] <= 17){
 								$sn_pakeho = "定額15GB";
-								$sn_service="家族でおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 17){
+								$sn_service="家族でおトク割";
+								if ($_SESSION["packet"] <= 15){
 									$softbank_new += 11000;
 								} else{
-									$softbank_new += 11000+1000*(ceil($_SESSION["packet"])-17);
+									$softbank_new += 11000+1000*(ceil($_SESSION["packet"])-15);
 								}
 								
-							} elseif(19 < $_SESSION["packet"] && $_SESSION["packet"] <= 27){
+							} elseif(17 < $_SESSION["packet"] && $_SESSION["packet"] <= 25){
 								$sn_pakeho = "定額20GB";
-								$sn_service="家族でおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 22){
+								$sn_service="家族でおトク割";
+								if ($_SESSION["packet"] <= 20){
 									$softbank_new += 14000;
 								} else{
-									$softbank_new += 14000+1000*(ceil($_SESSION["packet"])-22);
+									$softbank_new += 14000+1000*(ceil($_SESSION["packet"])-20);
 								}
 								
 							} else {
 								$sn_pakeho = "定額30GB";
-								$sn_service = "家族でおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"]<= 32){
+								$sn_service = "家族でおトク割";
+								if ($_SESSION["packet"]<= 30){
 									$softbank_new += 19500;
 								} else{
-									$softbank_new += 19500+1000*(ceil($_SESSION["packet"])-32);
+									$softbank_new += 19500+1000*(ceil($_SESSION["packet"])-30);
 								}
 							}
 							break;
@@ -1682,61 +1693,62 @@ class Welcome extends CI_Controller {
 						case "sumaho":#yns
 							if ($_SESSION["packet"] <= 3){
 								$sn_pakeho = "定額2GB";
-								$sn_service="家族でおトク割+スマホデータ増量キャンペーン";
+								$sn_service="スマホBB割";
 								if ($_SESSION["packet"] <= 2){
-									$softbank_new += 3500;
+									$softbank_new += 3500-934;
 								} else{
-									$softbank_new += 4500;
+									$sn_service="U25;
+									$softbank_new += 3000;
 								}
 							
 							} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 5){
 								$sn_pakeho = "定額5GB";
-								$sn_service="U25";
-								$softbank_new += 4500;
-							
-							} elseif(5 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
-								$sn_pakeho = "定額5GB";
-								$sn_service="スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 7){
-									$softbank_new += 5000;
-								} else{
-									$softbank_new += 5000+1000*(ceil($_SESSION["packet"])-7);
-								}
+								$sn_service="スマホBB割";
+								$softbank_new += 5000-1410;
 								
-							} elseif(10 < $_SESSION["packet"] && $_SESSION["packet"] <= 16){
+							} elseif(5 < $_SESSION["packet"] && $_SESSION["packet"] <= 8){
 								$sn_pakeho = "定額10GB";
-								$sn_service="10GBおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 12){
+								$sn_service="U25+10GBおトク割";
+								if ($_SESSION["packet"] <= 11){
+									$softbank_new += 8000-1410;
+								} else{
+									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-11)-1410;
+								}
+							
+							} elseif(8 < $_SESSION["packet"] && $_SESSION["packet"] <= 14){
+								$sn_pakeho = "定額10GB";
+								$sn_service="10GBおトク割";
+								if ($_SESSION["packet"] <= 10){
 									$softbank_new += 8000;
 								} else{
-									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-12);
+									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-10);
 								}
 								
-							} elseif(16 < $_SESSION["packet"] && $_SESSION["packet"] <= 18){
+							} elseif(14 < $_SESSION["packet"] && $_SESSION["packet"] <= 16){
 								$sn_pakeho = "定額15GB";
-								$sn_service="スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 17){
+								$sn_service="なし";
+								if ($_SESSION["packet"] <= 15){
 									$softbank_new += 12500;
 								} else{
 									$softbank_new += 13500;
 								}
 							
-							} elseif(18 < $_SESSION["packet"] && $_SESSION["packet"] <= 25){
+							} elseif(16 < $_SESSION["packet"] && $_SESSION["packet"] <= 23){
 								$sn_pakeho = "定額20GB";
 								$sn_service="U25";
-								if ($_SESSION["packet"] <= 20){
+								if ($_SESSION["packet"] <= 18){
 									$softbank_new += 14000;
 								} else{
-									$softbank_new += 14000+1000*(ceil($_SESSION["packet"])-20);
+									$softbank_new += 14000+1000*(ceil($_SESSION["packet"])-18);
 								}	
 							
 							} else {
 								$sn_pakeho = "定額30GB";
 								$sn_service="U25";
-								if ($_SESSION["packet"]<= 32){
+								if ($_SESSION["packet"]<= 30){
 									$softbank_new += 19500;
 								} else{
-									$softbank_new += 19500+1000*(ceil($_SESSION["packet"])-32);
+									$softbank_new += 19500+1000*(ceil($_SESSION["packet"])-30);
 								}
 							}
 							break;
@@ -1810,57 +1822,62 @@ class Welcome extends CI_Controller {
 						case "sumaho":#nys
 							if ($_SESSION["packet"] <= 3){
 								$sn_pakeho = "定額2GB";
-								$sn_service="家族でおトク割+スマホデータ増量キャンペーン";
+								$sn_service="スマホBB割";
 								if ($_SESSION["packet"] <= 2){
-									$softbank_new += 3500;
+									$softbank_new += 3500-934;
 								} else{
-									$softbank_new += 4500;
+									$sn_service="U25;
+									$softbank_new += 3000;
 								}
 							
-							} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
+							} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 5){
 								$sn_pakeho = "定額5GB";
-								$sn_service="家族でおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 7){
-									$softbank_new += 4700;
-								} else{
-									$softbank_new += 4700+1000*(ceil($_SESSION["packet"])-7);
-								}
+								$sn_service="スマホBB割";
+								$softbank_new += 5000-1410;
 								
+							} elseif(5 < $_SESSION["packet"] && $_SESSION["packet"] <= 8){
+								$sn_pakeho = "定額10GB";
+								$sn_service="U25+10GBおトク割";
+								if ($_SESSION["packet"] <= 11){
+									$softbank_new += 8000-1410;
+								} else{
+									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-11)-1410;
+								}
 							
-							} elseif(10 < $_SESSION["packet"] && $_SESSION["packet"] <= 15){
+							} elseif(8 < $_SESSION["packet"] && $_SESSION["packet"] <= 13){
 								$sn_pakeho = "定額10GB";
 								$sn_service="10GBおトク割";
-								if ($_SESSION["packet"] <= 12){
+								if ($_SESSION["packet"] <= 10){
 									$softbank_new += 8000;
 								} else{
-									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-12);
+									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-10);
 								}
 								
-							} elseif(15 < $_SESSION["packet"] && $_SESSION["packet"] <= 19){
+							} elseif(13 < $_SESSION["packet"] && $_SESSION["packet"] <= 17){
 								$sn_pakeho = "定額15GB";
-								$sn_service="家族でおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 17){
+								$sn_service="家族でおトク割";
+								if ($_SESSION["packet"] <= 15){
 									$softbank_new += 11000;
 								} else{
-									$softbank_new += 11000+1000*(ceil($_SESSION["packet"])-17);
+									$softbank_new += 11000+1000*(ceil($_SESSION["packet"])-15);
 								}
 								
-							} elseif(19 < $_SESSION["packet"] && $_SESSION["packet"] <= 27){
+							} elseif(17 < $_SESSION["packet"] && $_SESSION["packet"] <= 25){
 								$sn_pakeho = "定額20GB";
-								$sn_service="家族でおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 22){
+								$sn_service="家族でおトク割";
+								if ($_SESSION["packet"] <= 20){
 									$softbank_new += 14000;
 								} else{
-									$softbank_new += 14000+1000*(ceil($_SESSION["packet"])-22);
+									$softbank_new += 14000+1000*(ceil($_SESSION["packet"])-20);
 								}
 								
 							} else {
 								$sn_pakeho = "定額30GB";
-								$sn_service = "家族でおトク割+スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"]<= 32){
+								$sn_service = "家族でおトク割";
+								if ($_SESSION["packet"]<= 30){
 									$softbank_new += 19500;
 								} else{
-									$softbank_new += 19500+1000*(ceil($_SESSION["packet"])-32);
+									$softbank_new += 19500+1000*(ceil($_SESSION["packet"])-30);
 								}
 							}
 							break;
@@ -1887,11 +1904,7 @@ class Welcome extends CI_Controller {
 							} elseif(9 < $_SESSION["packet"] && $_SESSION["packet"] <= 13){
 								$sn_pakeho = "定額10GB";
 								$sn_service="10GBおトク割+iPhoneデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 11){
-									$softbank_new += 8000;
-								} else{
-									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-11);
-								}
+								$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-11);
 								
 							} elseif(13 < $_SESSION["packet"] && $_SESSION["packet"] <= 18){
 								$sn_pakeho = "定額15GB";
@@ -1931,56 +1944,62 @@ class Welcome extends CI_Controller {
 						case "sumaho":#nns
 							if ($_SESSION["packet"] <= 3){
 								$sn_pakeho = "定額2GB";
-								$sn_service="スマホデータ増量キャンペーン";
+								$sn_service="スマホBB割";
 								if ($_SESSION["packet"] <= 2){
-									$softbank_new += 3500;
+									$softbank_new += 3500-934;
 								} else{
-									$softbank_new += 4500;
+									$sn_service="U25;
+									$softbank_new += 3000;
 								}
-						
-							} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 10){
+							
+							} elseif(3 < $_SESSION["packet"] && $_SESSION["packet"] <= 5){
 								$sn_pakeho = "定額5GB";
-								$sn_service="スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 7){
-									$softbank_new += 5000;
-								} else{
-									$softbank_new += 5000+1000*(ceil($_SESSION["packet"])-7);
-								}
+								$sn_service="スマホBB割";
+								$softbank_new += 5000-1410;
 								
-							} elseif(10 < $_SESSION["packet"] && $_SESSION["packet"] <= 16){
+							} elseif(5 < $_SESSION["packet"] && $_SESSION["packet"] <= 8){
 								$sn_pakeho = "定額10GB";
-								$sn_service="スマホデータ増量キャンペーン+10GBおトク割";
-								if ($_SESSION["packet"] <= 12){
+								$sn_service="U25+10GBおトク割";
+								if ($_SESSION["packet"] <= 11){
+									$softbank_new += 8000-1410;
+								} else{
+									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-11)-1410;
+								}
+							
+							} elseif(8 < $_SESSION["packet"] && $_SESSION["packet"] <= 14){
+								$sn_pakeho = "定額10GB";
+								$sn_service="10GBおトク割";
+								if ($_SESSION["packet"] <= 10){
 									$softbank_new += 8000;
 								} else{
-									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-12);
+									$softbank_new += 8000+1000*(ceil($_SESSION["packet"])-10);
 								}
 								
-							} elseif(16 < $_SESSION["packet"] && $_SESSION["packet"] <= 20){
+							} elseif(14 < $_SESSION["packet"] && $_SESSION["packet"] <= 18){
 								$sn_pakeho = "定額15GB";
-								$sn_service="スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 17){
+								$sn_service="なし";
+								if ($_SESSION["packet"] <= 15){
 									$softbank_new += 12500;
 								} else{
-									$softbank_new += 12500+1000*(ceil($_SESSION["packet"])-17);
+									$softbank_new += 12500+1000*(ceil($_SESSION["packet"])-15);
 								}
 								
-							} elseif(20 < $_SESSION["packet"] && $_SESSION["packet"] <= 28){
+							} elseif(18 < $_SESSION["packet"] && $_SESSION["packet"] <= 26){
 								$sn_pakeho = "定額20GB";
-								$sn_service="スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"] <= 22){
+								$sn_service="なし";
+								if ($_SESSION["packet"] <= 20){
 									$softbank_new += 16000;
 								} else{
-									$softbank_new += 16000+1000*(ceil($_SESSION["packet"])-22);
+									$softbank_new += 16000+1000*(ceil($_SESSION["packet"])-20);
 								}
 								
 							} else {
 								$sn_pakeho = "定額30GB";
-								$sn_service = "スマホデータ増量キャンペーン";
-								if ($_SESSION["packet"]<= 32){
+								$sn_service = "なし";
+								if ($_SESSION["packet"]<= 30){
 									$softbank_new += 22500;
 								} else{
-									$softbank_new += 22500+1000*(ceil($_SESSION["packet"])-32);
+									$softbank_new += 22500+1000*(ceil($_SESSION["packet"])-30);
 								}
 							}
 							break;
@@ -2147,9 +2166,9 @@ class Welcome extends CI_Controller {
 		}
 	
 		#消費税かけてる
-		$_SESSION["docomo_ryoukin"]=ceil($docomo_ryoukin*1.08/100+3.03)*100;
-		$_SESSION["au_ryoukin"]=ceil($au_ryoukin*1.08/100+3.03)*100;
-		$_SESSION["softbank_ryoukin"]=ceil($softbank_ryoukin*1.08/100+3.03)*100;
+		$_SESSION["docomo_ryoukin"]=ceil($docomo_ryoukin*1.08/100)*100;
+		$_SESSION["au_ryoukin"]=ceil($au_ryoukin*1.08/100)*100;
+		$_SESSION["softbank_ryoukin"]=ceil($softbank_ryoukin*1.08/100)*100;
 		$_SESSION["d_plan"]=$d_plan;
 		$_SESSION["d_pakeho"]=$d_pakeho;
 		$_SESSION["a_plan"]=$a_plan;
@@ -2174,97 +2193,65 @@ class Welcome extends CI_Controller {
 		#エラーチェックの際は囲むこと。最後に外そう。
 		
 		########ここから#########
-		#別の値に代入してなんとかすることにします。
-		
-		$_SESSION["kyaria_true"] = NULL;
-		$_SESSION["kisyu_true"] = NULL;
-		$_SESSION["kaisen_true"] = NULL;
-		$_SESSION["U25_true"] = NULL;
 		
 		switch($_SESSION["kyaria"]){
 			case "docomo":
-				$_SESSION["kyaria_true"]="docomo";
+				$_SESSION["kyaria"]="docomo";
 				break;
 			
 			case "au":
-				$_SESSION["kyaria_true"]="au";
+				$_SESSION["kyaria"]="au";
 				break;
 		
 			case "softbank":
-				$_SESSION["kyaria_true"]="softbank";
+				$_SESSION["kyaria"]="softbank";
 				break;
 		}
 		switch($_SESSION["kisyu"]){
 			case "sumaho":
-				$_SESSION["kisyu_true"]="スマホ";
+				$_SESSION["kisyu"]="スマホ";
 				break;
 			
 			case "iphone":
-				$_SESSION["kisyu_true"]="iPhone";
+				$_SESSION["kisyu"]="iPhone";
 				break;
 			
 			default:
-				$_SESSION["kisyu_true"]="ガラケー";
+				$_SESSION["kisyu"]="ガラケー";
 				break;
 		}
 		switch($_SESSION["kaisen"]){
 			case "au_kaisen":
-				$_SESSION["kaisen_true"]="auの提携回線";
+				$_SESSION["kaisen"]="auの提携回線";
 				break;
 			
 			case "softbank_kaisen":
-				$_SESSION["kaisen_true"]="softbankの提携回線";
+				$_SESSION["kaisen"]="softbankの提携回線";
 				break;
 			default:
-				$_SESSION["kaisen_true"]="なし";
-				break;
-		}
-		switch($_SESSION["ruta"]){
-			case "au_ruta":
-				$_SESSION["ruta_true"]="auの提携ルーター";
-				break;
-			
-			case "softbank_ruta":
-				$_SESSION["ruta_true"]="softbankの提携ルーター";
-				break;
-			default:
-				$_SESSION["ruta_true"]="なし";
+				$_SESSION["kaisen"]="なし";
 				break;
 		}
 		
 		if ($_SESSION["U25"] === "yes"){
-			$_SESSION["U25_true"] = "はい";
+			$_SESSION["U25"] = "はい";
 		} else{
-			$_SESSION["U25_true"] = "いいえ";
-			}
+			$_SESSION["U25"] = "いいえ";
+				}
 		
 		########ここまで#########
 		
 		
 		$this->load->view("header",$data);
 		if($_SESSION["U25"]===FALSE or $_SESSION["familyotoku"]===FALSE){
-			$this->load->view("u25",$data);
+			$this->load->view("extra",$data);
 		}else{
 			$this->load->view("kekka",$data);
 		}
        // $this->load->view("footer",$data);
 	}
 	
-
-	public function extra()
-	{
-		$this->load->helper("url"); 
-		$data["page_title"] = "モバイル料金ラボ";
-		session_start();
-		
-		
-		$this->load->view("header",$data);
-		$this->load->view("extra",$data);
-       // $this->load->view("footer",$data);
-
-	}
-
-
+	
 	
 	/*public function book()
 	{
